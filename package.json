@@ -1,0 +1,39 @@
+{
+  "name": "infologgergui",
+  "version": "0.0.1",
+  "description": "Streaming and querying O2 logging",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run eslint && npm run mocha && npm run qunit",
+    "start": "node index.js --trace-sync-io",
+    "dev": "nodemon index.js --trace-sync-io",
+    "coverage": "./node_modules/.bin/nyc ./node_modules/mocha/bin/mocha",
+    "mocha": "./node_modules/.bin/mocha test/",
+    "qunit": "./node_modules/.bin/phantomjs ./node_modules/qunit-phantomjs-runner/runner-list.js file://`pwd`/test/qunit-lock.html",
+    "eslint": "./node_modules/.bin/eslint ./*.js public/*.js test/*.js",
+    "doc": "./node_modules/.bin/jsdoc2md --files ./*.js public/*.js test/*.js > docs/API.md"
+  },
+  "keywords": [
+    "Alice"
+  ],
+  "author": "Vladimir Kosmala",
+  "license": "ISC",
+  "dependencies": {
+    "@aliceo2/aliceo2-gui": "^1.0.13",
+    "mariasql": "^0.2.6"
+  },
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-http": "^3.0.0",
+    "eslint": "^4.5.0",
+    "eslint-config-google": "^0.9.1",
+    "jsdoc-to-markdown": "^3.0.0",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.12.0",
+    "nyc": "^11.1.0",
+    "phantom": "^4.0.5",
+    "qunit": "^1.0.0",
+    "qunit-phantomjs-runner": "^2.3.0"
+  }
+}
