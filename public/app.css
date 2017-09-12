@@ -1,0 +1,120 @@
+/* Main layout
+ * Split screen in half and behave like a real app (no scroll)
+ */
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.panel-command {
+  height: 100px;
+  background-color: #567cbd;
+}
+
+.panel-logs {
+  background-color: #fafafa;
+  height: calc(100vh - 100px); /* vh = viewport height */
+}
+
+/* General style */
+
+body, input, textarea {
+  /* Try to get the native font of the system (Mac, Windows, Android, ...) */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,sans-serif;
+}
+
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* Logs view */
+
+.text-overflow {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+#logs {
+  width: 100%;
+  height: 100%;
+}
+
+.col-100px {
+  /* need both max-width and width to force td width and good ellipsis */
+  width: 100px;
+  max-width: 100px;
+}
+
+.col-severityF {
+  background-color: rgba(255, 0, 0, 0.39);
+  border-radius: 14px;
+  vertical-align: middle !important;
+}
+.col-severityI {
+  background-color: rgba(0, 255, 0, 0.39);
+  border-radius: 14px;
+  vertical-align: middle !important;
+}
+
+
+.table-fixed {
+  position: relative;
+  padding-top: 37px;
+  background-color: #e9ecef; /* color of header */
+}
+.table-fixed-container {
+  overflow-y: auto;
+  height: 100%;
+  background-color: white; /* color of bg table */
+}
+.table-fixed th {
+  height: 0;
+  line-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border: none;
+  white-space: nowrap;
+}
+
+.table-fixed th div{
+  position: absolute;
+  padding: 9px 25px;
+  top: 0;
+  margin-left: -25px;
+  line-height: normal;
+}
+
+.table-fixed table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  background-color: transparent;
+  border-collapse: collapse;
+  table-layout: fixed; /* help with ellipsis on cells */
+}
+
+.table-fixed td {
+  padding: 0.1rem;
+  vertical-align: top;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.table-fixed thead th {
+  vertical-align: bottom;
+  text-transform: uppercase;
+  background-color: #e9ecef;
+}
+
+.table-fixed tbody {
+  background-color: white;
+}
+
+.table-fixed tbody tr:hover {
+  background-color: rgba(0,0,0,.075);
+}
+
+
+
