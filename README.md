@@ -44,9 +44,10 @@ TABLE HERE
 
 ### Insert fake data
 
+```
 $ mysql -u root -p INFOLOGGER < logs.sql
 $ mysql
 $ use INFOLOGGER;
 $ select * from messages limit 10;
-
+```
 
