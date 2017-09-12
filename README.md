@@ -2,10 +2,12 @@
 
 Web app for querying infoLogger database and streaming logs in real-time with filtering.
 
+```
 $ git clone ...
 $ create ssl keys, configure config.js
 $ npm install
 $ npm start
+```
 
 Command  | Result
 ------------- | -------------
