@@ -11,11 +11,13 @@ body {
 .panel-command {
   height: 100px;
   background-color: #567cbd;
+  position: relative;
 }
 
 .panel-logs {
   background-color: #fafafa;
   height: calc(100vh - 100px); /* vh = viewport height */
+  position: relative;
 }
 
 /* General style */
@@ -25,11 +27,42 @@ body, input, textarea {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,sans-serif;
 }
 
+* { box-sizing: border-box; }
 .text-left { text-align: left; }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 
+/* filters */
+
+#filters {
+  width: calc(100% - 250px);
+}
+
+#filters input {
+  width: 100%;
+}
+
+/* Commands view */
+
+#commands {
+  position: absolute;
+  width: 250px;
+  background-color: rgba(0, 0, 0, 0.15);
+  height: 100%;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#commands .ui-button {
+  width: 100%;
+}
+
 /* Logs view */
+
+#logs {
+  height: 100%;
+}
 
 .text-overflow {
   white-space: nowrap;
@@ -37,15 +70,20 @@ body, input, textarea {
   overflow: hidden;
 }
 
-#logs {
+.table-fixed-content {
   width: 100%;
-  height: 100%;
+  max-height: 100%;
 }
 
 .col-100px {
   /* need both max-width and width to force td width and good ellipsis */
   width: 100px;
   max-width: 100px;
+}
+.col-50px {
+  /* need both max-width and width to force td width and good ellipsis */
+  width: 50px;
+  max-width: 50px;
 }
 
 .col-severityF {
@@ -59,10 +97,11 @@ body, input, textarea {
   vertical-align: middle !important;
 }
 
-
 .table-fixed {
+  font-size: .75em;
+  height: 100%;
   position: relative;
-  padding-top: 37px;
+  padding-top: 30px;
   background-color: #e9ecef; /* color of header */
 }
 .table-fixed-container {

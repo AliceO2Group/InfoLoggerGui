@@ -1,34 +1,15 @@
+<!doctype html>
+<title>InfoLoggerGui - Alice</title>
 <link rel="stylesheet" href="/jquery-ui/jquery-ui.css">
 <link rel="stylesheet" href="/app.css">
 
 <div class="panel-command">
-  <h4>Alice infoLoggerGui</h4>
-  <a href="/" class="ui-button ui-widget ui-corner-all">Refresh page</a>
+  <div id="filters"></div>
+  <div id="commands"></div>
 </div>
 
 <div class="panel-logs">
-  <div class="table-fixed">
-    <div class="table-fixed-container">
-      <table id="logs">
-        <thead>
-          <tr>
-            <th class="col-100px">
-              <div>Severity</div>
-            </th>
-            <th class="col-100px">
-              <div>Host</div>
-            </th>
-            <th class="col-max">
-              <div>Message</div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div id="logs"></div>
 </div>
 
 <div id="ws"></div>
@@ -47,10 +28,17 @@ var token = "{{token}}";
 <script src="/query.model.js"></script>
 <script src="/stream.model.js"></script>
 <script src="/logs.widget.js"></script>
+<script src="/commands.widget.js"></script>
+<script src="/filters.widget.js"></script>
 
 <script type="text/javascript">
 // utils
+
+// Escape html for raw templating
 function htmlEscape(str) {
+  if (!str) {
+    return '';
+  }
   return str.replace(/&/g, '&amp;') // first!
             .replace(/>/g, '&gt;')
             .replace(/</g, '&lt;')
@@ -58,6 +46,13 @@ function htmlEscape(str) {
             .replace(/'/g, '&#39;')
             .replace(/`/g, '&#96;');
 }
+
+// Global error handler
+$(document).ajaxError(function(err) {
+  alert('Error with ajax');
+  console.error(err);
+});
+
   $(function() {
     /// instance of websocket widget
     var ws = $.o2.websocket({
@@ -68,46 +63,171 @@ function htmlEscape(str) {
       id: {{personid}},
     }, $('#ws') );
 
-    $('#ws').bind('websocketmessage', function(evt, data) {
-      console.log(arguments);
-    });
-
     // Model runs by itself and has an interface Observable
     // so views can connect to him and rereder when they get notified by the model
 
-    const model = {
-      filters: {
-        severity: null,
-        level: null,
-        timestamp: null,
-        hostname: null,
-        rolename: null,
-        pid: null,
-        username: null,
-        system: null,
-        facility: null,
-        detector: null,
-        partition: null,
-        run: null,
-        errcode: null,
-        errline: null,
-        errsource: null,
-        message: null,
-      },
-      logs: [
-        {"severity":"I","level":null,"timestamp":"1505223463.828289","hostname":"aido2db","rolename":"","pid":124889,"username":"root","system":"","facility":"","detector":"","partition":"","run":null,"errcode":null,"errline":null,"errsource":"","message":"test Tue Sep 12 15:37:43 CEST 201"},
-        {"severity":"I","level":null,"timestamp":"1505223463.828289","hostname":"aido2db","rolename":"","pid":124889,"username":"root","system":"","facility":"","detector":"","partition":"","run":null,"errcode":null,"errline":null,"errsource":"","message":"test Tue Sep 12 15:37:43 CEST 201"}
-      ],
-      filteredLogs: () => {
-        return this.logs.filter();
-      },
-      // Observable
-      set: (obj, value) => {
-        $.extend(this, obj);
-        // trigger listeners
-      }
-    };
+    // Simple Observable class to notify others listening for changes
+    class Observable {
+      observe(callback) {
+        if (!this.observers) {
+          this.observers = [];
+        }
 
-    $('#logs').logs({model: model});
+        this.observers.push(callback);
+      }
+
+      unobserve(callback) {
+        this.observers = this.observers.filter(observer => {
+          return observer !== callback
+        });
+      }
+
+      notify() {
+        this.observers.forEach(observer => {
+          observer(this);
+        });
+      }
+    }
+
+    // Set mode and get logs
+    class ModelApp extends Observable {
+      constructor() {
+        super();
+
+        this.logs = [];
+        this.liveStarted = false;
+        this.columns = {
+          severity: true,
+          level: false,
+          timestamp: true,
+          hostname: true,
+          rolename: false,
+          pid: false,
+          username: false,
+          system: false,
+          facility: false,
+          detector: false,
+          partition: false,
+          run: false,
+          errcode: false,
+          errline: false,
+          errsource: false,
+          message: true,
+        };
+
+        this.filters = {
+          match: {
+            severity: '',
+            level: '',
+            timestamp: '',
+            hostname: '',
+            rolename: '',
+            pid: '',
+            username: '',
+            system: '',
+            facility: '',
+            detector: '',
+            partition: '',
+            run: '',
+            errcode: '',
+            errline: '',
+            errsource: '',
+            message: '',
+          },
+          exclude: {
+            severity: '',
+            level: '',
+            timestamp: '',
+            hostname: '',
+            rolename: '',
+            pid: '',
+            username: '',
+            system: '',
+            facility: '',
+            detector: '',
+            partition: '',
+            run: '',
+            errcode: '',
+            errline: '',
+            errsource: '',
+            message: '',
+          }
+        };
+
+        $('#ws').bind('websocketmessage', (evt, data) => {
+          this.onLiveMessage(data.payload);
+        });
+      }
+
+      query(from, to, limit) {
+        // first, stop real-time if set
+        if (this.liveStarted) {
+          this.liveStop();
+        }
+
+        // jquery does not know how to stringify a deep object, so we JSON.stringify
+        // and we need to set content-type too (form-www-encoded by default)
+        return $.ajax({
+          url: '/api/query?token=' + token,
+          method: 'POST',
+          data: JSON.stringify({filters: this.filters}),
+          contentType: 'application/json',
+          success: rows => {
+            this.logs = rows;
+            this.notify();
+          }
+        });
+      }
+
+      liveStart() {
+        // first, empty all logs, then listen for new ones
+        this.logs = [];
+        this.notify();
+
+        return $.post('/api/liveStart?token=' + token, {token, token}, rows => {
+          this.liveStarted = true;
+          this.notify();
+        });
+      }
+
+      onLiveMessage(message) {
+        console.log('message:', message);
+        this.logs.push(message);
+        this.notify();
+      }
+
+      liveStop() {
+        return $.post('/api/liveStop?token=' + token, {token, token}, rows => {
+          this.liveStarted = false;
+          this.notify();
+        });
+      }
+
+      displayField(fieldName, value) {
+        this.columns[fieldName] = value;
+        this.notify();
+      }
+
+      matchField(fieldName, value) {
+        this.filters.match[fieldName] = value;
+        this.notify();
+      }
+
+      excludeField(fieldName, value) {
+        this.filters.exclude[fieldName] = value;
+        this.notify();
+      }
+    }
+
+    app = new ModelApp();
+
+    $('#logs').logs({model: app});
+    $('#filters').filters({model: app});
+    $('#commands').commands({model: app});
+
+    // Server should stop by itself the real-time when a client shutdown
+    // but currently there is no way to know if a client has been disconnected
+    // So we tell the server to not live when we begin a new session
+    app.liveStop();
   });
 </script>
