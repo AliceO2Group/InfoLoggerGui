@@ -6,8 +6,8 @@ module.exports = {
     "maxAge": "2m"
   },
   "oAuth": {
-    "secret": "P5lCSVALYVeyqYMXPlo0SZYXVKpfiuU19a06SVkRqDY1",
-    "id": "devinfologgergui2",
+    "secret": "<secret>",
+    "id": "<id>",
     "tokenHost": "https://oauth.web.cern.ch",
     "tokenPath": "/OAuth/Token",
     "authorizePath": "/OAuth/Authorize",
