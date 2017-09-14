@@ -18,7 +18,12 @@
 
 
 <script>
-var token = "{{token}}";
+var appConfig = {
+  token: "{{token}}",
+  hostname: "{{hostname}}",
+  port: "{{port}}",
+  personid: "{{personid}}",
+};
 </script>
 
 <!-- Gui Framework -->
@@ -63,10 +68,10 @@ $(document).ajaxError(function(err, xhr) {
     /// instance of websocket widget
     var ws = $.o2.websocket({
       // pass url of websocket server
-      url: 'wss://vcap.me:8443',
+      url: `wss://${appConfig.hostname}:${appConfig.port}`,
       // token, cernid, name and username are provided by CERN SSO
-      token: '{{token}}',
-      id: {{personid}},
+      token: appConfig.token,
+      id: appConfig.personid,
     }, $('#ws') );
 
     // Model runs by itself and has an interface Observable
@@ -174,7 +179,7 @@ $(document).ajaxError(function(err, xhr) {
         // jquery does not know how to stringify a deep object, so we JSON.stringify
         // and we need to set content-type too (form-www-encoded by default)
         return $.ajax({
-          url: '/api/query?token=' + token,
+          url: '/api/query?token=' + appConfig.token,
           method: 'POST',
           data: JSON.stringify({filters: this.filters}),
           contentType: 'application/json',
@@ -191,7 +196,7 @@ $(document).ajaxError(function(err, xhr) {
         this.notify();
 
         return $.ajax({
-          url: '/api/liveStart?token=' + token,
+          url: '/api/liveStart?token=' + appConfig.token,
           method: 'POST',
           data: JSON.stringify({filters: this.filters}),
           contentType: 'application/json',
@@ -209,7 +214,7 @@ $(document).ajaxError(function(err, xhr) {
       }
 
       liveStop() {
-        return $.post('/api/liveStop?token=' + token, {token, token}, rows => {
+        return $.post('/api/liveStop?token=' + appConfig.token, rows => {
           this.liveStarted = false;
           this.notify();
         });

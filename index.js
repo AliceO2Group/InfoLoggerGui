@@ -9,17 +9,22 @@ var SQLDataSource = require('./lib/SQLDataSource');
 var LiveDataSource = require('./lib/LiveDataSource');
 
 // Quick check config at start
-log.info('MySQL server host: %s', '127.0.0.1');
-log.info('HTTPS server port: %s', config.http.portSecure);
+log.info('MySQL: \t\t%s', `${config.mysql.host}:${config.mysql.port}`);
+log.info('InfoLoggerServer: \t%s', `${config.infoLoggerServer.host}:${config.infoLoggerServer.port}`);
+log.info('HTTP full link: \t%s', `http://${config.http.hostname}:${config.http.port}`);
+log.info('HTTPS full link: \t%s', `https://${config.http.hostname}:${config.http.portSecure}`);
 
 // Start servers
 const http = new HttpServer(config.http, config.jwt, config.oAuth);
 const websocketServer = new WebSocket(http.server, config.jwt);
 
 // Create data instances
-const sql = new SQLDataSource();
+const sql = new SQLDataSource(config.mysql);
 const stream = new LiveDataSource();
 
+// Configuration variable for client
+http.passToTemplate('hostname', config.http.hostname);
+http.passToTemplate('port', config.http.portSecure);
 
 http.post('/query', function(req, res, next) {
   const filters = req.body.filters;
@@ -37,7 +42,7 @@ http.post('/query', function(req, res, next) {
 http.post('/liveStart', function(req, res, next) {
   const filters = req.body.filters;
   stream.setfilters(filters);
-  stream.connect({port: 6102, host: 'aido2db.cern.ch'});
+  stream.connect(config.infoLoggerServer);
   res.json({ok: 1});
 });
 
