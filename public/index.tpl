@@ -100,9 +100,9 @@ $(document).ajaxError(function(err, xhr) {
       constructor() {
         super();
 
-        this.logs = [];
-        this.liveStarted = false;
-        this.columns = {
+        this.logs = []; // to be shown
+        this.liveStarted = false; // websocket gets new data
+        this.columns = { // display or not
           severity: true,
           level: false,
           timestamp: true,
@@ -190,9 +190,15 @@ $(document).ajaxError(function(err, xhr) {
         this.logs = [];
         this.notify();
 
-        return $.post('/api/liveStart?token=' + token, {token, token}, rows => {
-          this.liveStarted = true;
-          this.notify();
+        return $.ajax({
+          url: '/api/liveStart?token=' + token,
+          method: 'POST',
+          data: JSON.stringify({filters: this.filters}),
+          contentType: 'application/json',
+          success: rows => {
+            this.liveStarted = true;
+            this.notify();
+          }
         });
       }
 

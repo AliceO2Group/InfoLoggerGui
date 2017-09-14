@@ -35,6 +35,8 @@ http.post('/query', function(req, res, next) {
 });
 
 http.post('/liveStart', function(req, res, next) {
+  const filters = req.body.filters;
+  stream.setfilters(filters);
   stream.connect({port: 6102, host: 'aido2db.cern.ch'});
   res.json({ok: 1});
 });
