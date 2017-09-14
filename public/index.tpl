@@ -12,6 +12,8 @@
   <div id="logs"></div>
 </div>
 
+<div id="statusBar"></div>
+
 <div id="ws"></div>
 
 
@@ -30,6 +32,7 @@ var token = "{{token}}";
 <script src="/logs.widget.js"></script>
 <script src="/commands.widget.js"></script>
 <script src="/filters.widget.js"></script>
+<script src="/statusBar.widget.js"></script>
 
 <script type="text/javascript">
 // utils
@@ -48,9 +51,9 @@ function htmlEscape(str) {
 }
 
 // Global error handler
-$(document).ajaxError(function(err) {
-  alert('Error with ajax');
-  console.error(err);
+$(document).ajaxError(function(err, xhr) {
+  alert('Error with ajax: ' + xhr.statusText);
+  console.error(err, xhr.statusText);
 });
 
   $(function() {
@@ -224,6 +227,7 @@ $(document).ajaxError(function(err) {
     $('#logs').logs({model: app});
     $('#filters').filters({model: app});
     $('#commands').commands({model: app});
+    $('#statusBar').statusBar({model: app});
 
     // Server should stop by itself the real-time when a client shutdown
     // but currently there is no way to know if a client has been disconnected

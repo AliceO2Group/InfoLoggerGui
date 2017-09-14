@@ -12,12 +12,15 @@ body {
   height: 100px;
   background-color: #567cbd;
   position: relative;
+  color: white;
 }
 
 .panel-logs {
   background-color: #fafafa;
-  height: calc(100vh - 100px); /* vh = viewport height */
   position: relative;
+  /* vh = viewport height */
+  /* 1.2rem and 1px is the statusBar in the footer */
+  height: calc(100vh - 100px - 1.2rem - 1px);
 }
 
 /* General style */
@@ -155,5 +158,14 @@ body, input, textarea {
   background-color: rgba(0,0,0,.075);
 }
 
+/* Status bar */
 
+#statusBar {
+  height: 1.2rem;
+  background-color: #e9ecef;
+  font-size: 80%;
+  line-height: 1.2rem;
+  border-top: 1px solid black;
+  padding: 0 1rem;
+}
 
