@@ -2,10 +2,12 @@
 
 Web app for querying infoLogger database and streaming logs in real-time with filtering.
 
+```
 $ git clone ...
 $ create ssl keys, configure config.js
 $ npm install
 $ npm start
+```
 
 Command  | Result
 ------------- | -------------
@@ -42,9 +44,10 @@ TABLE HERE
 
 ### Insert fake data
 
+```
 $ mysql -u root -p INFOLOGGER < logs.sql
 $ mysql
 $ use INFOLOGGER;
 $ select * from messages limit 10;
-
+```
 
