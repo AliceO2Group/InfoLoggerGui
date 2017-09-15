@@ -74,6 +74,9 @@ $(function() {
   // So we tell the server to not live when we begin a new session
   app.liveStop();
 
+  // Let's get the last data to begin
+  app.query();
+
   // Expose app instance for debugging purpose as it contains all the project's data
   window.app = app;
 });
