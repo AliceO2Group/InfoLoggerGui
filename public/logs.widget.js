@@ -14,15 +14,13 @@ jQuery.widget('o2.logs', {
   render: function() {
     const el = this.element;
     const model = this.model;
-    var str = '';
 
     const columns = model.columns;
-
+    var rows = '';
     model.logs.forEach(row => {
       const classSeverity = row.severity === 'I' ? 'col-severityI' : 'col-severityF';
 
-
-      str += `
+      rows += `
         <tr>
           ${columns.severity ? `<td class="text-overflow text-center ${classSeverity}">${htmlEscape(row.severity)}</td>` : ''}
           ${columns.level ? `<td class="text-overflow text-left" title="${htmlEscape(row.level)}">${htmlEscape(row.level)}</td>` : ''}
@@ -44,8 +42,7 @@ jQuery.widget('o2.logs', {
       `;
     });
 
-    // virtual-dom should be used here to avoid losing text selection and scroll position
-      $(this.element).html(`  <div class="table-fixed">
+    const tableStr = `<div class="table-fixed">
       <div class="table-fixed-container">
         <table class="table-fixed-content">
           <thead>
@@ -69,12 +66,11 @@ jQuery.widget('o2.logs', {
             </tr>
           </thead>
           <tbody>
-
+            ${rows}
           </tbody>
         </table>
       </div>
-    </div>`);
-    $(el).find('tbody').html(str);
+    </div>`;
+    morphdom(el[0], tableStr);
   }
 });
-

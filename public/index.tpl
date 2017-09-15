@@ -39,6 +39,7 @@ var appConfig = {
 <script src="/filters.widget.js"></script>
 <script src="/statusBar.widget.js"></script>
 <script src="/utils.js"></script>
+<script src="/morphdom.plugin.js"></script>
 
 <script type="text/javascript">
 // Global error handler
