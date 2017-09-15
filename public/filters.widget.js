@@ -7,14 +7,14 @@ jQuery.widget('o2.filters', {
     }
 
     this.model = this.options.model;
-    // don't render a second time, this remove focus if user was writting
-    // missing virtua-dom for this template engine
-    // this.model.observe(this.render.bind(this)); // refresh when data change
+    this.model.observe(this.render.bind(this)); // refresh when data change
     this.render();
 
-    $(this.element).delegate('[data-action="display"]', 'change', e => {
+    $(this.element).delegate('[data-action="display"]', 'click', e => {
       var $target = $(e.target);
-      this.model.displayField($target.data('field'), $target.prop('checked'));
+      var fieldName = $target.data('field');
+      var previousValue = this.model.columns[fieldName];
+      this.model.displayField(fieldName, !previousValue);
     });
 
     $(this.element).delegate('[data-action="match"]', 'input', e => {
@@ -33,49 +33,28 @@ jQuery.widget('o2.filters', {
     const model = this.model;
     const columns = model.columns;
     const filters = model.filters;
-    var str = '';
 
-    str = `
+    var str = `
     <table>
       <tr>
         <td></td>
-        <td>Severity</td>
-        <td>Level</td>
-        <td>Timestamp</td>
-        <td>Hostname</td>
-        <td>Rolename</td>
-        <td>PID</td>
-        <td>Username</td>
-        <td>System</td>
-        <td>Facility</td>
-        <td>Detector</td>
-        <td>Partition</td>
-        <td>Run</td>
-        <td>ErrCode</td>
-        <td>ErrLine</td>
-        <td>ErrSource</td>
-        <td>Message</td>
+        <td><button class="display-button ${columns.severity ? 'display-button-active':''}" data-action="display" data-field="severity">Severity</button></td>
+        <td><button class="display-button ${columns.level ? 'display-button-active':''}" data-action="display" data-field="level">Level</button></td>
+        <td><button class="display-button ${columns.timestamp ? 'display-button-active':''}" data-action="display" data-field="timestamp">Timestamp</button></td>
+        <td><button class="display-button ${columns.hostname ? 'display-button-active':''}" data-action="display" data-field="hostname">Hostname</button></td>
+        <td><button class="display-button ${columns.rolename ? 'display-button-active':''}" data-action="display" data-field="rolename">Rolename</button></td>
+        <td><button class="display-button ${columns.pid ? 'display-button-active':''}" data-action="display" data-field="pid">PID</button></td>
+        <td><button class="display-button ${columns.username ? 'display-button-active':''}" data-action="display" data-field="username">Username</button></td>
+        <td><button class="display-button ${columns.system ? 'display-button-active':''}" data-action="display" data-field="system">System</button></td>
+        <td><button class="display-button ${columns.facility ? 'display-button-active':''}" data-action="display" data-field="facility">Facility</button></td>
+        <td><button class="display-button ${columns.detector ? 'display-button-active':''}" data-action="display" data-field="detector">Detector</button></td>
+        <td><button class="display-button ${columns.partition ? 'display-button-active':''}" data-action="display" data-field="partition">Partition</button></td>
+        <td><button class="display-button ${columns.run ? 'display-button-active':''}" data-action="display" data-field="run">Run</button></td>
+        <td><button class="display-button ${columns.errcode ? 'display-button-active':''}" data-action="display" data-field="errcode">ErrCode</button></td>
+        <td><button class="display-button ${columns.errline ? 'display-button-active':''}" data-action="display" data-field="errline">ErrLine</button></td>
+        <td><button class="display-button ${columns.errsource ? 'display-button-active':''}" data-action="display" data-field="errsource">ErrSource</button></td>
+        <td><button class="display-button ${columns.message ? 'display-button-active':''}" data-action="display" data-field="message">Message</button></td>
       </tr>
-      <tr>
-        <td>Display</td>
-        <td><input type="checkbox" data-action="display" data-field="severity" ${columns.severity ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="level" ${columns.level ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="timestamp" ${columns.timestamp ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="hostname" ${columns.hostname ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="rolename" ${columns.rolename ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="pid" ${columns.pid ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="username" ${columns.username ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="system" ${columns.system ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="facility" ${columns.facility ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="detector" ${columns.detector ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="partition" ${columns.partition ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="run" ${columns.run ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="errcode" ${columns.errcode ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="errline" ${columns.errline ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="errsource" ${columns.errsource ? 'checked' : ''}/></td>
-        <td><input type="checkbox" data-action="display" data-field="message" ${columns.message ? 'checked' : ''}/></td>
-      </tr>
-      <tr>
       <tr>
         <td>Match</td>
         <td><input type="text" data-action="match" data-field="severity" value="${filters.match.severity}"/></td>
@@ -118,6 +97,6 @@ jQuery.widget('o2.filters', {
     `;
 
     // virtual-dom should be used here to avoid losing text selection and scroll position
-    $(el).html(str);
+    morphdom(el[0], `<div id="filters">${str}</div>`);
   }
 });

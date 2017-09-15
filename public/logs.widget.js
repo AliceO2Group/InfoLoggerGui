@@ -37,7 +37,7 @@ jQuery.widget('o2.logs', {
           ${columns.errcode ? `<td class="text-overflow text-left" title="${htmlEscape(row.errcode)}">${htmlEscape(row.errcode)}</td>` : ''}
           ${columns.errline ? `<td class="text-overflow text-left" title="${htmlEscape(row.errline)}">${htmlEscape(row.errline)}</td>` : ''}
           ${columns.errsource ? `<td class="text-overflow text-left" title="${htmlEscape(row.errsource)}">${htmlEscape(row.errsource)}</td>` : ''}
-          ${columns.message ? `<td text-overflow text-left" title="${htmlEscape(row.message)}">${htmlEscape(row.message)}</td>` : ''}
+          ${columns.message ? `<td class="text-overflow text-left" title="${htmlEscape(row.message)}">${htmlEscape(row.message)}</td>` : ''}
         </tr>
       `;
     });
