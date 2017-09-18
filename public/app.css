@@ -117,15 +117,21 @@ td { max-width: 0; /* allow ellipsis on tables */ }
   width: 50px;
 }
 
-.col-severityF {
-  background-color: rgba(255, 0, 0, 0.39);
+.severity-i, .severity-w, .severity-e, .severity-f {
   border-radius: 14px;
   vertical-align: middle !important;
 }
-.col-severityI {
-  background-color: rgba(0, 255, 0, 0.39);
-  border-radius: 14px;
-  vertical-align: middle !important;
+.severity-i {
+  background-color: rgba(0, 231, 255, 0.39);
+}
+.severity-w {
+  background-color: rgba(255, 153, 0, 0.39);
+}
+.severity-e {
+  background-color: rgba(255, 0, 0, 0.39);
+}
+.severity-f {
+  background-color: rgba(255, 0, 0, 0.39);
 }
 
 .table-bordered td, .table-bordered th {

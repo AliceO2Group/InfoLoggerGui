@@ -63,7 +63,25 @@ jQuery.widget('o2.logs', {
           </colgroup>
           <tbody>
             ${model.logs.map((row) => {
-              const classSeverity = row.severity === 'I' ? 'col-severityI' : 'col-severityF';
+              let classSeverity;
+              switch(row.severity) {
+                case 'I':
+                  classSeverity = 'severity-i';
+                  break;
+                case 'W':
+                  classSeverity = 'severity-w';
+                  break;
+                case 'E':
+                  classSeverity = 'severity-e';
+                  break;
+                case 'F':
+                  classSeverity = 'severity-f';
+                  break;
+
+                default:
+                  classSeverity = '';
+                  break;
+              }
 
               return `
                 <tr>
