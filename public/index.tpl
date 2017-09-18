@@ -18,7 +18,7 @@
 
 
 <script>
-var appConfig = {
+const appConfig = {
   token: "{{token}}",
   hostname: "{{hostname}}",
   port: "{{port}}",

@@ -1,7 +1,5 @@
 jQuery.widget('o2.commands', {
   _create: function() {
-    console.log('commands widget created');
-
     if (!this.options.model) {
       throw new Error('commands widget needs a model');
     }
@@ -14,7 +12,7 @@ jQuery.widget('o2.commands', {
   render: function() {
     const el = this.element;
     const model = this.model;
-    var str = '';
+    let str = '';
 
     str = '<button onclick="location.href=\'/\'" class="btn">Refresh page</button>';
 

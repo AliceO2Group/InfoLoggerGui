@@ -1,5 +1,13 @@
-// Set mode and get logs
+/* globals Observable,appConfig */
+
+/**
+ * App model containing all data, methods, ajax calls of this application
+ * It runs on its own and views can 'observe' for changes to redraw.
+ */
 class ModelApp extends Observable {
+  /**
+   * Constructor, declares default properties and init Observable super class
+   */
   constructor() {
     super();
 
@@ -21,7 +29,7 @@ class ModelApp extends Observable {
       errcode: false,
       errline: false,
       errsource: false,
-      message: true,
+      message: true
     };
 
     this.filters = {
@@ -41,7 +49,7 @@ class ModelApp extends Observable {
         errcode: '',
         errline: '',
         errsource: '',
-        message: '',
+        message: ''
       },
       exclude: {
         severity: '',
@@ -59,7 +67,7 @@ class ModelApp extends Observable {
         errcode: '',
         errline: '',
         errsource: '',
-        message: '',
+        message: ''
       }
     };
 
@@ -68,6 +76,13 @@ class ModelApp extends Observable {
     });
   }
 
+  /**
+   * Query server for logs stored in DB
+   * @param {string} from - date limit
+   * @param {string} to - date limit
+   * @param {int} limit - how many rows to get
+   * @return {xhr} jquery ajax instance
+   */
   query(from, to, limit) {
     // first, stop real-time if set
     if (this.liveStarted) {
@@ -79,15 +94,19 @@ class ModelApp extends Observable {
     return $.ajax({
       url: '/api/query?token=' + appConfig.token,
       method: 'POST',
-      data: JSON.stringify({filters: this.filters}),
+      data: JSON.stringify({filters: this.filters, from, to, limit}),
       contentType: 'application/json',
-      success: rows => {
+      success: (rows) => {
         this.logs = rows;
         this.notify();
       }
     });
   }
 
+  /**
+   * Ask server to send all new logs via websocket
+   * @return {xhr} jquery ajax instance
+   */
   liveStart() {
     // first, empty all logs, then listen for new ones
     this.logs = [];
@@ -98,36 +117,58 @@ class ModelApp extends Observable {
       method: 'POST',
       data: JSON.stringify({filters: this.filters}),
       contentType: 'application/json',
-      success: rows => {
+      success: () => {
         this.liveStarted = true;
         this.notify();
       }
     });
   }
 
-  onLiveMessage(message) {
-    console.log('message:', message);
-    this.logs.push(message);
+  /**
+   * Inserts log into list and notify observers
+   * @param {string} log - log object to be inserted
+   */
+  onLiveMessage(log) {
+    this.logs.push(log);
     this.notify();
   }
 
+  /**
+   * Tell server to stop sending new logs into websocket
+   * @return {xhr} jquery ajax instance
+   */
   liveStop() {
-    return $.post('/api/liveStop?token=' + appConfig.token, rows => {
+    return $.post('/api/liveStop?token=' + appConfig.token, () => {
       this.liveStarted = false;
       this.notify();
     });
   }
 
+  /**
+   * Set if a field should be displayed or not
+   * @param {string} fieldName - field to be set
+   * @param {boolean} value - display or not
+   */
   displayField(fieldName, value) {
     this.columns[fieldName] = value;
     this.notify();
   }
 
+  /**
+   * Set search per field (operand: =)
+   * @param {string} fieldName - field to be set
+   * @param {string} value - criterias, separated by space
+   */
   matchField(fieldName, value) {
     this.filters.match[fieldName] = value;
     this.notify();
   }
 
+  /**
+   * Set search per field (operand: !=)
+   * @param {string} fieldName - field to be set
+   * @param {string} value - criterias, separated by space
+   */
   excludeField(fieldName, value) {
     this.filters.exclude[fieldName] = value;
     this.notify();

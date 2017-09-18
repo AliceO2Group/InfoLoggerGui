@@ -1,7 +1,8 @@
+/* eslint max-len: 0 */
+/* templates are better read with full length */
+
 jQuery.widget('o2.filters', {
   _create: function() {
-    console.log('filters widget created');
-
     if (!this.options.model) {
       throw new Error('filters widget needs a model');
     }
@@ -10,20 +11,20 @@ jQuery.widget('o2.filters', {
     this.model.observe(this.render.bind(this)); // refresh when data change
     this.render();
 
-    $(this.element).delegate('[data-action="display"]', 'click', e => {
-      var $target = $(e.target);
-      var fieldName = $target.data('field');
-      var previousValue = this.model.columns[fieldName];
+    $(this.element).delegate('[data-action="display"]', 'click', (e) => {
+      const $target = $(e.target);
+      const fieldName = $target.data('field');
+      const previousValue = this.model.columns[fieldName];
       this.model.displayField(fieldName, !previousValue);
     });
 
-    $(this.element).delegate('[data-action="match"]', 'input', e => {
-      var $target = $(e.target);
+    $(this.element).delegate('[data-action="match"]', 'input', (e) => {
+      const $target = $(e.target);
       this.model.matchField($target.data('field'), $target.val());
     });
 
-    $(this.element).delegate('[data-action="exclude"]', 'input', e => {
-      var $target = $(e.target);
+    $(this.element).delegate('[data-action="exclude"]', 'input', (e) => {
+      const $target = $(e.target);
       this.model.excludeField($target.data('field'), $target.val());
     });
   },
@@ -34,7 +35,7 @@ jQuery.widget('o2.filters', {
     const columns = model.columns;
     const filters = model.filters;
 
-    var str = `
+    let str = `
     <table>
       <tr>
         <td></td>

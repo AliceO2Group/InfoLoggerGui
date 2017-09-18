@@ -1,7 +1,5 @@
 jQuery.widget('o2.statusBar', {
   _create: function() {
-    console.log('statusBar widget created');
-
     if (!this.options.model) {
       throw new Error('statusBar widget needs a model');
     }
@@ -14,7 +12,7 @@ jQuery.widget('o2.statusBar', {
   render: function() {
     const el = this.element;
     const model = this.model;
-    var str = '';
+    let str = '';
 
     str = `
         ${model.logs.length} messages

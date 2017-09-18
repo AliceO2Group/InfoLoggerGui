@@ -1,7 +1,10 @@
+/* eslint max-len: 0 */
+/* templates are better read with full length */
+/* eslint indent: 0 */
+/* templates are not well recognized by eslint, js into tpl is not well handled */
+
 jQuery.widget('o2.logs', {
   _create: function() {
-    console.log('logs widget created');
-
     if (!this.options.model) {
       throw new Error('logs widget needs a model');
     }
@@ -59,27 +62,27 @@ jQuery.widget('o2.logs', {
             ${columns.message ? `<col class="col-max">` : ''}
           </colgroup>
           <tbody>
-            ${model.logs.map(row => {
+            ${model.logs.map((row) => {
               const classSeverity = row.severity === 'I' ? 'col-severityI' : 'col-severityF';
 
               return `
                 <tr>
-                  ${columns.severity ? `<td class="text-overflow text-center ${classSeverity}">${htmlEscape(row.severity)}</td>` : ''}
-                  ${columns.level ? `<td class="text-overflow text-left" title="${htmlEscape(row.level)}">${htmlEscape(row.level)}</td>` : ''}
-                  ${columns.timestamp ? `<td class="text-overflow text-left" title="${htmlEscape(row.timestamp)}">${htmlEscape(row.timestamp)}</td>` : ''}
-                  ${columns.hostname ? `<td class="text-overflow text-left" title="${htmlEscape(row.hostname)}">${htmlEscape(row.hostname)}</td>` : ''}
-                  ${columns.rolename ? `<td class="text-overflow text-left" title="${htmlEscape(row.rolename)}">${htmlEscape(row.rolename)}</td>` : ''}
-                  ${columns.pid ? `<td class="text-overflow text-left" title="${htmlEscape(row.pid)}">${htmlEscape(row.pid)}</td>` : ''}
-                  ${columns.username ? `<td class="text-overflow text-left" title="${htmlEscape(row.username)}">${htmlEscape(row.username)}</td>` : ''}
-                  ${columns.system ? `<td class="text-overflow text-left" title="${htmlEscape(row.system)}">${htmlEscape(row.system)}</td>` : ''}
-                  ${columns.facility ? `<td class="text-overflow text-left" title="${htmlEscape(row.facility)}">${htmlEscape(row.facility)}</td>` : ''}
-                  ${columns.detector ? `<td class="text-overflow text-left" title="${htmlEscape(row.detector)}">${htmlEscape(row.detector)}</td>` : ''}
-                  ${columns.partition ? `<td class="text-overflow text-left" title="${htmlEscape(row.partition)}">${htmlEscape(row.partition)}</td>` : ''}
-                  ${columns.run ? `<td class="text-overflow text-left" title="${htmlEscape(row.run)}">${htmlEscape(row.run)}</td>` : ''}
-                  ${columns.errcode ? `<td class="text-overflow text-left" title="${htmlEscape(row.errcode)}">${htmlEscape(row.errcode)}</td>` : ''}
-                  ${columns.errline ? `<td class="text-overflow text-left" title="${htmlEscape(row.errline)}">${htmlEscape(row.errline)}</td>` : ''}
-                  ${columns.errsource ? `<td class="text-overflow text-left" title="${htmlEscape(row.errsource)}">${htmlEscape(row.errsource)}</td>` : ''}
-                  ${columns.message ? `<td class="text-overflow text-left" title="${htmlEscape(row.message)}">${htmlEscape(row.message)}</td>` : ''}
+                  ${columns.severity ? `<td class="text-overflow text-center ${classSeverity}">${$.escapeHTML(row.severity)}</td>` : ''}
+                  ${columns.level ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.level)}">${$.escapeHTML(row.level)}</td>` : ''}
+                  ${columns.timestamp ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.timestamp)}">${$.escapeHTML(row.timestamp)}</td>` : ''}
+                  ${columns.hostname ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.hostname)}">${$.escapeHTML(row.hostname)}</td>` : ''}
+                  ${columns.rolename ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.rolename)}">${$.escapeHTML(row.rolename)}</td>` : ''}
+                  ${columns.pid ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.pid)}">${$.escapeHTML(row.pid)}</td>` : ''}
+                  ${columns.username ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.username)}">${$.escapeHTML(row.username)}</td>` : ''}
+                  ${columns.system ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.system)}">${$.escapeHTML(row.system)}</td>` : ''}
+                  ${columns.facility ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.facility)}">${$.escapeHTML(row.facility)}</td>` : ''}
+                  ${columns.detector ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.detector)}">${$.escapeHTML(row.detector)}</td>` : ''}
+                  ${columns.partition ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.partition)}">${$.escapeHTML(row.partition)}</td>` : ''}
+                  ${columns.run ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.run)}">${$.escapeHTML(row.run)}</td>` : ''}
+                  ${columns.errcode ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.errcode)}">${$.escapeHTML(row.errcode)}</td>` : ''}
+                  ${columns.errline ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.errline)}">${$.escapeHTML(row.errline)}</td>` : ''}
+                  ${columns.errsource ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.errsource)}">${$.escapeHTML(row.errsource)}</td>` : ''}
+                  ${columns.message ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.message)}">${$.escapeHTML(row.message)}</td>` : ''}
                 </tr>
               `;
             }).join('')}

@@ -1,8 +1,12 @@
-// Patch a DOM with an other DOM
-// like innerHTML but keep internal states of elements
-// Put in public folder cause of no way to take from node_modules at the time
+/* eslint-disable */
 
-// https://github.com/patrick-steele-idem/morphdom
+/**
+ * Patch a DOM with an other DOM
+ * like innerHTML but keep internal states of elements
+ * Put in public folder cause of no way to take from node_modules at the time
+ * Source: https://github.com/patrick-steele-idem/morphdom
+ * morphdom(fromNode, toNode)
+ */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
