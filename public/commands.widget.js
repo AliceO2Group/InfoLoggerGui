@@ -16,15 +16,15 @@ jQuery.widget('o2.commands', {
     const model = this.model;
     var str = '';
 
-    str = '<a href="/" class="ui-button ui-widget ui-corner-all">Refresh page</a>';
+    str = '<button onclick="location.href=\'/\'" class="btn">Refresh page</button>';
 
     if (model.liveStarted) {
-      str += '<button class="ui-button ui-widget ui-corner-all" onclick="app.liveStop()">Live stop</button>';
+      str += '<button class="btn" onclick="app.liveStop()">Live stop</button>';
     } else {
-      str += '<button class="ui-button ui-widget ui-corner-all" onclick="app.liveStart()">Live start</button>';
+      str += '<button class="btn" onclick="app.liveStart()">Live start</button>';
     }
 
-    str += '<button class="ui-button ui-widget ui-corner-all" onclick="app.query()">Query last 50 msg</button>';
+    str += '<button class="btn" onclick="app.query()">Query last 50 msg</button>';
 
     // virtual-dom should be used here to avoid losing text selection and scroll position
     $(el).html(str);

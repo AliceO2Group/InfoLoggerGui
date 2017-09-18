@@ -40,7 +40,7 @@ td { max-width: 0; /* allow ellipsis on tables */ }
 /* filters */
 
 #filters {
-  width: calc(100% - 250px);
+  width: 100%;
 }
 
 #filters input {
@@ -66,17 +66,25 @@ td { max-width: 0; /* allow ellipsis on tables */ }
 /* Commands view */
 
 #commands {
+  height: 25px;
+  border-bottom: 1px solid rgb(202, 202, 202);
+  background-color: #f3f3f3;
   position: absolute;
-  width: 250px;
-  background-color: rgba(0, 0, 0, 0.15);
-  height: 100%;
-  right: 0;
-  top: 0;
   bottom: 0;
+  width: 100%;
 }
 
-#commands .ui-button {
-  width: 100%;
+.btn {
+  background-color: transparent;
+  border: 0;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  user-select: none;
+  border-radius: 5px;
+}
+.btn:hover {
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 /* Logs view */
@@ -128,8 +136,6 @@ td { max-width: 0; /* allow ellipsis on tables */ }
 .table-bordered td:first-child, .table-bordered th:first-child {
   border-left: 0;
 }
-
-
 
 .table-hover tr:hover {
   background-color: rgba(0,0,0,.075);
