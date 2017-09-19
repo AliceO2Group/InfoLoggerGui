@@ -1,0 +1,159 @@
+/* Main layout
+ * Split screen in half and behave like a real app (no scroll)
+ */
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.panel-command {
+  height: 100px;
+  background-color: #567cbd;
+  position: relative;
+  color: white;
+}
+
+.panel-logs {
+  background-color: #fafafa;
+  position: relative;
+  /* vh = viewport height */
+  /* 1.2rem and 1px is the statusBar in the footer */
+  height: calc(100vh - 100px - 1.2rem - 1px);
+}
+
+/* General style */
+
+body, input, textarea {
+  /* Try to get the native font of the system (Mac, Windows, Android, ...) */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,sans-serif;
+}
+* { box-sizing: border-box; }
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+table { width: 100%; border-collapse: collapse; }
+td { max-width: 0; /* allow ellipsis on tables */ }
+.text-overflow { white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+
+/* filters */
+
+#filters {
+  width: 100%;
+}
+
+#filters input {
+  width: 100%;
+}
+
+.display-button {
+  width: 100%;
+  background-color: transparent;
+  border-radius: 5px;
+  border: 0;
+}
+
+.display-button:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.display-button-active {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+/* Commands view */
+
+#commands {
+  height: 25px;
+  border-bottom: 1px solid rgb(202, 202, 202);
+  background-color: #f3f3f3;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.btn {
+  background-color: transparent;
+  border: 0;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  user-select: none;
+  border-radius: 5px;
+}
+.btn:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Logs view */
+
+#logs {
+  height: 100%;
+}
+
+.table-logs-header {
+  background-color: white;
+  border-bottom: 1px solid #aaa;
+  height: 24px;
+  line-height: 22px;
+}
+
+.container-table-logs {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  top: 25px; /* table header + 1px border */
+  bottom: 0;
+  background-color: white;
+}
+
+.col-100px {
+  width: 100px;
+}
+.col-50px {
+  width: 50px;
+}
+
+.severity-i, .severity-w, .severity-e, .severity-f {
+  border-radius: 14px;
+  vertical-align: middle !important;
+}
+.severity-i {
+  background-color: rgba(0, 231, 255, 0.39);
+}
+.severity-w {
+  background-color: rgba(255, 153, 0, 0.39);
+}
+.severity-e {
+  background-color: rgba(255, 0, 0, 0.39);
+}
+.severity-f {
+  background-color: rgba(255, 0, 0, 0.39);
+}
+
+.table-bordered td, .table-bordered th {
+  padding: 1px 4px;
+  vertical-align: top;
+  border-left: 1px solid #aaa;
+}
+.table-bordered td:first-child, .table-bordered th:first-child {
+  border-left: 0;
+}
+
+.table-hover tr:hover {
+  background-color: rgba(0,0,0,.075);
+}
+
+/* Status bar */
+
+#statusBar {
+  height: 1.2rem;
+  background-color: #e9ecef;
+  font-size: 80%;
+  line-height: 1.2rem;
+  border-top: 1px solid black;
+  padding: 0 1rem;
+}

@@ -1,0 +1,7 @@
+// Production only, don't keep in repo
+cert
+node_modules
+config.js
+
+// Mac files
+.DS_Store
