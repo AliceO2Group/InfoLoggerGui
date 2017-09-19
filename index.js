@@ -20,7 +20,7 @@ log.info('HTTPS full link: \t%s',
 
 // Start servers
 const http = new HttpServer(config.http, config.jwt, config.oAuth);
-const websocketServer = new WebSocket(http.server, config.jwt);
+const websocketServer = new WebSocket(http, config.jwt);
 
 // Create data instances
 const sql = new SQLDataSource(config.mysql);

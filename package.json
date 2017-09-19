@@ -19,7 +19,7 @@
   "author": "Vladimir Kosmala",
   "license": "ISC",
   "dependencies": {
-    "@aliceo2/aliceo2-gui": "^1.0.13",
+    "@aliceo2/aliceo2-gui": "^1.0.17",
     "mariasql": "^0.2.6"
   },
   "repository": {
@@ -30,12 +30,12 @@
     "chai": "^4.0.2",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^3.0.0",
-    "eslint": "^4.5.0",
+    "eslint": "^4.7.1",
     "eslint-config-google": "^0.9.1",
     "jsdoc-to-markdown": "^3.0.0",
-    "mocha": "^3.2.0",
-    "nodemon": "^1.12.0",
-    "nyc": "^11.1.0",
+    "mocha": "^3.5.3",
+    "nodemon": "^1.12.1",
+    "nyc": "^11.2.1",
     "phantom": "^4.0.5",
     "qunit": "^1.0.0",
     "qunit-phantomjs-runner": "^2.3.0"
