@@ -11,13 +11,42 @@ jQuery.widget('o2.logs', {
 
     this.model = this.options.model;
     this.model.observe(this.render.bind(this)); // refresh when data change
+    this.el = this.element[0]; // get DOM element from widget
     this.render();
+
+    this.rowHeight = 20; // px
+    this.stateScrollTop = 0;
+
+    // .container-table-logs will stay the same DOM element thanks to DOM diff algo
+    // we do this after render so it exists
+    const logs = this.el.querySelector('.container-table-logs')
+    logs.addEventListener('scroll', (e) => {
+      this.stateScrollTop = logs.scrollTop;
+      this.offsetHeight = logs.offsetHeight;
+      // this.render();
+      requestAnimationFrame(this.render.bind(this));
+    })
+
+    this.stateScrollTop = logs.scrollTop;
+    this.offsetHeight = logs.offsetHeight;
+  },
+
+  _destroy: function() {
+
   },
 
   render: function() {
     const el = this.element;
     const model = this.model;
     const columns = model.columns;
+
+    const nbRows = model.logs.length;
+    const start = this.stateScrollTop / this.rowHeight | 0;
+    const end = start + (this.offsetHeight / this.rowHeight | 0) + 2;
+    const slice = model.logs.slice(start, end);
+    const logsTotalHeight = nbRows * this.rowHeight;
+    const tableHeight = slice.length * this.rowHeight;
+    const paddingBottom = logsTotalHeight - tableHeight - this.stateScrollTop;
 
     const tableStr = `<div>
       <table class="table-logs-header table-bordered">
@@ -42,7 +71,7 @@ jQuery.widget('o2.logs', {
       </table>
 
       <div class="container-table-logs">
-        <table class="table-hover table-bordered">
+        <table class="table-hover table-bordered" style="margin-top:${this.stateScrollTop}px;margin-bottom:${paddingBottom}px;">
           <colgroup>
             ${columns.severity ? `<col class="col-100px">` : ''}
             ${columns.level ? `<col class="col-50px">` : ''}
@@ -62,7 +91,7 @@ jQuery.widget('o2.logs', {
             ${columns.message ? `<col class="col-max">` : ''}
           </colgroup>
           <tbody>
-            ${model.logs.map((row) => {
+            ${slice.map((row) => {
               let classSeverity;
               switch(row.severity) {
                 case 'I':
@@ -108,6 +137,6 @@ jQuery.widget('o2.logs', {
         </table>
       </div>
     </div>`;
-    morphdom(el[0], tableStr);
+    morphdom(this.el, tableStr);
   }
 });
