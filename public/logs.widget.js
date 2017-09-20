@@ -14,21 +14,20 @@ jQuery.widget('o2.logs', {
     this.el = this.element[0]; // get DOM element from widget
     this.render();
 
-    this.rowHeight = 20; // px
-    this.stateScrollTop = 0;
+    this.rowHeight = 20; // px, to change if CSS change
+    this.logsScrollTop = 0;
 
+    // we need this element to watch its scroll position and render only the <td> inside the screen
+    // so we are not rendering the <td> the user can't see
     // .container-table-logs will stay the same DOM element thanks to DOM diff algo
     // we do this after render so it exists
-    const logs = this.el.querySelector('.container-table-logs')
-    logs.addEventListener('scroll', (e) => {
-      this.stateScrollTop = logs.scrollTop;
-      this.offsetHeight = logs.offsetHeight;
-      // this.render();
+    this.logs = this.el.querySelector('.container-table-logs')
+    this.logs.addEventListener('scroll', (e) => {
       requestAnimationFrame(this.render.bind(this));
     })
-
-    this.stateScrollTop = logs.scrollTop;
-    this.offsetHeight = logs.offsetHeight;
+    window.addEventListener('resize', (e) => {
+      requestAnimationFrame(this.render.bind(this));
+    })
   },
 
   _destroy: function() {
@@ -36,42 +35,48 @@ jQuery.widget('o2.logs', {
   },
 
   render: function() {
-    const el = this.element;
-    const model = this.model;
-    const columns = model.columns;
+    const logs = this.model.logs;
+    const columns = this.model.columns;
 
-    const nbRows = model.logs.length;
-    const start = this.stateScrollTop / this.rowHeight | 0;
-    const end = start + (this.offsetHeight / this.rowHeight | 0) + 2;
-    const slice = model.logs.slice(start, end);
-    const logsTotalHeight = nbRows * this.rowHeight;
-    const tableHeight = slice.length * this.rowHeight;
-    const paddingBottom = logsTotalHeight - tableHeight - this.stateScrollTop;
+    this.logsScrollTop = this.logs ? this.logs.scrollTop : 0;
+    this.logsOffsetHeight = this.logs ? this.logs.offsetHeight : 0;
+
+    const nbRows = logs.length;
+    const start = Math.round(this.logsScrollTop / this.rowHeight);
+    const end = start + Math.round(this.logsOffsetHeight / this.rowHeight);
+    const slice = logs.slice(start, end);
+    const allLogsHeight = nbRows * this.rowHeight;
+    const sliceLogsHeight = slice.length * this.rowHeight;
+    const paddingBottom = Math.max(allLogsHeight - sliceLogsHeight - this.logsScrollTop, 0);
+
+    // handle max scroll possible: total height - table height
+    // avoid cutting in half the last row or instable rendering (slice unstable)
+    const marginTop = Math.min(this.logsScrollTop, allLogsHeight - sliceLogsHeight);
 
     const tableStr = `<div>
       <table class="table-logs-header table-bordered">
         <tr>
-          ${columns.severity ? `<th class="text-center col-100px">Severity</th>` : ''}
-          ${columns.level ? `<th class="text-left col-50px">Level</th>` : ''}
-          ${columns.timestamp ? `<th class="text-left col-100px">Timestamp</th>` : ''}
-          ${columns.hostname ? `<th class="text-left col-100px">Hostname</th>` : ''}
-          ${columns.rolename ? `<th class="text-left col-100px">Rolename</th>` : ''}
-          ${columns.pid ? `<th class="text-left col-50px">Pid</th>` : ''}
-          ${columns.username ? `<th class="text-left col-100px">Username</th>` : ''}
-          ${columns.system ? `<th class="text-left col-50px">System</th>` : ''}
-          ${columns.facility ? `<th class="text-left col-100px">Facility</th>` : ''}
-          ${columns.detector ? `<th class="text-left col-50px">Detector</th>` : ''}
-          ${columns.partition ? `<th class="text-left col-100px">Partition</th>` : ''}
-          ${columns.run ? `<th class="text-left col-50px">Run</th>` : ''}
-          ${columns.errcode ? `<th class="text-left col-50px">errCode</th>` : ''}
-          ${columns.errline ? `<th class="text-left col-50px">errLine</th>` : ''}
-          ${columns.errsource ? `<th class="text-left col-100px">errSource</th>` : ''}
-          ${columns.message ? `<th class="text-left col-max">Message</th>` : ''}
+          ${columns.severity ? `<th class="cell-bordered text-center col-100px">Severity</th>` : ''}
+          ${columns.level ? `<th class="cell-bordered text-left col-50px">Level</th>` : ''}
+          ${columns.timestamp ? `<th class="cell-bordered text-left col-100px">Timestamp</th>` : ''}
+          ${columns.hostname ? `<th class="cell-bordered text-left col-100px">Hostname</th>` : ''}
+          ${columns.rolename ? `<th class="cell-bordered text-left col-100px">Rolename</th>` : ''}
+          ${columns.pid ? `<th class="cell-bordered text-left col-50px">Pid</th>` : ''}
+          ${columns.username ? `<th class="cell-bordered text-left col-100px">Username</th>` : ''}
+          ${columns.system ? `<th class="cell-bordered text-left col-50px">System</th>` : ''}
+          ${columns.facility ? `<th class="cell-bordered text-left col-100px">Facility</th>` : ''}
+          ${columns.detector ? `<th class="cell-bordered text-left col-50px">Detector</th>` : ''}
+          ${columns.partition ? `<th class="cell-bordered text-left col-100px">Partition</th>` : ''}
+          ${columns.run ? `<th class="cell-bordered text-left col-50px">Run</th>` : ''}
+          ${columns.errcode ? `<th class="cell-bordered text-left col-50px">errCode</th>` : ''}
+          ${columns.errline ? `<th class="cell-bordered text-left col-50px">errLine</th>` : ''}
+          ${columns.errsource ? `<th class="cell-bordered text-left col-100px">errSource</th>` : ''}
+          ${columns.message ? `<th class="cell-bordered text-left col-max">Message</th>` : ''}
         </tr>
       </table>
 
       <div class="container-table-logs">
-        <table class="table-hover table-bordered" style="margin-top:${this.stateScrollTop}px;margin-bottom:${paddingBottom}px;">
+        <table class="table-hover table-bordered" data-start="${start}" data-end="${end}" style="margin-top:${marginTop}px;margin-bottom:${paddingBottom}px;">
           <colgroup>
             ${columns.severity ? `<col class="col-100px">` : ''}
             ${columns.level ? `<col class="col-50px">` : ''}
@@ -113,23 +118,23 @@ jQuery.widget('o2.logs', {
               }
 
               return `
-                <tr>
-                  ${columns.severity ? `<td class="text-overflow text-center ${classSeverity}">${$.escapeHTML(row.severity)}</td>` : ''}
-                  ${columns.level ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.level)}">${$.escapeHTML(row.level)}</td>` : ''}
-                  ${columns.timestamp ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.timestamp)}">${$.escapeHTML(row.timestamp)}</td>` : ''}
-                  ${columns.hostname ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.hostname)}">${$.escapeHTML(row.hostname)}</td>` : ''}
-                  ${columns.rolename ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.rolename)}">${$.escapeHTML(row.rolename)}</td>` : ''}
-                  ${columns.pid ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.pid)}">${$.escapeHTML(row.pid)}</td>` : ''}
-                  ${columns.username ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.username)}">${$.escapeHTML(row.username)}</td>` : ''}
-                  ${columns.system ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.system)}">${$.escapeHTML(row.system)}</td>` : ''}
-                  ${columns.facility ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.facility)}">${$.escapeHTML(row.facility)}</td>` : ''}
-                  ${columns.detector ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.detector)}">${$.escapeHTML(row.detector)}</td>` : ''}
-                  ${columns.partition ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.partition)}">${$.escapeHTML(row.partition)}</td>` : ''}
-                  ${columns.run ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.run)}">${$.escapeHTML(row.run)}</td>` : ''}
-                  ${columns.errcode ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.errcode)}">${$.escapeHTML(row.errcode)}</td>` : ''}
-                  ${columns.errline ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.errline)}">${$.escapeHTML(row.errline)}</td>` : ''}
-                  ${columns.errsource ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.errsource)}">${$.escapeHTML(row.errsource)}</td>` : ''}
-                  ${columns.message ? `<td class="text-overflow text-left" title="${$.escapeHTML(row.message)}">${$.escapeHTML(row.message)}</td>` : ''}
+                <tr class="row-hover">
+                  ${columns.severity ? `<td class="text-overflow text-center cell-bordered ${classSeverity}">${$.escapeHTML(row.severity)}</td>` : ''}
+                  ${columns.level ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.level)}</td>` : ''}
+                  ${columns.timestamp ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.timestamp)}</td>` : ''}
+                  ${columns.hostname ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.hostname)}</td>` : ''}
+                  ${columns.rolename ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.rolename)}</td>` : ''}
+                  ${columns.pid ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.pid)}</td>` : ''}
+                  ${columns.username ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.username)}</td>` : ''}
+                  ${columns.system ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.system)}</td>` : ''}
+                  ${columns.facility ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.facility)}</td>` : ''}
+                  ${columns.detector ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.detector)}</td>` : ''}
+                  ${columns.partition ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.partition)}</td>` : ''}
+                  ${columns.run ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.run)}</td>` : ''}
+                  ${columns.errcode ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.errcode)}</td>` : ''}
+                  ${columns.errline ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.errline)}</td>` : ''}
+                  ${columns.errsource ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.errsource)}</td>` : ''}
+                  ${columns.message ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.message)}</td>` : ''}
                 </tr>
               `;
             }).join('')}
