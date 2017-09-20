@@ -22,7 +22,7 @@ jQuery.widget('o2.commands', {
       str += '<button class="btn" onclick="app.liveStart()">Live start</button>';
     }
 
-    str += '<button class="btn" onclick="app.query()">Query last 50 msg</button>';
+    str += '<button class="btn" onclick="app.query()">Query last 1000 msg</button>';
 
     // virtual-dom should be used here to avoid losing text selection and scroll position
     $(el).html(str);
