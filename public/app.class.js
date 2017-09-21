@@ -13,6 +13,8 @@ class ModelApp extends Observable {
 
     this.logs = []; // to be shown
     this.liveStarted = false; // websocket gets new data
+    this.inspectorActivated = true; // right panel displaying current row selected
+    this.selectedRow = null;
     this.columns = { // display or not
       severity: true,
       level: false,
@@ -97,6 +99,9 @@ class ModelApp extends Observable {
       data: JSON.stringify({filters: this.filters, from, to, limit}),
       contentType: 'application/json',
       success: (rows) => {
+        // Logs don't have any unique id, so we generate one
+        rows.forEach((row) => row.virtualId = $.virtualId());
+
         this.logs = rows;
         this.notify();
       }
@@ -129,6 +134,9 @@ class ModelApp extends Observable {
    * @param {string} log - log object to be inserted
    */
   onLiveMessage(log) {
+    // Logs don't have any unique id, so we generate one
+    log.virtualId = $.virtualId();
+
     this.logs.push(log);
     this.notify();
   }
@@ -172,5 +180,58 @@ class ModelApp extends Observable {
   excludeField(fieldName, value) {
     this.filters.exclude[fieldName] = value;
     this.notify();
+  }
+
+  /**
+   * Getter/setter for the row selected in the table, we use virtualId as an id
+   * @param {object|string} row - the row to be selected, or its virtualId
+   * @return {object} the row selected or null
+   */
+  selected(row) {
+    if (arguments.length) {
+      if (typeof row === 'string') {
+        // if we set by the virtualId
+        row = this.logs.find((log) => log.virtualId === row)
+      }
+      this.selectedRow = row;
+      this.notify();
+    }
+
+    return this.selectedRow;
+  }
+
+  /**
+   * Move current cursor by `n` rows
+   * @param {Number} n - can be negative or positive
+   */
+  moveRow(n) {
+    if (!this.logs.length) {
+      return;
+    }
+
+    const currentSelected = this.selected();
+    if (!currentSelected) {
+      this.selected(this.logs[0]);
+      return;
+    }
+
+    const currentIndex = this.logs.indexOf(currentSelected);
+    const newIndex = Math.min(Math.max(currentIndex + n, 0), this.logs.length - 1); // [0 ; length-1]
+
+    this.selected(this.logs[newIndex].virtualId);
+  }
+
+  /**
+   * Getter/setter for the inspector
+   * @param {bool} activated - state of the inspector
+   * @return {bool} if the inspector is enabled or not
+   */
+  inspector(activated) {
+    if (arguments.length) {
+      this.inspectorActivated = activated;
+      this.notify();
+    }
+
+    return this.inspectorActivated;
   }
 }

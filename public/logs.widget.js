@@ -35,8 +35,9 @@ jQuery.widget('o2.logs', {
   },
 
   render: function() {
-    const logs = this.model.logs;
-    const columns = this.model.columns;
+    const model = this.model;
+    const logs = model.logs;
+    const columns = model.columns;
 
     this.logsScrollTop = this.logs ? this.logs.scrollTop : 0;
     this.logsOffsetHeight = this.logs ? this.logs.offsetHeight : 0;
@@ -53,7 +54,7 @@ jQuery.widget('o2.logs', {
     // avoid cutting in half the last row or instable rendering (slice unstable)
     const marginTop = Math.min(this.logsScrollTop, allLogsHeight - sliceLogsHeight);
 
-    const tableStr = `<div>
+    const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''}">
       <table class="table-logs-header table-bordered">
         <tr>
           ${columns.severity ? `<th class="cell-bordered text-center col-100px">Severity</th>` : ''}
@@ -76,7 +77,7 @@ jQuery.widget('o2.logs', {
       </table>
 
       <div class="container-table-logs">
-        <table class="table-hover table-bordered" data-start="${start}" data-end="${end}" style="margin-top:${marginTop}px;margin-bottom:${paddingBottom}px;">
+        <table class="table-hover table-bordered" style="margin-top:${marginTop}px;margin-bottom:${paddingBottom}px;">
           <colgroup>
             ${columns.severity ? `<col class="col-100px">` : ''}
             ${columns.level ? `<col class="col-50px">` : ''}
@@ -97,29 +98,40 @@ jQuery.widget('o2.logs', {
           </colgroup>
           <tbody>
             ${slice.map((row) => {
-              let classSeverity;
-              switch(row.severity) {
-                case 'I':
-                  classSeverity = 'severity-i';
-                  break;
-                case 'W':
-                  classSeverity = 'severity-w';
-                  break;
-                case 'E':
-                  classSeverity = 'severity-e';
-                  break;
-                case 'F':
-                  classSeverity = 'severity-f';
-                  break;
+              let classSeverity = '';
+              let textSeverity = '';
+              if (row) {
+                switch(row.severity) {
+                  case 'I':
+                    classSeverity = 'severity-i';
+                    textSeverity = 'INFO';
+                    break;
+                  case 'W':
+                    classSeverity = 'severity-w';
+                    textSeverity = 'WARN';
+                    break;
+                  case 'E':
+                    classSeverity = 'severity-e';
+                    textSeverity = 'ERROR';
+                    break;
+                  case 'F':
+                    classSeverity = 'severity-f';
+                    textSeverity = 'FAIL';
+                    break;
 
-                default:
-                  classSeverity = '';
-                  break;
+                  default:
+                    break;
+                }
+              }
+
+              let rowSelected = '';
+              if (row === model.selected()) {
+                rowSelected = 'row-selected';
               }
 
               return `
-                <tr class="row-hover">
-                  ${columns.severity ? `<td class="text-overflow text-center cell-bordered ${classSeverity}">${$.escapeHTML(row.severity)}</td>` : ''}
+                <tr class="row-hover ${rowSelected}" onclick="app.selected('${row.virtualId}')">
+                  ${columns.severity ? `<td class="text-overflow text-center cell-bordered ${classSeverity}">${textSeverity}</td>` : ''}
                   ${columns.level ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.level)}</td>` : ''}
                   ${columns.timestamp ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.timestamp)}</td>` : ''}
                   ${columns.hostname ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.hostname)}</td>` : ''}
