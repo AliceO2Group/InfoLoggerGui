@@ -55,7 +55,7 @@ jQuery.widget('o2.logs', {
     const marginTop = Math.min(this.logsScrollTop, allLogsHeight - sliceLogsHeight);
 
     const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''}">
-      <table class="table-logs-header table-bordered">
+      <table class="table-logs-header table-bordered default-cursor">
         <tr>
           ${columns.severity ? `<th class="cell-bordered text-center col-100px">Severity</th>` : ''}
           ${columns.level ? `<th class="cell-bordered text-left col-50px">Level</th>` : ''}
@@ -77,7 +77,7 @@ jQuery.widget('o2.logs', {
       </table>
 
       <div class="container-table-logs">
-        <table class="table-hover table-bordered" style="margin-top:${marginTop}px;margin-bottom:${paddingBottom}px;">
+        <table class="table-hover table-bordered default-cursor" style="margin-top:${marginTop}px;margin-bottom:${paddingBottom}px;">
           <colgroup>
             ${columns.severity ? `<col class="col-100px">` : ''}
             ${columns.level ? `<col class="col-50px">` : ''}
