@@ -57,22 +57,22 @@ jQuery.widget('o2.logs', {
     const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''}">
       <table class="table-logs-header table-bordered default-cursor">
         <tr>
-          ${columns.severity ? `<th class="cell-bordered text-center col-100px">Severity</th>` : ''}
-          ${columns.level ? `<th class="cell-bordered text-left col-50px">Level</th>` : ''}
-          ${columns.timestamp ? `<th class="cell-bordered text-left col-100px">Timestamp</th>` : ''}
-          ${columns.hostname ? `<th class="cell-bordered text-left col-100px">Hostname</th>` : ''}
-          ${columns.rolename ? `<th class="cell-bordered text-left col-100px">Rolename</th>` : ''}
-          ${columns.pid ? `<th class="cell-bordered text-left col-50px">Pid</th>` : ''}
-          ${columns.username ? `<th class="cell-bordered text-left col-100px">Username</th>` : ''}
-          ${columns.system ? `<th class="cell-bordered text-left col-50px">System</th>` : ''}
-          ${columns.facility ? `<th class="cell-bordered text-left col-100px">Facility</th>` : ''}
-          ${columns.detector ? `<th class="cell-bordered text-left col-50px">Detector</th>` : ''}
-          ${columns.partition ? `<th class="cell-bordered text-left col-100px">Partition</th>` : ''}
-          ${columns.run ? `<th class="cell-bordered text-left col-50px">Run</th>` : ''}
-          ${columns.errcode ? `<th class="cell-bordered text-left col-50px">errCode</th>` : ''}
-          ${columns.errline ? `<th class="cell-bordered text-left col-50px">errLine</th>` : ''}
-          ${columns.errsource ? `<th class="cell-bordered text-left col-100px">errSource</th>` : ''}
-          ${columns.message ? `<th class="cell-bordered text-left col-max">Message</th>` : ''}
+          ${columns.severity ? `<th class="text-overflow cell-bordered text-center col-100px">Severity</th>` : ''}
+          ${columns.level ? `<th class="text-overflow cell-bordered text-left col-50px">Level</th>` : ''}
+          ${columns.timestamp ? `<th class="text-overflow cell-bordered text-left col-100px">Timestamp</th>` : ''}
+          ${columns.hostname ? `<th class="text-overflow cell-bordered text-left col-100px">Hostname</th>` : ''}
+          ${columns.rolename ? `<th class="text-overflow cell-bordered text-left col-100px">Rolename</th>` : ''}
+          ${columns.pid ? `<th class="text-overflow cell-bordered text-left col-50px">Pid</th>` : ''}
+          ${columns.username ? `<th class="text-overflow cell-bordered text-left col-100px">Username</th>` : ''}
+          ${columns.system ? `<th class="text-overflow cell-bordered text-left col-50px">System</th>` : ''}
+          ${columns.facility ? `<th class="text-overflow cell-bordered text-left col-100px">Facility</th>` : ''}
+          ${columns.detector ? `<th class="text-overflow cell-bordered text-left col-50px">Detector</th>` : ''}
+          ${columns.partition ? `<th class="text-overflow cell-bordered text-left col-100px">Partition</th>` : ''}
+          ${columns.run ? `<th class="text-overflow cell-bordered text-left col-50px">Run</th>` : ''}
+          ${columns.errcode ? `<th class="text-overflow cell-bordered text-left col-50px">errCode</th>` : ''}
+          ${columns.errline ? `<th class="text-overflow cell-bordered text-left col-50px">errLine</th>` : ''}
+          ${columns.errsource ? `<th class="text-overflow cell-bordered text-left col-100px">errSource</th>` : ''}
+          ${columns.message ? `<th class="text-overflow cell-bordered text-left col-max">Message</th>` : ''}
         </tr>
       </table>
 

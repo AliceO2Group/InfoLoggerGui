@@ -36,7 +36,7 @@ body, input, textarea {
 }
 * { box-sizing: border-box; }
 table { width: 100%; border-collapse: collapse; }
-td { max-width: 0; /* allow ellipsis on tables */ vertical-align: top; }
+td, th { max-width: 0; /* allow ellipsis on tables */ vertical-align: top; }
 
 .text-left { text-align: left; }
 .text-center { text-align: center; }
