@@ -172,7 +172,7 @@ td, th { max-width: 0; /* allow ellipsis on tables */ vertical-align: top; }
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: white;
+  background-color: #f6f6f6;
 }
 .inspector-content {
   border-bottom: 1px solid #e6e6e6;
