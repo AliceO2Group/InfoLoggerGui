@@ -24,7 +24,7 @@ jQuery.widget('o2.commands', {
   </div>
 
   <div class="pull-right command-bar">
-    <button class="btn ${model.inspector() ? 'active' : ''}" onclick="app.inspector(!app.inspector())">Inspector</button>
+    <button title="Shortcut: i" class="btn ${model.inspector() ? 'active' : ''}" onclick="app.inspector(!app.inspector())">Inspector</button>
   </div>
 </div>`;
 

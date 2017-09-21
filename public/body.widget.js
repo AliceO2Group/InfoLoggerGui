@@ -15,7 +15,7 @@ jQuery.widget('o2.body', {
     if (e.target.tagName.toLowerCase() === 'input') {
       return;
     }
-
+console.log('e.keyCode:', e.keyCode);
     // shortcuts
     switch (e.keyCode) {
       case 40: // bottom
@@ -26,7 +26,7 @@ jQuery.widget('o2.body', {
         this.model.moveRow(-1);
         e.preventDefault();
         break;
-      case 105: // i
+      case 73: // i
         this.model.inspector(!this.model.inspector());
         break;
     }
