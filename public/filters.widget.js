@@ -39,22 +39,22 @@ jQuery.widget('o2.filters', {
     <table>
       <tr>
         <td></td>
-        <td><button class="display-button ${columns.severity ? 'display-button-active':''}" data-action="display" data-field="severity">Severity</button></td>
-        <td><button class="display-button ${columns.level ? 'display-button-active':''}" data-action="display" data-field="level">Level</button></td>
-        <td><button class="display-button ${columns.timestamp ? 'display-button-active':''}" data-action="display" data-field="timestamp">Timestamp</button></td>
-        <td><button class="display-button ${columns.hostname ? 'display-button-active':''}" data-action="display" data-field="hostname">Hostname</button></td>
-        <td><button class="display-button ${columns.rolename ? 'display-button-active':''}" data-action="display" data-field="rolename">Rolename</button></td>
-        <td><button class="display-button ${columns.pid ? 'display-button-active':''}" data-action="display" data-field="pid">PID</button></td>
-        <td><button class="display-button ${columns.username ? 'display-button-active':''}" data-action="display" data-field="username">Username</button></td>
-        <td><button class="display-button ${columns.system ? 'display-button-active':''}" data-action="display" data-field="system">System</button></td>
-        <td><button class="display-button ${columns.facility ? 'display-button-active':''}" data-action="display" data-field="facility">Facility</button></td>
-        <td><button class="display-button ${columns.detector ? 'display-button-active':''}" data-action="display" data-field="detector">Detector</button></td>
-        <td><button class="display-button ${columns.partition ? 'display-button-active':''}" data-action="display" data-field="partition">Partition</button></td>
-        <td><button class="display-button ${columns.run ? 'display-button-active':''}" data-action="display" data-field="run">Run</button></td>
-        <td><button class="display-button ${columns.errcode ? 'display-button-active':''}" data-action="display" data-field="errcode">ErrCode</button></td>
-        <td><button class="display-button ${columns.errline ? 'display-button-active':''}" data-action="display" data-field="errline">ErrLine</button></td>
-        <td><button class="display-button ${columns.errsource ? 'display-button-active':''}" data-action="display" data-field="errsource">ErrSource</button></td>
-        <td><button class="display-button ${columns.message ? 'display-button-active':''}" data-action="display" data-field="message">Message</button></td>
+        <td><button class="btn btn-block ${columns.severity ? 'active':''}" data-action="display" data-field="severity">Severity</button></td>
+        <td><button class="btn btn-block ${columns.level ? 'active':''}" data-action="display" data-field="level">Level</button></td>
+        <td><button class="btn btn-block ${columns.timestamp ? 'active':''}" data-action="display" data-field="timestamp">Timestamp</button></td>
+        <td><button class="btn btn-block ${columns.hostname ? 'active':''}" data-action="display" data-field="hostname">Hostname</button></td>
+        <td><button class="btn btn-block ${columns.rolename ? 'active':''}" data-action="display" data-field="rolename">Rolename</button></td>
+        <td><button class="btn btn-block ${columns.pid ? 'active':''}" data-action="display" data-field="pid">PID</button></td>
+        <td><button class="btn btn-block ${columns.username ? 'active':''}" data-action="display" data-field="username">Username</button></td>
+        <td><button class="btn btn-block ${columns.system ? 'active':''}" data-action="display" data-field="system">System</button></td>
+        <td><button class="btn btn-block ${columns.facility ? 'active':''}" data-action="display" data-field="facility">Facility</button></td>
+        <td><button class="btn btn-block ${columns.detector ? 'active':''}" data-action="display" data-field="detector">Detector</button></td>
+        <td><button class="btn btn-block ${columns.partition ? 'active':''}" data-action="display" data-field="partition">Partition</button></td>
+        <td><button class="btn btn-block ${columns.run ? 'active':''}" data-action="display" data-field="run">Run</button></td>
+        <td><button class="btn btn-block ${columns.errcode ? 'active':''}" data-action="display" data-field="errcode">ErrCode</button></td>
+        <td><button class="btn btn-block ${columns.errline ? 'active':''}" data-action="display" data-field="errline">ErrLine</button></td>
+        <td><button class="btn btn-block ${columns.errsource ? 'active':''}" data-action="display" data-field="errsource">ErrSource</button></td>
+        <td><button class="btn btn-block ${columns.message ? 'active':''}" data-action="display" data-field="message">Message</button></td>
       </tr>
       <tr>
         <td>Match</td>

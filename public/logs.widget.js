@@ -35,15 +35,16 @@ jQuery.widget('o2.logs', {
   },
 
   render: function() {
-    const logs = this.model.logs;
-    const columns = this.model.columns;
+    const model = this.model;
+    const logs = model.logs;
+    const columns = model.columns;
 
     this.logsScrollTop = this.logs ? this.logs.scrollTop : 0;
     this.logsOffsetHeight = this.logs ? this.logs.offsetHeight : 0;
 
     const nbRows = logs.length;
     const start = Math.round(this.logsScrollTop / this.rowHeight);
-    const end = start + Math.round(this.logsOffsetHeight / this.rowHeight);
+    const end = start + Math.round(this.logsOffsetHeight / this.rowHeight) + 1; // the last one is cut in half
     const slice = logs.slice(start, end);
     const allLogsHeight = nbRows * this.rowHeight;
     const sliceLogsHeight = slice.length * this.rowHeight;
@@ -53,30 +54,30 @@ jQuery.widget('o2.logs', {
     // avoid cutting in half the last row or instable rendering (slice unstable)
     const marginTop = Math.min(this.logsScrollTop, allLogsHeight - sliceLogsHeight);
 
-    const tableStr = `<div>
-      <table class="table-logs-header table-bordered">
+    const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''}">
+      <table class="table-logs-header table-bordered default-cursor">
         <tr>
-          ${columns.severity ? `<th class="cell-bordered text-center col-100px">Severity</th>` : ''}
-          ${columns.level ? `<th class="cell-bordered text-left col-50px">Level</th>` : ''}
-          ${columns.timestamp ? `<th class="cell-bordered text-left col-100px">Timestamp</th>` : ''}
-          ${columns.hostname ? `<th class="cell-bordered text-left col-100px">Hostname</th>` : ''}
-          ${columns.rolename ? `<th class="cell-bordered text-left col-100px">Rolename</th>` : ''}
-          ${columns.pid ? `<th class="cell-bordered text-left col-50px">Pid</th>` : ''}
-          ${columns.username ? `<th class="cell-bordered text-left col-100px">Username</th>` : ''}
-          ${columns.system ? `<th class="cell-bordered text-left col-50px">System</th>` : ''}
-          ${columns.facility ? `<th class="cell-bordered text-left col-100px">Facility</th>` : ''}
-          ${columns.detector ? `<th class="cell-bordered text-left col-50px">Detector</th>` : ''}
-          ${columns.partition ? `<th class="cell-bordered text-left col-100px">Partition</th>` : ''}
-          ${columns.run ? `<th class="cell-bordered text-left col-50px">Run</th>` : ''}
-          ${columns.errcode ? `<th class="cell-bordered text-left col-50px">errCode</th>` : ''}
-          ${columns.errline ? `<th class="cell-bordered text-left col-50px">errLine</th>` : ''}
-          ${columns.errsource ? `<th class="cell-bordered text-left col-100px">errSource</th>` : ''}
-          ${columns.message ? `<th class="cell-bordered text-left col-max">Message</th>` : ''}
+          ${columns.severity ? `<th class="text-overflow cell-bordered text-center col-100px">Severity</th>` : ''}
+          ${columns.level ? `<th class="text-overflow cell-bordered text-left col-50px">Level</th>` : ''}
+          ${columns.timestamp ? `<th class="text-overflow cell-bordered text-left col-100px">Timestamp</th>` : ''}
+          ${columns.hostname ? `<th class="text-overflow cell-bordered text-left col-100px">Hostname</th>` : ''}
+          ${columns.rolename ? `<th class="text-overflow cell-bordered text-left col-100px">Rolename</th>` : ''}
+          ${columns.pid ? `<th class="text-overflow cell-bordered text-left col-50px">Pid</th>` : ''}
+          ${columns.username ? `<th class="text-overflow cell-bordered text-left col-100px">Username</th>` : ''}
+          ${columns.system ? `<th class="text-overflow cell-bordered text-left col-50px">System</th>` : ''}
+          ${columns.facility ? `<th class="text-overflow cell-bordered text-left col-100px">Facility</th>` : ''}
+          ${columns.detector ? `<th class="text-overflow cell-bordered text-left col-50px">Detector</th>` : ''}
+          ${columns.partition ? `<th class="text-overflow cell-bordered text-left col-100px">Partition</th>` : ''}
+          ${columns.run ? `<th class="text-overflow cell-bordered text-left col-50px">Run</th>` : ''}
+          ${columns.errcode ? `<th class="text-overflow cell-bordered text-left col-50px">errCode</th>` : ''}
+          ${columns.errline ? `<th class="text-overflow cell-bordered text-left col-50px">errLine</th>` : ''}
+          ${columns.errsource ? `<th class="text-overflow cell-bordered text-left col-100px">errSource</th>` : ''}
+          ${columns.message ? `<th class="text-overflow cell-bordered text-left col-max">Message</th>` : ''}
         </tr>
       </table>
 
       <div class="container-table-logs">
-        <table class="table-hover table-bordered" data-start="${start}" data-end="${end}" style="margin-top:${marginTop}px;margin-bottom:${paddingBottom}px;">
+        <table class="table-hover table-bordered default-cursor" style="margin-top:${marginTop}px;margin-bottom:${paddingBottom}px;">
           <colgroup>
             ${columns.severity ? `<col class="col-100px">` : ''}
             ${columns.level ? `<col class="col-50px">` : ''}
@@ -97,29 +98,40 @@ jQuery.widget('o2.logs', {
           </colgroup>
           <tbody>
             ${slice.map((row) => {
-              let classSeverity;
-              switch(row.severity) {
-                case 'I':
-                  classSeverity = 'severity-i';
-                  break;
-                case 'W':
-                  classSeverity = 'severity-w';
-                  break;
-                case 'E':
-                  classSeverity = 'severity-e';
-                  break;
-                case 'F':
-                  classSeverity = 'severity-f';
-                  break;
+              let classSeverity = '';
+              let textSeverity = '';
+              if (row) {
+                switch(row.severity) {
+                  case 'I':
+                    classSeverity = 'severity-i';
+                    textSeverity = 'INFO';
+                    break;
+                  case 'W':
+                    classSeverity = 'severity-w';
+                    textSeverity = 'WARN';
+                    break;
+                  case 'E':
+                    classSeverity = 'severity-e';
+                    textSeverity = 'ERROR';
+                    break;
+                  case 'F':
+                    classSeverity = 'severity-f';
+                    textSeverity = 'FAIL';
+                    break;
 
-                default:
-                  classSeverity = '';
-                  break;
+                  default:
+                    break;
+                }
+              }
+
+              let rowSelected = '';
+              if (row === model.selected()) {
+                rowSelected = 'row-selected';
               }
 
               return `
-                <tr class="row-hover">
-                  ${columns.severity ? `<td class="text-overflow text-center cell-bordered ${classSeverity}">${$.escapeHTML(row.severity)}</td>` : ''}
+                <tr class="row-hover ${rowSelected}" onclick="app.selected('${row.virtualId}')">
+                  ${columns.severity ? `<td class="text-overflow text-center cell-bordered ${classSeverity}">${textSeverity}</td>` : ''}
                   ${columns.level ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.level)}</td>` : ''}
                   ${columns.timestamp ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.timestamp)}</td>` : ''}
                   ${columns.hostname ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.hostname)}</td>` : ''}

@@ -9,6 +9,7 @@
 </div>
 
 <div class="panel-logs">
+  <div id="inspector"></div>
   <div id="logs"></div>
 </div>
 
@@ -34,10 +35,12 @@ const appConfig = {
 <!-- This project -->
 <script src="/observable.class.js"></script>
 <script src="/app.class.js"></script>
+<script src="/body.widget.js"></script>
 <script src="/logs.widget.js"></script>
 <script src="/commands.widget.js"></script>
 <script src="/filters.widget.js"></script>
 <script src="/statusBar.widget.js"></script>
+<script src="/inspector.widget.js"></script>
 <script src="/utils.js"></script>
 <script src="/morphdom.plugin.js"></script>
 
@@ -64,9 +67,11 @@ $(function() {
 
   const app = new ModelApp();
 
+  $('body').body({model: app});
   $('#logs').logs({model: app});
   $('#filters').filters({model: app});
   $('#commands').commands({model: app});
+  $('#inspector').inspector({model: app});
   $('#statusBar').statusBar({model: app});
 
   // Server should stop by itself the real-time when a client shutdown
