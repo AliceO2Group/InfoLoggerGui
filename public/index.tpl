@@ -56,7 +56,7 @@ $(function() {
   /// instance of websocket widget
   const ws = $.o2.websocket({
     // pass url of websocket server
-    url: `wss://${appConfig.hostname}:${appConfig.port}`,
+    url: `wss://${location.host}`,
     // token, cernid, name and username are provided by CERN SSO
     token: appConfig.token,
     id: appConfig.personid,
