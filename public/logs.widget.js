@@ -44,7 +44,7 @@ jQuery.widget('o2.logs', {
 
     const nbRows = logs.length;
     const start = Math.round(this.logsScrollTop / this.rowHeight);
-    const end = start + Math.round(this.logsOffsetHeight / this.rowHeight);
+    const end = start + Math.round(this.logsOffsetHeight / this.rowHeight) + 1; // the last one is cut in half
     const slice = logs.slice(start, end);
     const allLogsHeight = nbRows * this.rowHeight;
     const sliceLogsHeight = slice.length * this.rowHeight;
