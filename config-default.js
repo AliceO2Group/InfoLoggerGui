@@ -28,7 +28,7 @@ module.exports = {
     cert: './cert/cert.pem'
   },
   infoLoggerServer: {
-    host: 'aido2db.cern.ch',
+    host: 'localhost',
     port: 6102
   },
   mysql: { // all options: https://github.com/mscdex/node-mariasql#client-methods
