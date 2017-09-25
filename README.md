@@ -4,10 +4,16 @@ Web app for querying infoLogger database and streaming logs in real-time with fi
 
 ```
 $ git clone ...
-$ create ssl keys, configure config.js
+$ cd InfoLoggerGui
+$ mkdir cert
+$ openssl req -nodes -x509 -newkey rsa:4096 -keyout cert/key.pem -out cert/cert.pem -days 365
+$ mv config-default.js config.js
+$ vi config.js
 $ npm install
 $ npm start
 ```
+
+You need a MySQL and a InfoLoggerServer to connect to. InfoLoggerServer can be faked using `npm run ils`.
 
 Command  | Result
 ------------- | -------------
@@ -25,13 +31,6 @@ Before starting the InfoLoggerGui (which is a server/client view), you should ha
 All browsers, starting from IE 12 (Edge)
 
 # How to develop
-
-### Generating SSL key
-
-It generates two files without pass phrase.
-
-$ mkdir cert
-$ openssl req -nodes -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
 
 ### Working with remote MariaSQL server
 
