@@ -16,6 +16,7 @@ npm run dev | start app in dev mode with auto-restart on file change
 npm run test | will run eslint, mocha and qunit
 npm run doc | build the doc in docs/API.md
 npm run coverage | report coverage of tests
+npm run ils | start local InfoLoggerServer with fake real-time data for dev purpose
 
 Before starting the InfoLoggerGui (which is a server/client view), you should have a InfoLoggerServer and MySQL running (which store the logs) and configured in config.js, all this can be found here: https://github.com/AliceO2Group/InfoLogger/blob/master/doc/README.md
 
