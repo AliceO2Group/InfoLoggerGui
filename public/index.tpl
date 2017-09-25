@@ -24,6 +24,7 @@ const appConfig = {
   hostname: "{{hostname}}",
   port: "{{port}}",
   personid: "{{personid}}",
+  oauth: "{{oauth}}",
 };
 </script>
 
@@ -58,6 +59,7 @@ $(function() {
     // pass url of websocket server
     url: `wss://${location.host}`,
     // token, cernid, name and username are provided by CERN SSO
+    oauth: appConfig.oauth,
     token: appConfig.token,
     id: appConfig.personid,
   }, $('#ws') );
