@@ -6,19 +6,17 @@ jQuery.widget('o2.statusBar', {
 
     this.model = this.options.model;
     this.model.observe(this.render.bind(this)); // refresh when data change
+    this.el = this.element[0]; // get DOM element from widget
     this.render();
   },
 
   render: function() {
-    const el = this.element;
     const model = this.model;
-    let str = '';
 
-    str = `
-        ${model.logs.length} messages
-    `;
+    const template = `<div id="statusBar">
+      ${model.logs.length} messages ${model.queyTime === 0 ? '' : `(${(model.queyTime / 1000).toPrecision(2)} seconds)`}
+    </div>`;
 
-    // virtual-dom should be used here to avoid losing text selection and scroll position
-    $(el).html(str);
+    morphdom(this.el, template);
   }
 });

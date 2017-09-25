@@ -15,7 +15,7 @@ jQuery.widget('o2.body', {
     if (e.target.tagName.toLowerCase() === 'input') {
       return;
     }
-console.log('e.keyCode:', e.keyCode);
+console.log('e.keyCode:', e.keyCode, e);
     // shortcuts
     switch (e.keyCode) {
       case 40: // bottom
@@ -28,6 +28,18 @@ console.log('e.keyCode:', e.keyCode);
         break;
       case 73: // i
         this.model.inspector(!this.model.inspector());
+        break;
+      case 76: // l
+        this.model.live(!this.model.live());
+        break;
+      case 67: // c
+        this.model.clear();
+        break;
+      case 82: // r
+        location.href = '/';
+        break;
+      case 81: // q
+        this.model.query();
         break;
     }
   }

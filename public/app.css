@@ -50,6 +50,7 @@ td, th { max-width: 0; /* allow ellipsis on tables */ vertical-align: top; }
 .btn { background-color: transparent; border: 0; text-decoration: none; display: inline-block; font-size: 12px; user-select: none; border-radius: 5px;}
 .btn:hover {background-color: rgba(0, 0, 0, 0.1);}
 .btn.active {background-color: rgba(0, 0, 0, 0.4); color: white;}
+.btn.disabled { color: rgba(0, 0, 0, 0.2); }
 .btn-block { width: 100%; display: block;}
 .default-cursor { cursor: default; } /* application feeling */
 
@@ -75,6 +76,35 @@ td, th { max-width: 0; /* allow ellipsis on tables */ vertical-align: top; }
 }
 .command-bar {
   padding: 0 5px;
+  height: 100%;
+}
+
+.toolbar {
+  display: flex;
+}
+.toolbar-btn {
+  margin: 2px;
+}
+.toolbar-spacer {
+  background-color: #ccc;
+  width: 1px;
+  margin: 5px 4px;
+  height: 16px;
+}
+
+.toolbar-live-options {
+  transition: width 0.3s;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0.4);
+  line-height: 24px;
+}
+.toolbar-live-options.open {
+   width: 100%;
+}
+.toolbar-live-arrow {
+  padding: 0 6px;
 }
 
 /* Logs view */

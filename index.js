@@ -32,8 +32,9 @@ http.passToTemplate('port', config.http.portSecure);
 
 http.post('/query', function(req, res) {
   const filters = req.body.filters;
+  const limit = req.body.limit;
 
-  sql.queryFromFilters(filters, function(err, rows) {
+  sql.queryFromFilters(filters, limit, function(err, rows) {
     if (err) {
       res.status(500).send();
       throw err;

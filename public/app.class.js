@@ -15,6 +15,11 @@ class ModelApp extends Observable {
     this.liveStarted = false; // websocket gets new data
     this.inspectorActivated = true; // right panel displaying current row selected
     this.selectedRow = null;
+    this.autoScrollEnabled = true;
+    this.autoCleanEnabled = true;
+    this.maxLogs = 10000;
+    this.queyTime = 0;
+    this.querying = false; // loading data from a query
     this.columns = { // display or not
       severity: true,
       level: false,
@@ -87,46 +92,71 @@ class ModelApp extends Observable {
    */
   query(from, to, limit) {
     // first, stop real-time if set
-    if (this.liveStarted) {
-      this.liveStop();
+    if (this.live()) {
+      this.live(false);
     }
 
     // jquery does not know how to stringify a deep object, so we JSON.stringify
     // and we need to set content-type too (form-www-encoded by default)
+    const startTiming = new Date();
+    this.querying = true;
+    this.notify();
+
     return $.ajax({
       url: '/api/query?token=' + appConfig.token,
       method: 'POST',
-      data: JSON.stringify({filters: this.filters, from, to, limit}),
+      data: JSON.stringify({filters: this.filters, from, to, limit: this.maxLogs}),
       contentType: 'application/json',
       success: (rows) => {
         // Logs don't have any unique id, so we generate one
         rows.forEach((row) => row.virtualId = $.virtualId());
 
+        this.queyTime = new Date() - startTiming;
         this.logs = rows;
+      },
+      complete: () => {
+        this.querying = false;
         this.notify();
       }
     });
   }
 
   /**
-   * Ask server to send all new logs via websocket
-   * @return {xhr} jquery ajax instance
+   * Getter/setter of live mode state, if argument is provided it tells the server to start/stop
+   * sending logs by websocket
+   * @param {bool} enabled - (optional) start/stop live mode
+   * @return {bool} live mode state
    */
-  liveStart() {
-    // first, empty all logs, then listen for new ones
-    this.logs = [];
-    this.notify();
+  live(enabled) {
+    if (!arguments.length) {
+      return this.liveStarted;
+    }
 
-    return $.ajax({
-      url: '/api/liveStart?token=' + appConfig.token,
-      method: 'POST',
-      data: JSON.stringify({filters: this.filters}),
-      contentType: 'application/json',
-      success: () => {
-        this.liveStarted = true;
+    if (enabled) {
+      // first, empty all logs, then listen for new ones
+      this.logs = [];
+      this.notify();
+
+      $.ajax({
+        url: '/api/liveStart?token=' + appConfig.token,
+        method: 'POST',
+        data: JSON.stringify({filters: this.filters}),
+        contentType: 'application/json',
+        success: () => {
+          this.liveStarted = true;
+          this.queyTime = 0; // no querytime with real-time
+          this.notify();
+        }
+      });
+    } else {
+      $.post('/api/liveStop?token=' + appConfig.token, () => {
+        this.liveStarted = false;
+        this.queyTime = 0; // no querytime with real-time
         this.notify();
-      }
-    });
+      });
+    }
+
+    return this.liveStarted;
   }
 
   /**
@@ -138,18 +168,19 @@ class ModelApp extends Observable {
     log.virtualId = $.virtualId();
 
     this.logs.push(log);
+    if (this.logs.length > this.maxLogs) {
+      this.logs = this.logs.slice(0, this.maxLogs);
+    }
     this.notify();
   }
 
   /**
-   * Tell server to stop sending new logs into websocket
-   * @return {xhr} jquery ajax instance
+   * Clear all logs stored
    */
-  liveStop() {
-    return $.post('/api/liveStop?token=' + appConfig.token, () => {
-      this.liveStarted = false;
-      this.notify();
-    });
+  clear() {
+    this.logs = [];
+    this.queyTime = 0;
+    this.notify();
   }
 
   /**
@@ -233,5 +264,47 @@ class ModelApp extends Observable {
     }
 
     return this.inspectorActivated;
+  }
+
+  /**
+   * Getter/setter for the auto-scroll
+   * @param {bool} enabled - state of auto-scroll
+   * @return {bool} if the auto-scroll is enabled or not
+   */
+  autoScroll(enabled) {
+    if (arguments.length) {
+      this.autoScrollEnabled = enabled;
+      this.notify();
+    }
+
+    return this.autoScrollEnabled;
+  }
+
+  /**
+   * Getter/setter for the auto-scroll
+   * @param {bool} enabled - state of auto-scroll
+   * @return {bool} if the auto-scroll is enabled or not
+   */
+  autoClean(enabled) {
+    if (arguments.length) {
+      this.autoCleanEnabled = enabled;
+      this.notify();
+    }
+
+    return this.autoCleanEnabled;
+  }
+
+  /**
+   * Getter/setter for the max number of logs loaded in memory
+   * @param {Number} max - how many logs
+   * @return {Number} how many logs
+   */
+  max(max) {
+    if (arguments.length) {
+      this.maxLogs = max;
+      this.notify();
+    }
+
+    return this.maxLogs;
   }
 }
