@@ -58,41 +58,41 @@ jQuery.widget('o2.filters', {
       </tr>
       <tr>
         <td>Match</td>
-        <td><input type="text" data-action="match" data-field="severity" value="${filters.match.severity}"/></td>
-        <td><input type="text" data-action="match" data-field="level" value="${filters.match.level}"/></td>
-        <td><input type="text" data-action="match" data-field="timestamp" value="${filters.match.timestamp}"/></td>
-        <td><input type="text" data-action="match" data-field="hostname" value="${filters.match.hostname}"/></td>
-        <td><input type="text" data-action="match" data-field="rolename" value="${filters.match.rolename}"/></td>
-        <td><input type="text" data-action="match" data-field="pid" value="${filters.match.pid}"/></td>
-        <td><input type="text" data-action="match" data-field="username" value="${filters.match.username}"/></td>
-        <td><input type="text" data-action="match" data-field="system" value="${filters.match.system}"/></td>
-        <td><input type="text" data-action="match" data-field="facility" value="${filters.match.facility}"/></td>
-        <td><input type="text" data-action="match" data-field="detector" value="${filters.match.detector}"/></td>
-        <td><input type="text" data-action="match" data-field="partition" value="${filters.match.partition}"/></td>
-        <td><input type="text" data-action="match" data-field="run" value="${filters.match.run}"/></td>
-        <td><input type="text" data-action="match" data-field="errcode" value="${filters.match.errcode}"/></td>
-        <td><input type="text" data-action="match" data-field="errline" value="${filters.match.errline}"/></td>
-        <td><input type="text" data-action="match" data-field="errsource" value="${filters.match.errsource}"/></td>
-        <td><input type="text" data-action="match" data-field="message" value="${filters.match.message}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="severity" ${model.live() ? 'disabled' : ''} value="${filters.match.severity}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="level" ${model.live() ? 'disabled' : ''} value="${filters.match.level}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="timestamp" ${model.live() ? 'disabled' : ''} value="${filters.match.timestamp}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${filters.match.hostname}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${filters.match.rolename}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="pid" ${model.live() ? 'disabled' : ''} value="${filters.match.pid}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="username" ${model.live() ? 'disabled' : ''} value="${filters.match.username}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="system" ${model.live() ? 'disabled' : ''} value="${filters.match.system}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="facility" ${model.live() ? 'disabled' : ''} value="${filters.match.facility}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="detector" ${model.live() ? 'disabled' : ''} value="${filters.match.detector}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="partition" ${model.live() ? 'disabled' : ''} value="${filters.match.partition}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="run" ${model.live() ? 'disabled' : ''} value="${filters.match.run}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${filters.match.errcode}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="errline" ${model.live() ? 'disabled' : ''} value="${filters.match.errline}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${filters.match.errsource}"/></td>
+        <td><input type="text" class="form-control" data-action="match" data-field="message" ${model.live() ? 'disabled' : ''} value="${filters.match.message}"/></td>
       </tr>
       <tr>
         <td>Exclude</td>
-        <td><input type="text" data-action="exclude" data-field="severity" value="${filters.exclude.severity}"/></td>
-        <td><input type="text" data-action="exclude" data-field="level" value="${filters.exclude.level}"/></td>
-        <td><input type="text" data-action="exclude" data-field="timestamp" value="${filters.exclude.timestamp}"/></td>
-        <td><input type="text" data-action="exclude" data-field="hostname" value="${filters.exclude.hostname}"/></td>
-        <td><input type="text" data-action="exclude" data-field="rolename" value="${filters.exclude.rolename}"/></td>
-        <td><input type="text" data-action="exclude" data-field="pid" value="${filters.exclude.pid}"/></td>
-        <td><input type="text" data-action="exclude" data-field="username" value="${filters.exclude.username}"/></td>
-        <td><input type="text" data-action="exclude" data-field="system" value="${filters.exclude.system}"/></td>
-        <td><input type="text" data-action="exclude" data-field="facility" value="${filters.exclude.facility}"/></td>
-        <td><input type="text" data-action="exclude" data-field="detector" value="${filters.exclude.detector}"/></td>
-        <td><input type="text" data-action="exclude" data-field="partition" value="${filters.exclude.partition}"/></td>
-        <td><input type="text" data-action="exclude" data-field="run" value="${filters.exclude.run}"/></td>
-        <td><input type="text" data-action="exclude" data-field="errcode" value="${filters.exclude.errcode}"/></td>
-        <td><input type="text" data-action="exclude" data-field="errline" value="${filters.exclude.errline}"/></td>
-        <td><input type="text" data-action="exclude" data-field="errsource" value="${filters.exclude.errsource}"/></td>
-        <td><input type="text" data-action="exclude" data-field="message" value="${filters.exclude.message}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="severity" ${model.live() ? 'disabled' : ''} value="${filters.exclude.severity}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="level" ${model.live() ? 'disabled' : ''} value="${filters.exclude.level}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="timestamp" ${model.live() ? 'disabled' : ''} value="${filters.exclude.timestamp}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${filters.exclude.hostname}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${filters.exclude.rolename}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="pid" ${model.live() ? 'disabled' : ''} value="${filters.exclude.pid}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="username" ${model.live() ? 'disabled' : ''} value="${filters.exclude.username}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="system" ${model.live() ? 'disabled' : ''} value="${filters.exclude.system}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="facility" ${model.live() ? 'disabled' : ''} value="${filters.exclude.facility}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="detector" ${model.live() ? 'disabled' : ''} value="${filters.exclude.detector}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="partition" ${model.live() ? 'disabled' : ''} value="${filters.exclude.partition}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="run" ${model.live() ? 'disabled' : ''} value="${filters.exclude.run}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${filters.exclude.errcode}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="errline" ${model.live() ? 'disabled' : ''} value="${filters.exclude.errline}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${filters.exclude.errsource}"/></td>
+        <td><input type="text" class="form-control" data-action="exclude" data-field="message" ${model.live() ? 'disabled' : ''} value="${filters.exclude.message}"/></td>
       </tr>
     </table>
     `;

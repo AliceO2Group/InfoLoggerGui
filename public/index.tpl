@@ -1,5 +1,6 @@
 <!doctype html>
 <title>InfoLoggerGui - Alice</title>
+<link rel="icon" href="/favicon.png" />
 <link rel="stylesheet" href="/jquery-ui/jquery-ui.css">
 <link rel="stylesheet" href="/app.css">
 
@@ -79,7 +80,7 @@ $(function() {
   // Server should stop by itself the real-time when a client shutdown
   // but currently there is no way to know if a client has been disconnected
   // So we tell the server to not live when we begin a new session
-  app.liveStop();
+  app.live(false);
 
   // Let's get the last data to begin
   app.query();

@@ -155,5 +155,12 @@ jQuery.widget('o2.logs', {
       </div>
     </div>`;
     morphdom(this.el, tableStr);
+
+    // Scrolling down will force a redraw, so we put it in next animation frame
+    requestAnimationFrame(() => {
+      if (model.live() && model.autoScroll()) {
+        this.logs.scrollTop = this.logs.scrollHeight;
+      }
+    });
   }
 });
