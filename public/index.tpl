@@ -1,5 +1,6 @@
 <!doctype html>
 <title>InfoLoggerGui - Alice</title>
+<link rel="icon" href="/favicon.png" />
 <link rel="stylesheet" href="/jquery-ui/jquery-ui.css">
 <link rel="stylesheet" href="/app.css">
 

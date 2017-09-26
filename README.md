@@ -53,3 +53,7 @@ $ use INFOLOGGER;
 $ select * from messages limit 10;
 ```
 
+### Credits
+
+Favicon made by Freepik from www.flaticon.com
+
