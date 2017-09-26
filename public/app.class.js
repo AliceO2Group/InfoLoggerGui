@@ -168,16 +168,16 @@ class ModelApp extends Observable {
     log.virtualId = $.virtualId();
 
     this.logs.push(log);
-    if (this.logs.length > this.maxLogs) {
-      this.logs = this.logs.slice(0, this.maxLogs);
+    if (this.logs.length > this.maxLogs && this.autoCleanEnabled) {
+      this.logs = this.logs.slice(-this.maxLogs);
     }
     this.notify();
   }
 
   /**
-   * Clear all logs stored
+   * Empty all logs stored
    */
-  clear() {
+  empty() {
     this.logs = [];
     this.queyTime = 0;
     this.notify();

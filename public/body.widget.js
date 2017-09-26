@@ -32,14 +32,20 @@ console.log('e.keyCode:', e.keyCode, e);
       case 76: // l
         this.model.live(!this.model.live());
         break;
-      case 67: // c
-        this.model.clear();
+      case 69: // e
+        this.model.empty();
         break;
       case 82: // r
         location.href = '/';
         break;
       case 81: // q
         this.model.query();
+        break;
+      case 83: // s
+        this.model.autoScroll(!this.model.autoScroll());
+        break;
+      case 67: // c
+        this.model.autoClean(!this.model.autoClean());
         break;
     }
   }

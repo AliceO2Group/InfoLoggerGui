@@ -32,7 +32,8 @@ body {
 
 body, input, textarea {
   /* Try to get the native font of the system (Mac, Windows, Android, ...) */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
 }
 * { box-sizing: border-box; }
 table { width: 100%; border-collapse: collapse; }
@@ -54,14 +55,14 @@ td, th { max-width: 0; /* allow ellipsis on tables */ vertical-align: top; }
 .btn-block { width: 100%; display: block;}
 .default-cursor { cursor: default; } /* application feeling */
 
+.form-control { display: block; width: 100%; line-height: 1.25; color: #464a4c; background-color: #fff; border: 1px solid rgba(0,0,0,.15); border-radius: .15rem; }
+input:disabled { background-color: #eceeef; cursor: no-drop; }
+
 /* filters */
 
 #filters {
   width: 100%;
-}
-
-#filters input {
-  width: 100%;
+  padding: 5px;
 }
 
 /* Commands view */
@@ -220,7 +221,6 @@ td, th { max-width: 0; /* allow ellipsis on tables */ vertical-align: top; }
 #statusBar {
   height: 1.2rem;
   background-color: #e9ecef;
-  font-size: 80%;
   line-height: 1.2rem;
   border-top: 1px solid black;
   padding: 0 1rem;
