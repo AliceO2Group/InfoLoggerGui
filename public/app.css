@@ -30,11 +30,12 @@ body {
 
 /* General style */
 
-body, input, textarea {
+body {
   /* Try to get the native font of the system (Mac, Windows, Android, ...) */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 12px;
 }
+input, textarea, select { margin: 0; font-family: inherit; font-size: inherit; line-height: inherit; }
 * { box-sizing: border-box; }
 table { width: 100%; border-collapse: collapse; }
 td, th { max-width: 0; /* allow ellipsis on tables */ vertical-align: top; }
@@ -145,9 +146,14 @@ input:disabled { background-color: #eceeef; cursor: no-drop; }
 .col-50px {
   width: 50px;
 }
+.col-100px:last-child, .col-75px:last-child, .col-50px:last-child {
+  /* don't set size for the last column so it take the rest available */
+  width: initial;
+}
 
 .severity-i, .severity-w, .severity-e, .severity-f {
   vertical-align: middle !important;
+  font-weight: bold;
 }
 .severity-i {
   color: #17a2b8;
