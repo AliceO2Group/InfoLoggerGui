@@ -86,7 +86,7 @@ input:disabled { background-color: #eceeef; cursor: no-drop; }
   left: calc(100% + 4px);
   color: black;
   top: -6px;
-  width: 300px;
+  width: 320px;
   background-color: #f3f3f3;
   border: 1px solid rgb(154, 154, 154);
   border-radius: 5px;

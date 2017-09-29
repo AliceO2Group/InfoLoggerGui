@@ -41,6 +41,12 @@ class ModelApp extends Observable {
     };
 
     this.filters = {
+      lessthan: {
+        timestamp: null
+      },
+      morethan: {
+        timestamp: null
+      },
       match: {
         datetimeFrom: '',
         datetimeTo: '',
@@ -220,6 +226,22 @@ class ModelApp extends Observable {
   excludeField(fieldName, value) {
     this.filters.exclude[fieldName] = value;
     this.notify();
+  }
+
+  /**
+   * Getter/setter for criterias per field and per operator
+   * @param {string} fieldName - field to be set
+   * @param {string} operator - operator associated (match, exclude, lessthan, morethan)
+   * @param {string} value - criteria
+   */
+  criteria(fieldName, operator, value) {
+    if (arguments.length === 3) {
+      this.filters[operator][fieldName] = value;
+      console.log(arguments);
+      this.notify();
+    }
+
+    return this.filters[operator][fieldName];
   }
 
   /**
