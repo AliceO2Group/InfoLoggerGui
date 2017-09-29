@@ -21,19 +21,20 @@ class ModelApp extends Observable {
     this.queyTime = 0;
     this.querying = false; // loading data from a query
     this.columns = { // display or not
+      date: false,
+      time: true,
       severity: true,
       level: false,
-      timestamp: true,
-      hostname: true,
+      hostname: false,
       rolename: true,
       pid: false,
       username: false,
-      system: false,
-      facility: true,
+      system: true,
+      facility: false,
       detector: false,
       partition: false,
       run: false,
-      errcode: false,
+      errcode: true,
       errline: false,
       errsource: false,
       message: true
@@ -41,9 +42,13 @@ class ModelApp extends Observable {
 
     this.filters = {
       match: {
+        datetimeFrom: '',
+        datetimeTo: '',
+        datetimeFromParsed: null,
+        datetimeToParsed: null,
+
         severity: '',
         level: '',
-        timestamp: '',
         hostname: '',
         rolename: '',
         pid: '',
@@ -61,7 +66,6 @@ class ModelApp extends Observable {
       exclude: {
         severity: '',
         level: '',
-        timestamp: '',
         hostname: '',
         rolename: '',
         pid: '',
@@ -199,6 +203,11 @@ class ModelApp extends Observable {
    * @param {string} value - criterias, separated by space
    */
   matchField(fieldName, value) {
+    // Special parsing for datetime from human string
+    if (fieldName === 'datetimeFrom' || fieldName === 'datetimeTo') {
+      this.filters.match[fieldName + 'Parsed'] = $.parseDate(value);
+    }
+
     this.filters.match[fieldName] = value;
     this.notify();
   }
