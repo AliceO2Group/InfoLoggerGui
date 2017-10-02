@@ -39,56 +39,8 @@ class ModelApp extends Observable {
       message: true
     };
 
-    this.rawFilters = {};
-    this.filters = {
-      lessthan: {
-        timestamp: null
-      },
-      morethan: {
-        timestamp: null
-      },
-      match: {
-        datetimeFrom: '',
-        datetimeTo: '',
-        datetimeFromParsed: null,
-        datetimeToParsed: null,
-
-        severity: '',
-        level: '',
-        hostname: '',
-        rolename: '',
-        pid: '',
-        username: '',
-        system: '',
-        facility: '',
-        detector: '',
-        partition: '',
-        run: '',
-        errcode: '',
-        errline: '',
-        errsource: '',
-        message: ''
-      },
-      exclude: {
-        severity: '',
-        level: '',
-        hostname: '',
-        rolename: '',
-        pid: '',
-        username: '',
-        system: '',
-        facility: '',
-        detector: '',
-        partition: '',
-        run: '',
-        errcode: '',
-        errline: '',
-        errsource: '',
-        message: ''
-      }
-    };
-
-    this.filters = {};
+    this.rawFilters = {}; // copy of user inputs
+    this.filters = {}; // parsed version with type casting
 
     $('#ws').bind('websocketmessage', (evt, data) => {
       this.onLiveMessage(data.payload);
