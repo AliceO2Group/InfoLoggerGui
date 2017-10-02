@@ -16,7 +16,6 @@ class ModelApp extends Observable {
     this.inspectorActivated = true; // right panel displaying current row selected
     this.selectedRow = null;
     this.autoScrollEnabled = true;
-    this.autoCleanEnabled = true;
     this.maxLogs = 10000;
     this.queyTime = 0;
     this.querying = false; // loading data from a query
@@ -95,12 +94,10 @@ class ModelApp extends Observable {
 
   /**
    * Query server for logs stored in DB
-   * @param {string} from - date limit
-   * @param {string} to - date limit
-   * @param {int} limit - how many rows to get
    * @return {xhr} jquery ajax instance
    */
-  query(from, to, limit) {
+  query() {
+    console.log('this:', this);
     // first, stop real-time if set
     if (this.live()) {
       this.live(false);
@@ -115,7 +112,7 @@ class ModelApp extends Observable {
     return $.ajax({
       url: '/api/query?token=' + appConfig.token,
       method: 'POST',
-      data: JSON.stringify({filters: this.filters, from, to, limit: this.maxLogs}),
+      data: JSON.stringify({filters: this.filters, limit: this.maxLogs}),
       contentType: 'application/json',
       success: (rows) => {
         // Logs don't have any unique id, so we generate one
@@ -178,7 +175,7 @@ class ModelApp extends Observable {
     log.virtualId = $.virtualId();
 
     this.logs.push(log);
-    if (this.logs.length > this.maxLogs && this.autoCleanEnabled) {
+    if (this.logs.length > this.maxLogs) {
       this.logs = this.logs.slice(-this.maxLogs);
     }
     this.notify();
@@ -309,20 +306,6 @@ class ModelApp extends Observable {
     }
 
     return this.autoScrollEnabled;
-  }
-
-  /**
-   * Getter/setter for the auto-scroll
-   * @param {bool} enabled - state of auto-scroll
-   * @return {bool} if the auto-scroll is enabled or not
-   */
-  autoClean(enabled) {
-    if (arguments.length) {
-      this.autoCleanEnabled = enabled;
-      this.notify();
-    }
-
-    return this.autoCleanEnabled;
   }
 
   /**

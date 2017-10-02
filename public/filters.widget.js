@@ -60,6 +60,12 @@ jQuery.widget('o2.filters', {
       this.state.datetimeToFocus = false;
       this.render();
     });
+
+    $(this.element).delegate('form', 'submit', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      this.model.query();
+    });
   },
 
   render: function() {
@@ -70,35 +76,35 @@ jQuery.widget('o2.filters', {
 
     const template = `<div id="filters">
 
-  <div class="d-flex">
-
+  <form class="d-flex">
+    <input type="submit" class="hidden">
     <table class="">
       <tr>
-        <td><button class="btn btn-block text-overflow ${columns.level ? 'active':''}" data-action="display" data-field="level">Level</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.level ? 'active':''}" data-action="display" data-field="level">Level</button></td>
         <td class="col-150px">
           <div class="d-flex">
-            <button class="btn btn-block text-overflow ${columns.date ? 'active':''}" data-action="display" data-field="date">Date</button>
-            <button class="btn btn-block text-overflow ${columns.time ? 'active':''}" data-action="display" data-field="time">Time</button>
+            <button type="button" class="btn btn-block text-overflow ${columns.date ? 'active':''}" data-action="display" data-field="date">Date</button>
+            <button type="button" class="btn btn-block text-overflow ${columns.time ? 'active':''}" data-action="display" data-field="time">Time</button>
           </div>
         </td>
-        <td><button class="btn btn-block text-overflow ${columns.severity ? 'active':''}" data-action="display" data-field="severity">Severity</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.hostname ? 'active':''}" data-action="display" data-field="hostname">Hostname</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.rolename ? 'active':''}" data-action="display" data-field="rolename">Rolename</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.pid ? 'active':''}" data-action="display" data-field="pid">PID</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.username ? 'active':''}" data-action="display" data-field="username">Username</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.system ? 'active':''}" data-action="display" data-field="system">System</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.facility ? 'active':''}" data-action="display" data-field="facility">Facility</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.detector ? 'active':''}" data-action="display" data-field="detector">Detector</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.partition ? 'active':''}" data-action="display" data-field="partition">Partition</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.run ? 'active':''}" data-action="display" data-field="run">Run</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.errcode ? 'active':''}" data-action="display" data-field="errcode">ErrCode</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.errline ? 'active':''}" data-action="display" data-field="errline">ErrLine</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.errsource ? 'active':''}" data-action="display" data-field="errsource">ErrSource</button></td>
-        <td><button class="btn btn-block text-overflow ${columns.message ? 'active':''}" data-action="display" data-field="message">Message</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.severity ? 'active':''}" data-action="display" data-field="severity">Severity</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.hostname ? 'active':''}" data-action="display" data-field="hostname">Hostname</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.rolename ? 'active':''}" data-action="display" data-field="rolename">Rolename</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.pid ? 'active':''}" data-action="display" data-field="pid">PID</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.username ? 'active':''}" data-action="display" data-field="username">Username</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.system ? 'active':''}" data-action="display" data-field="system">System</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.facility ? 'active':''}" data-action="display" data-field="facility">Facility</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.detector ? 'active':''}" data-action="display" data-field="detector">Detector</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.partition ? 'active':''}" data-action="display" data-field="partition">Partition</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.run ? 'active':''}" data-action="display" data-field="run">Run</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.errcode ? 'active':''}" data-action="display" data-field="errcode">ErrCode</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.errline ? 'active':''}" data-action="display" data-field="errline">ErrLine</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.errsource ? 'active':''}" data-action="display" data-field="errsource">ErrSource</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.message ? 'active':''}" data-action="display" data-field="message">Message</button></td>
       </tr>
       <tr>
         <td rowspan="2">
-          <select>
+          <select ${model.live() ? 'disabled' : ''}>
             <option selected>Any</option>
             <option>Shift ≤1</option>
             <option>Oncall ≤6</option>
@@ -107,7 +113,7 @@ jQuery.widget('o2.filters', {
           </select>
         </td>
         <td>
-          <input type="text" tabindex="1" class="form-control input-datetime-from" data-criteria data-operator="morethan" data-field="timestamp" data-state="datetimeFrom" ${model.live() ? 'disabled' : ''} value="${this.state.datetimeFrom}" placeholder="from"/>
+          <input type="text" tabindex="0" class="form-control input-datetime-from" data-criteria data-operator="morethan" data-field="timestamp" data-state="datetimeFrom" ${model.live() ? 'disabled' : ''} value="${this.state.datetimeFrom}" placeholder="from"/>
           ${datetimeHelper(this.state.datetimeFromFocus, model.criteria('timestamp', 'morethan'))}
         </td>
         <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="level" ${model.live() ? 'disabled' : ''} value="${filters.match.level}" placeholder="match"/></td>
@@ -127,7 +133,7 @@ jQuery.widget('o2.filters', {
       </tr>
       <tr>
         <td>
-          <input type="text" tabindex="2" class="form-control input-datetime-to" data-criteria data-operator="lessthan" data-field="timestamp" data-state="datetimeTo" ${model.live() ? 'disabled' : ''} value="${this.state.datetimeTo}"  placeholder="to"/>
+          <input type="text" tabindex="1" class="form-control input-datetime-to" data-criteria data-operator="lessthan" data-field="timestamp" data-state="datetimeTo" ${model.live() ? 'disabled' : ''} value="${this.state.datetimeTo}"  placeholder="to"/>
           ${datetimeHelper(this.state.datetimeToFocus, model.criteria('timestamp', 'lessthan'))}
         </td>
         <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="level" ${model.live() ? 'disabled' : ''} value="${filters.exclude.level}" placeholder="exclude"/></td>
@@ -146,7 +152,7 @@ jQuery.widget('o2.filters', {
         <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="message" ${model.live() ? 'disabled' : ''} value="${filters.exclude.message}"/></td>
       </tr>
     </table>
-  </div>
+  </form>
 </div>`;
 
     function datetimeHelper(show, date) {

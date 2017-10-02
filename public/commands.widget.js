@@ -32,7 +32,6 @@ jQuery.widget('o2.commands', {
       <div class="toolbar toolbar-live-options ${model.live() ? 'open' : ''}">
         <span class="toolbar-live-arrow"> ➡ </span>︎
         <button class="btn toolbar-btn ${model.autoScroll() ? 'active' : ''}" onclick="app.autoScroll(!app.autoScroll())" title="Scroll at bottom each time a message is received (s)">Auto-scroll</button>
-        <button class="btn toolbar-btn ${model.autoClean() ? 'active' : ''}" onclick="app.autoClean(!app.autoClean())" title="Keep only the last X logs (c)">Auto-clean</button>
       </div>
     </span>
   </div>

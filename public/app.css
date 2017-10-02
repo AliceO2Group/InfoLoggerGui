@@ -59,9 +59,10 @@ hr { border: 0; border-bottom: 1px solid #dddddd; }
 .default-cursor { cursor: default; } /* application feeling */
 
 .form-control { display: block; width: 100%; line-height: 1.25; color: #464a4c; background-color: #fff; border: 1px solid rgba(0,0,0,.15); border-radius: .15rem; }
-input:disabled { background-color: #eceeef; cursor: no-drop; }
+input:disabled, textarea:disabled, select:disabled { background-color: #eceeef; cursor: no-drop; }
 
 .d-flex { display: flex; }
+.hidden { display: none; }
 
 /* filters */
 
@@ -275,6 +276,9 @@ input:disabled { background-color: #eceeef; cursor: no-drop; }
   overflow-x: hidden;
   overflow-y: auto;
   background-color: #f6f6f6;
+}
+.inspector-default {
+  padding: 10px;
 }
 .inspector-content {
   border-bottom: 1px solid #e6e6e6;
