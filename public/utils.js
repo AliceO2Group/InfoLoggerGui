@@ -96,9 +96,9 @@ $.parseDate = function(humanString) {
     }
   ];
 
-  // Absolute: [DD[/MM[/YYYY]]] and set hour to midnight
+  // Absolute: [DD/[MM[/YYYY]]] and set hour to midnight
 
-  const regDate = /([0-9]+)(\/([0-9]+)(\/([0-9]+)(\/([0-9]+))?)?)?/i;
+  const regDate = /([0-9]+)\/(([0-9]+)(\/([0-9]+)(\/([0-9]+))?)?)?/i;
   const regDateResult = regDate.exec(humanString);
   if (regDateResult) {
     date.setDate(parseInt(regDateResult[1], 10)); // mandatory day

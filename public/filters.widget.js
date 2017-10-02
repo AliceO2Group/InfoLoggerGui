@@ -11,8 +11,6 @@ jQuery.widget('o2.filters', {
     this.model.observe(this.render.bind(this)); // refresh when data change
     this.el = this.element[0]; // get DOM element from widget
     this.state = {
-      datetimeFrom: '', // raw value from input without parsing
-      datetimeTo: '', // raw value from input without parsing
       datetimeFromFocus: false, // internal state to show datetime help
       datetimeToFocus: false, // internal state to show datetime help
     };
@@ -25,20 +23,20 @@ jQuery.widget('o2.filters', {
       this.model.displayField(fieldName, !previousValue);
     });
 
+    // This widget store internal state of its inputs to render them
+    // And the value is sent to model with the appropriate type (string/date/number) and operator
     $(this.element).delegate('[data-criteria]', 'input', (e) => {
       const $target = $(e.target);
       const field = $target.data('field');
       const operator = $target.data('operator');
       let value = $target.val();
-      const stateName = $target.data('state');
 
-      // Parsing timestamp before sending to model
-      if (field === 'timestamp') {
-        this.state[stateName] = value; // save raw value locally
-        value = $.parseDate(value);
-      }
+      // if (field === 'timestamp') {
+      //   value = $.parseDate(value);
+      // }
 
-      this.model.criteria(field, operator, value);
+      this.model.rawFilter(field, operator, value);
+      console.log('this.model.rawFilter(field, operator):', this.model.rawFilter(field, operator), field, operator);
     });
 
     $(this.element).delegate('.input-datetime-from', 'focus', (e) => {
@@ -113,43 +111,43 @@ jQuery.widget('o2.filters', {
           </select>
         </td>
         <td>
-          <input type="text" tabindex="0" class="form-control input-datetime-from" data-criteria data-operator="morethan" data-field="timestamp" data-state="datetimeFrom" ${model.live() ? 'disabled' : ''} value="${this.state.datetimeFrom}" placeholder="from"/>
-          ${datetimeHelper(this.state.datetimeFromFocus, model.criteria('timestamp', 'morethan'))}
+          <input type="text" tabindex="1" class="form-control input-datetime-from" data-criteria data-operator="$gte" data-field="timestamp" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('timestamp', '$gte')}" placeholder="from"/>
+          ${datetimeHelper(this.state.datetimeFromFocus, model.parsedFilters('timestamp', '$gte'))}
         </td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="level" ${model.live() ? 'disabled' : ''} value="${filters.match.level}" placeholder="match"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${filters.match.hostname}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${filters.match.rolename}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="pid" ${model.live() ? 'disabled' : ''} value="${filters.match.pid}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="username" ${model.live() ? 'disabled' : ''} value="${filters.match.username}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="system" ${model.live() ? 'disabled' : ''} value="${filters.match.system}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="facility" ${model.live() ? 'disabled' : ''} value="${filters.match.facility}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="detector" ${model.live() ? 'disabled' : ''} value="${filters.match.detector}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="partition" ${model.live() ? 'disabled' : ''} value="${filters.match.partition}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="run" ${model.live() ? 'disabled' : ''} value="${filters.match.run}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${filters.match.errcode}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="errline" ${model.live() ? 'disabled' : ''} value="${filters.match.errline}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${filters.match.errsource}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="match" data-field="message" ${model.live() ? 'disabled' : ''} value="${filters.match.message}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="level" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('level', '$in') || ''}" placeholder="match"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('hostname', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('rolename', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="pid" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('pid', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="username" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('username', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="system" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('system', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="facility" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('facility', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="detector" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('detector', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="partition" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('partition', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="run" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('run', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errcode', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="errline" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errline', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errsource', '$in') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="message" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('message', '$in') || ''}"/></td>
       </tr>
       <tr>
         <td>
-          <input type="text" tabindex="1" class="form-control input-datetime-to" data-criteria data-operator="lessthan" data-field="timestamp" data-state="datetimeTo" ${model.live() ? 'disabled' : ''} value="${this.state.datetimeTo}"  placeholder="to"/>
-          ${datetimeHelper(this.state.datetimeToFocus, model.criteria('timestamp', 'lessthan'))}
+          <input type="text" tabindex="2" class="form-control input-datetime-to" data-criteria data-operator="$lte" data-field="timestamp" data-state="datetimeTo" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('timestamp', '$lte')}"  placeholder="to"/>
+          ${datetimeHelper(this.state.datetimeToFocus, model.parsedFilters('timestamp', '$lte'))}
         </td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="level" ${model.live() ? 'disabled' : ''} value="${filters.exclude.level}" placeholder="exclude"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${filters.exclude.hostname}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${filters.exclude.rolename}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="pid" ${model.live() ? 'disabled' : ''} value="${filters.exclude.pid}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="username" ${model.live() ? 'disabled' : ''} value="${filters.exclude.username}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="system" ${model.live() ? 'disabled' : ''} value="${filters.exclude.system}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="facility" ${model.live() ? 'disabled' : ''} value="${filters.exclude.facility}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="detector" ${model.live() ? 'disabled' : ''} value="${filters.exclude.detector}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="partition" ${model.live() ? 'disabled' : ''} value="${filters.exclude.partition}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="run" ${model.live() ? 'disabled' : ''} value="${filters.exclude.run}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${filters.exclude.errcode}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="errline" ${model.live() ? 'disabled' : ''} value="${filters.exclude.errline}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${filters.exclude.errsource}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="exclude" data-field="message" ${model.live() ? 'disabled' : ''} value="${filters.exclude.message}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="level" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('level', '$nin') || ''}" placeholder="exclude"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('hostname', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('rolename', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="pid" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('pid', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="username" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('username', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="system" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('system', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="facility" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('facility', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="detector" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('detector', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="partition" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('partition', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="run" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('run', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errcode', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="errline" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errline', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errsource', '$nin') || ''}"/></td>
+        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="message" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('message', '$nin') || ''}"/></td>
       </tr>
     </table>
   </form>
@@ -164,15 +162,18 @@ jQuery.widget('o2.filters', {
 
           <div class="datetime-helper-memo">
             <span>
-              [hh:[mm[:ss[.mmm]]]<br>
-              [DD[/MM[/YYYY]]]<br>
+              [hh:[mm[:ss[.mmm]]]<span class="pull-right">absolute time</span><br>
+              [DD/[MM[/YYYY]]]<span class="pull-right">absolute day midnight</span><br>
               <hr>
-              +/-1day<br>
-              +/-1hour<br>
-              +/-1minute<br>
-              +/-1second
+              [+/-[N]d]<span class="pull-right">relative days</span><br>
+              [+/-[N]h]<span class="pull-right">relative hours</span><br>
+              [+/-[N]m]<span class="pull-right">relative minutes</span><br>
+              [+/-[N]s]<span class="pull-right">relative seconds</span>
               <hr>
-              <i>Partial and mixed inputs are handled, eg: "-5m" means "now minus five minute". Mandatory parts are underlined.</i>
+              <i>Examples:<br>
+              1/ 20: (first day of this month, 8pm)<br>
+              -5m (now minus 5 minutes)<br>
+              -d 17: (yesterday 5pm)</i>
             </span>
           </div>
         </div>

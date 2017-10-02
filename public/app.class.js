@@ -39,6 +39,7 @@ class ModelApp extends Observable {
       message: true
     };
 
+    this.rawFilters = {};
     this.filters = {
       lessthan: {
         timestamp: null
@@ -86,6 +87,8 @@ class ModelApp extends Observable {
         message: ''
       }
     };
+
+    this.filters = {};
 
     $('#ws').bind('websocketmessage', (evt, data) => {
       this.onLiveMessage(data.payload);
@@ -201,31 +204,6 @@ class ModelApp extends Observable {
   }
 
   /**
-   * Set search per field (operand: =)
-   * @param {string} fieldName - field to be set
-   * @param {string} value - criterias, separated by space
-   */
-  matchField(fieldName, value) {
-    // Special parsing for datetime from human string
-    if (fieldName === 'datetimeFrom' || fieldName === 'datetimeTo') {
-      this.filters.match[fieldName + 'Parsed'] = $.parseDate(value);
-    }
-
-    this.filters.match[fieldName] = value;
-    this.notify();
-  }
-
-  /**
-   * Set search per field (operand: !=)
-   * @param {string} fieldName - field to be set
-   * @param {string} value - criterias, separated by space
-   */
-  excludeField(fieldName, value) {
-    this.filters.exclude[fieldName] = value;
-    this.notify();
-  }
-
-  /**
    * Getter/setter for criterias per field and per operator
    * @param {string} fieldName - field to be set
    * @param {string} operator - operator associated (match, exclude, lessthan, morethan)
@@ -233,12 +211,111 @@ class ModelApp extends Observable {
    */
   criteria(fieldName, operator, value) {
     if (arguments.length === 3) {
-      this.filters[operator][fieldName] = value;
-      console.log(arguments);
+      // this.filters[operator][fieldName] = value;
+      // console.log(arguments);
+      // this.notify();
+
+      switch(operator) {
+        case 'match':
+          this.filters[fieldName] = value;
+          break;
+        case 'exclude':
+          if (this.filters[fieldName] !== 'object') {
+            this.filters[fieldName] = {};
+          }
+          this.filters[fieldName] = {$not: {$eq: value, $not: null}};
+          break;
+        case 'lessthan':
+          if (this.filters[fieldName] !== 'object') {
+            this.filters[fieldName] = {};
+          }
+          this.filters[fieldName] = {$lt: value};
+          break;
+        case 'morethan':
+          if (this.filters[fieldName] !== 'object') {
+            this.filters[fieldName] = {};
+          }
+          this.filters[fieldName] = {$gt: value};
+          break;
+        default:
+          throw new Error(`operator "${operator}" unknown`);
+          break;
+      }
+
+      console.log('this.filters:', this.filters);
+    }
+  }
+
+  /**
+   * ...
+   */
+  rawFilter(field, operator, value) {
+    // Set raw filter
+    if (arguments.length === 3) {
+      if (!value) {
+        // empty value, don't keep useless information
+        delete this.rawFilters[field][operator];
+
+        // remove also the fields widthout any value
+        if (Object.keys(this.rawFilters[field]).length === 0) {
+          delete this.rawFilters[field];
+        }
+      } else {
+        if (!this.rawFilters[field]) {
+          this.rawFilters[field] = {};
+        }
+        this.rawFilters[field][operator] = value;
+      }
+
+      // Set parsed filter
+      this.filters = {};
+      for (const field in this.rawFilters) {
+        this.filters[field] = {};
+
+        for (const operator in this.rawFilters[field]) {
+          // Cast special values
+          let parsedValue = this.rawFilters[field][operator];
+          if (field === 'timestamp') {
+            parsedValue = $.parseDate(parsedValue);
+          } else if (operator === '$in') {
+            parsedValue = parsedValue.split(' ');
+          } else if (operator === '$nin') {
+            parsedValue = parsedValue.split(' ');
+          }
+
+          // Bad values like NaN, null, invalid date
+          if (!parsedValue) {
+            continue;
+          }
+
+          this.filters[field][operator] = parsedValue;
+        }
+      }
+
+      // Notify
       this.notify();
+      console.log('this.rawFilters:', this.rawFilters, this.filters);
     }
 
-    return this.filters[operator][fieldName];
+    // Get raw value, always a string
+    if (!this.rawFilters[field] || !this.rawFilters[field][operator]) {
+      return '';
+    }
+
+    return this.rawFilters[field][operator];
+  }
+
+  /**
+   * Getter for the parsed filters
+   * @param {object|string} row - the row to be selected, or its virtualId
+   * @return {object} the row selected or null
+   */
+  parsedFilters(field, operator) {
+    if (!this.filters[field]) {
+      return null;
+    }
+
+    return this.filters[field][operator];
   }
 
   /**
