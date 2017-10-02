@@ -15,6 +15,7 @@ jQuery.widget('o2.logs', {
     this.render();
 
     this.rowHeight = 20; // px, to change if CSS change
+    this.logsModel = null; // scroll top when this value change
     this.logsScrollTop = 0;
 
     // we need this element to watch its scroll position and render only the <td> inside the screen
@@ -54,6 +55,14 @@ jQuery.widget('o2.logs', {
     // handle max scroll possible: total height - table height
     // avoid cutting in half the last row or instable rendering (slice unstable)
     const marginTop = Math.min(this.logsScrollTop, allLogsHeight - sliceLogsHeight);
+
+    // When reference change, scroll top
+    if (this.logsModel !== logs && this.logs) {
+      requestAnimationFrame(() => {
+        this.logs.scrollTop = 0;
+      });
+    }
+    this.logsModel = logs;
 
     const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''}">
       <table class="table-logs-header table-bordered default-cursor">
