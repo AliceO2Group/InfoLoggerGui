@@ -24,10 +24,11 @@ jQuery.widget('o2.logs', {
     this.logs = this.el.querySelector('.container-table-logs')
     this.logs.addEventListener('scroll', (e) => {
       requestAnimationFrame(this.render.bind(this));
-    })
+    });
+
     window.addEventListener('resize', (e) => {
       requestAnimationFrame(this.render.bind(this));
-    })
+    });
   },
 
   _destroy: function() {

@@ -247,7 +247,11 @@ class ModelApp extends Observable {
   }
 
   /**
-   * ...
+   * Getter/setter for input field, this also update the parsed/casted filters
+   * @param {string} field - name of the column
+   * @param {string} operator - criteria to apply to the column
+   * @param {string} value - the string given by user
+   * @return {string} always a string, to show to user
    */
   rawFilter(field, operator, value) {
     // Set raw filter
@@ -307,8 +311,9 @@ class ModelApp extends Observable {
 
   /**
    * Getter for the parsed filters
-   * @param {object|string} row - the row to be selected, or its virtualId
-   * @return {object} the row selected or null
+   * @param {string} field - name of the column
+   * @param {string} operator - criteria to apply to the column
+   * @return {string|date|number} the parsed value associated to this filter
    */
   parsedFilters(field, operator) {
     if (!this.filters[field]) {
