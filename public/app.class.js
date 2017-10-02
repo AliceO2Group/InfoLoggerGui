@@ -115,7 +115,7 @@ class ModelApp extends Observable {
     return $.ajax({
       url: '/api/query?token=' + appConfig.token,
       method: 'POST',
-      data: JSON.stringify({filters: this.filters, limit: this.maxLogs}),
+      data: JSON.stringify({limit: this.maxLogs}), // filters: this.filters, TODO: filtering with broadcast
       contentType: 'application/json',
       success: (rows) => {
         // Logs don't have any unique id, so we generate one
