@@ -68,7 +68,7 @@ $(function() {
   // Model runs by itself and has an interface Observable
   // so views can connect to him and rereder when they get notified by the model
 
-  const app = new ModelApp();
+  const app = new App();
 
   $('body').body({model: app});
   $('#logs').logs({model: app});

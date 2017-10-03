@@ -4,7 +4,7 @@
  * App model containing all data, methods, ajax calls of this application
  * It runs on its own and views can 'observe' for changes to redraw.
  */
-class ModelApp extends Observable {
+class App extends Observable {
   /**
    * Constructor, declares default properties and init Observable super class
    */
