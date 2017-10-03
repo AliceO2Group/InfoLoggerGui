@@ -56,14 +56,6 @@ jQuery.widget('o2.logs', {
     // avoid cutting in half the last row or instable rendering (slice unstable)
     const marginTop = Math.min(this.logsScrollTop, allLogsHeight - sliceLogsHeight);
 
-    // When reference change, scroll top
-    if (this.logsModel !== logs && this.logs) {
-      requestAnimationFrame(() => {
-        this.logs.scrollTop = 0;
-      });
-    }
-    this.logsModel = logs;
-
     const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''}">
       <table class="table-logs-header table-bordered default-cursor">
         <tr>
@@ -175,5 +167,13 @@ jQuery.widget('o2.logs', {
         this.logs.scrollTop = this.logs.scrollHeight;
       }
     });
+
+    // When reference change (new logs were loaded), scroll top
+    if (this.logsModel !== logs && this.logs) {
+      requestAnimationFrame(() => {
+        this.logs.scrollTop = 0;
+      });
+    }
+    this.logsModel = logs;
   }
 });
