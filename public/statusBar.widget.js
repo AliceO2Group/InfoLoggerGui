@@ -14,7 +14,7 @@ jQuery.widget('o2.statusBar', {
     const model = this.model;
 
     const template = `<div id="statusBar">
-      ${model.logs.length} messages ${model.queyTime === 0 ? '' : `(${(model.queyTime / 1000).toPrecision(2)} seconds)`}
+      ${model.logs.length} messages ${model.total !== model.logs.length ? `out of ${model.total}` : ''} ${model.queyTime === 0 ? '' : `(${(model.queyTime / 1000).toPrecision(2)} seconds)`}
     </div>`;
 
     morphdom(this.el, template);

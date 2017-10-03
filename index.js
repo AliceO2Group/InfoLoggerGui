@@ -8,6 +8,11 @@ const config = require('./config.js');
 const SQLDataSource = require('./lib/SQLDataSource');
 const LiveDataSource = require('./lib/LiveDataSource');
 
+process.once('uncaughtException', function(e) {
+  console.error(e.stack || e);
+  process.exit(1);
+});
+
 // Quick check config at start
 log.info('MySQL: \t\t%s',
   `${config.mysql.host}:${config.mysql.port}`);
@@ -34,14 +39,15 @@ http.post('/query', function(req, res) {
   const filters = req.body.filters;
   const limit = req.body.limit;
 
-  sql.queryFromFilters(filters, limit, function(err, rows) {
-    if (err) {
-      res.status(500).send();
-      throw err;
-    }
-
-    res.json(rows);
-  });
+  sql
+    .queryFromFilters(filters, {limit})
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+      console.error(err.stack || err);
+    });
 });
 
 http.post('/liveStart', function(req, res) {

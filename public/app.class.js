@@ -19,6 +19,7 @@ class ModelApp extends Observable {
     this.maxLogs = 10000;
     this.queyTime = 0;
     this.querying = false; // loading data from a query
+    this.total = 0; // total rows found, can be smaller than logs.length
     this.columns = { // display or not
       date: false,
       time: true,
@@ -67,14 +68,15 @@ class ModelApp extends Observable {
     return $.ajax({
       url: '/api/query?token=' + appConfig.token,
       method: 'POST',
-      data: JSON.stringify({limit: this.maxLogs}), // filters: this.filters, TODO: filtering with broadcast
+      data: JSON.stringify({filters: this.filters, limit: this.maxLogs}),
       contentType: 'application/json',
-      success: (rows) => {
+      success: (result) => {
         // Logs don't have any unique id, so we generate one
-        rows.forEach((row) => row.virtualId = $.virtualId());
+        result.rows.forEach((row) => row.virtualId = $.virtualId());
 
         this.queyTime = new Date() - startTiming;
-        this.logs = rows;
+        this.logs = result.rows;
+        this.total = result.total;
       },
       complete: () => {
         this.querying = false;
@@ -97,6 +99,7 @@ class ModelApp extends Observable {
     if (enabled) {
       // first, empty all logs, then listen for new ones
       this.logs = [];
+      this.total = 0;
       this.notify();
 
       $.ajax({
@@ -142,6 +145,7 @@ class ModelApp extends Observable {
   empty() {
     this.logs = [];
     this.queyTime = 0;
+    this.total = 0;
     this.notify();
   }
 
