@@ -59,7 +59,7 @@ jQuery.widget('o2.inspector', {
     const template = `<div id="inspector" class="${model.inspector() ? 'right-panel-open' : ''}">
       <div class="inspector-container">
         ${!row
-          ? `<p class="text-center">Select a row</p>`
+          ? `<p class="text-center inspector-default">Select a row</p>`
           : `<div class="inspector-content">
             <table class="inspector-table">
               <tr><td class="col-100px inspector-cell text-right">Severity :</td><td class="text-wrap-break ${classSeverity}">${textSeverity}</td></tr>

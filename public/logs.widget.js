@@ -15,6 +15,7 @@ jQuery.widget('o2.logs', {
     this.render();
 
     this.rowHeight = 20; // px, to change if CSS change
+    this.logsModel = null; // scroll top when this value change
     this.logsScrollTop = 0;
 
     // we need this element to watch its scroll position and render only the <td> inside the screen
@@ -24,10 +25,11 @@ jQuery.widget('o2.logs', {
     this.logs = this.el.querySelector('.container-table-logs')
     this.logs.addEventListener('scroll', (e) => {
       requestAnimationFrame(this.render.bind(this));
-    })
+    });
+
     window.addEventListener('resize', (e) => {
       requestAnimationFrame(this.render.bind(this));
-    })
+    });
   },
 
   _destroy: function() {
@@ -59,7 +61,8 @@ jQuery.widget('o2.logs', {
         <tr>
           ${columns.severity ? `<th class="text-overflow cell-bordered text-center col-100px">Severity</th>` : ''}
           ${columns.level ? `<th class="text-overflow cell-bordered text-left col-50px">Level</th>` : ''}
-          ${columns.timestamp ? `<th class="text-overflow cell-bordered text-left col-100px">Timestamp</th>` : ''}
+          ${columns.date ? `<th class="text-overflow cell-bordered text-left col-100px">Date</th>` : ''}
+          ${columns.time ? `<th class="text-overflow cell-bordered text-left col-100px">Time</th>` : ''}
           ${columns.hostname ? `<th class="text-overflow cell-bordered text-left col-100px">Hostname</th>` : ''}
           ${columns.rolename ? `<th class="text-overflow cell-bordered text-left col-100px">Rolename</th>` : ''}
           ${columns.pid ? `<th class="text-overflow cell-bordered text-left col-50px">Pid</th>` : ''}
@@ -81,7 +84,8 @@ jQuery.widget('o2.logs', {
           <colgroup>
             ${columns.severity ? `<col class="col-100px">` : ''}
             ${columns.level ? `<col class="col-50px">` : ''}
-            ${columns.timestamp ? `<col class="col-100px">` : ''}
+            ${columns.date ? `<col class="col-100px">` : ''}
+            ${columns.time ? `<col class="col-100px">` : ''}
             ${columns.hostname ? `<col class="col-100px">` : ''}
             ${columns.rolename ? `<col class="col-100px">` : ''}
             ${columns.pid ? `<col class="col-50px">` : ''}
@@ -133,7 +137,8 @@ jQuery.widget('o2.logs', {
                 <tr class="row-hover ${rowSelected}" onclick="app.selected('${row.virtualId}')">
                   ${columns.severity ? `<td class="text-overflow text-center cell-bordered ${classSeverity}">${textSeverity}</td>` : ''}
                   ${columns.level ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.level)}</td>` : ''}
-                  ${columns.timestamp ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.timestamp)}</td>` : ''}
+                  ${columns.date ? `<td class="text-overflow cell-bordered">${new Date(row.timestamp * 1000).toLocaleDateString()}</td>` : ''}
+                  ${columns.time ? `<td class="text-overflow cell-bordered">${new Date(row.timestamp * 1000).toLocaleTimeString()}</td>` : ''}
                   ${columns.hostname ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.hostname)}</td>` : ''}
                   ${columns.rolename ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.rolename)}</td>` : ''}
                   ${columns.pid ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.pid)}</td>` : ''}
@@ -162,5 +167,13 @@ jQuery.widget('o2.logs', {
         this.logs.scrollTop = this.logs.scrollHeight;
       }
     });
+
+    // When reference change (new logs were loaded), scroll top
+    if (this.logsModel !== logs && this.logs) {
+      requestAnimationFrame(() => {
+        this.logs.scrollTop = 0;
+      });
+    }
+    this.logsModel = logs;
   }
 });

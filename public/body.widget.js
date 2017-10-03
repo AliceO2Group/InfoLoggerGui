@@ -44,9 +44,6 @@ console.log('e.keyCode:', e.keyCode, e);
       case 83: // s
         this.model.autoScroll(!this.model.autoScroll());
         break;
-      case 67: // c
-        this.model.autoClean(!this.model.autoClean());
-        break;
     }
   }
 });

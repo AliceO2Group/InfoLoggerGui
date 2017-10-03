@@ -16,67 +16,31 @@ class ModelApp extends Observable {
     this.inspectorActivated = true; // right panel displaying current row selected
     this.selectedRow = null;
     this.autoScrollEnabled = true;
-    this.autoCleanEnabled = true;
     this.maxLogs = 10000;
     this.queyTime = 0;
     this.querying = false; // loading data from a query
     this.columns = { // display or not
+      date: false,
+      time: true,
       severity: true,
       level: false,
-      timestamp: true,
-      hostname: true,
+      hostname: false,
       rolename: true,
       pid: false,
       username: false,
-      system: false,
-      facility: true,
+      system: true,
+      facility: false,
       detector: false,
       partition: false,
       run: false,
-      errcode: false,
+      errcode: true,
       errline: false,
       errsource: false,
       message: true
     };
 
-    this.filters = {
-      match: {
-        severity: '',
-        level: '',
-        timestamp: '',
-        hostname: '',
-        rolename: '',
-        pid: '',
-        username: '',
-        system: '',
-        facility: '',
-        detector: '',
-        partition: '',
-        run: '',
-        errcode: '',
-        errline: '',
-        errsource: '',
-        message: ''
-      },
-      exclude: {
-        severity: '',
-        level: '',
-        timestamp: '',
-        hostname: '',
-        rolename: '',
-        pid: '',
-        username: '',
-        system: '',
-        facility: '',
-        detector: '',
-        partition: '',
-        run: '',
-        errcode: '',
-        errline: '',
-        errsource: '',
-        message: ''
-      }
-    };
+    this.rawFilters = {}; // copy of user inputs
+    this.filters = {}; // parsed version with type casting
 
     $('#ws').bind('websocketmessage', (evt, data) => {
       this.onLiveMessage(data.payload);
@@ -85,12 +49,10 @@ class ModelApp extends Observable {
 
   /**
    * Query server for logs stored in DB
-   * @param {string} from - date limit
-   * @param {string} to - date limit
-   * @param {int} limit - how many rows to get
    * @return {xhr} jquery ajax instance
    */
-  query(from, to, limit) {
+  query() {
+    console.log('this:', this);
     // first, stop real-time if set
     if (this.live()) {
       this.live(false);
@@ -105,7 +67,7 @@ class ModelApp extends Observable {
     return $.ajax({
       url: '/api/query?token=' + appConfig.token,
       method: 'POST',
-      data: JSON.stringify({filters: this.filters, from, to, limit: this.maxLogs}),
+      data: JSON.stringify({limit: this.maxLogs}), // filters: this.filters, TODO: filtering with broadcast
       contentType: 'application/json',
       success: (rows) => {
         // Logs don't have any unique id, so we generate one
@@ -168,7 +130,7 @@ class ModelApp extends Observable {
     log.virtualId = $.virtualId();
 
     this.logs.push(log);
-    if (this.logs.length > this.maxLogs && this.autoCleanEnabled) {
+    if (this.logs.length > this.maxLogs) {
       this.logs = this.logs.slice(-this.maxLogs);
     }
     this.notify();
@@ -194,23 +156,123 @@ class ModelApp extends Observable {
   }
 
   /**
-   * Set search per field (operand: =)
+   * Getter/setter for criterias per field and per operator
    * @param {string} fieldName - field to be set
-   * @param {string} value - criterias, separated by space
+   * @param {string} operator - operator associated (match, exclude, lessthan, morethan)
+   * @param {string} value - criteria
    */
-  matchField(fieldName, value) {
-    this.filters.match[fieldName] = value;
-    this.notify();
+  criteria(fieldName, operator, value) {
+    if (arguments.length === 3) {
+      // this.filters[operator][fieldName] = value;
+      // console.log(arguments);
+      // this.notify();
+
+      switch(operator) {
+        case 'match':
+          this.filters[fieldName] = value;
+          break;
+        case 'exclude':
+          if (this.filters[fieldName] !== 'object') {
+            this.filters[fieldName] = {};
+          }
+          this.filters[fieldName] = {$not: {$eq: value, $not: null}};
+          break;
+        case 'lessthan':
+          if (this.filters[fieldName] !== 'object') {
+            this.filters[fieldName] = {};
+          }
+          this.filters[fieldName] = {$lt: value};
+          break;
+        case 'morethan':
+          if (this.filters[fieldName] !== 'object') {
+            this.filters[fieldName] = {};
+          }
+          this.filters[fieldName] = {$gt: value};
+          break;
+        default:
+          throw new Error(`operator "${operator}" unknown`);
+          break;
+      }
+
+      console.log('this.filters:', this.filters);
+    }
   }
 
   /**
-   * Set search per field (operand: !=)
-   * @param {string} fieldName - field to be set
-   * @param {string} value - criterias, separated by space
+   * Getter/setter for input field, this also update the parsed/casted filters
+   * @param {string} field - name of the column
+   * @param {string} operator - criteria to apply to the column
+   * @param {string} value - the string given by user
+   * @return {string} always a string, to show to user
    */
-  excludeField(fieldName, value) {
-    this.filters.exclude[fieldName] = value;
-    this.notify();
+  rawFilter(field, operator, value) {
+    // Set raw filter
+    if (arguments.length === 3) {
+      if (!value) {
+        // empty value, don't keep useless information
+        delete this.rawFilters[field][operator];
+
+        // remove also the fields widthout any value
+        if (Object.keys(this.rawFilters[field]).length === 0) {
+          delete this.rawFilters[field];
+        }
+      } else {
+        if (!this.rawFilters[field]) {
+          this.rawFilters[field] = {};
+        }
+        this.rawFilters[field][operator] = value;
+      }
+
+      // Set parsed filter
+      this.filters = {};
+      for (const field in this.rawFilters) {
+        this.filters[field] = {};
+
+        for (const operator in this.rawFilters[field]) {
+          // Cast special values
+          let parsedValue = this.rawFilters[field][operator];
+          if (field === 'timestamp') {
+            parsedValue = $.parseDate(parsedValue);
+          } else if (operator === '$in') {
+            parsedValue = parsedValue.split(' ');
+          } else if (operator === '$nin') {
+            parsedValue = parsedValue.split(' ');
+          }
+
+          // Bad values like NaN, null, invalid date
+          if (!parsedValue) {
+            continue;
+          }
+
+          this.filters[field][operator] = parsedValue;
+        }
+      }
+
+      // Notify
+      this.notify();
+      console.log('this.rawFilters:', this.rawFilters, this.filters);
+    }
+
+    // Get raw value, always a string
+    if (!this.rawFilters[field] || !this.rawFilters[field][operator]) {
+      return '';
+    }
+
+    return this.rawFilters[field][operator];
+  }
+
+  /**
+   * Getter for the parsed filters
+   * @param {string} field - name of the column
+   * @param {string} operator - criteria to apply to the column
+   * @return {string|date|number} the parsed value associated to this filter
+   */
+  parsedFilters(field, operator) {
+    if (!this.filters[field]) {
+      return null;
+    }
+
+    return this.filters[field][operator];
   }
 
   /**
@@ -278,20 +340,6 @@ class ModelApp extends Observable {
     }
 
     return this.autoScrollEnabled;
-  }
-
-  /**
-   * Getter/setter for the auto-scroll
-   * @param {bool} enabled - state of auto-scroll
-   * @return {bool} if the auto-scroll is enabled or not
-   */
-  autoClean(enabled) {
-    if (arguments.length) {
-      this.autoCleanEnabled = enabled;
-      this.notify();
-    }
-
-    return this.autoCleanEnabled;
   }
 
   /**
