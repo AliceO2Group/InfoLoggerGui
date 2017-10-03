@@ -20,7 +20,7 @@
   "author": "Vladimir Kosmala",
   "license": "ISC",
   "dependencies": {
-    "@aliceo2/aliceo2-gui": "^1.0.17",
+    "@aliceo2/aliceo2-gui": "^1.0.22",
     "mariasql": "^0.2.6"
   },
   "repository": {
