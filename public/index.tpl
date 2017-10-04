@@ -49,8 +49,16 @@ const appConfig = {
 <script type="text/javascript">
 // Global error handler
 $(document).ajaxError(function(err, xhr) {
-  alert('Error with ajax: ' + xhr.statusText);
-  console.error(err, xhr.statusText);
+  // Error with a message
+  if (xhr.responseJSON && xhr.responseJSON.message) {
+    return alert(xhr.responseJSON.message);
+  }
+
+  // Unknown error, just print the HTTP status
+  alert(xhr.statusText);
+
+  // Log for dev
+  console.error('Ajax error:', xhr);
 });
 
 // Starting app
@@ -76,9 +84,6 @@ $(function() {
   $('#commands').commands({model: app});
   $('#inspector').inspector({model: app});
   $('#statusBar').statusBar({model: app});
-
-  // Let's get the last data to begin
-  app.query();
 
   // Expose app instance for debugging purpose as it contains all the project's data
   window.app = app;

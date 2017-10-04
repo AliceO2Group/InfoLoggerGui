@@ -22,8 +22,8 @@
   "license": "ISC",
   "dependencies": {
     "@aliceo2/aliceo2-gui": "1.0.22",
-    "mariasql": "0.2.6",
-    "morphdom": "2.3.3"
+    "morphdom": "2.3.3",
+    "mysql": "2.14.1"
   },
   "repository": {
     "type": "git",

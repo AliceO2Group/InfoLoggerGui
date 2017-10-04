@@ -31,11 +31,11 @@ module.exports = {
     host: 'localhost',
     port: 6102
   },
-  mysql: { // all options: https://github.com/mscdex/node-mariasql#client-methods
+  mysql: { // all options: https://github.com/mysqljs/mysql#connection-options
     host: '127.0.0.1',
     user: 'root',
     password: '--',
-    db: 'INFOLOGGER',
+    database: 'INFOLOGGER',
     port: 3306
   }
 };

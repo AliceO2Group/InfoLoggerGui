@@ -45,8 +45,7 @@ http.post('/query', function(req, res) {
       res.json(result);
     })
     .catch((err) => {
-      res.status(500).send(err);
-      log.error(err.stack || err);
+      res.status(500).json({message: err.message});
     });
 });
 
