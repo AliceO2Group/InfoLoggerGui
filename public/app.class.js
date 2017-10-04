@@ -115,6 +115,7 @@ class App extends Observable {
       this.total = 0;
       this.liveStarted = true;
       this.queyTime = 0; // no querytime with real-time
+      this.selectedRow = null;
       this.notify();
 
       const filters = this.filters;
@@ -200,6 +201,7 @@ class App extends Observable {
     this.logs = [];
     this.queyTime = 0;
     this.total = 0;
+    this.selectedRow = null;
     this.notify();
   }
 
