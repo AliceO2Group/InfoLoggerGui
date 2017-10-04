@@ -44,7 +44,7 @@ const appConfig = {
 <script src="/statusBar.widget.js"></script>
 <script src="/inspector.widget.js"></script>
 <script src="/utils.js"></script>
-<script src="/morphdom.plugin.js"></script>
+<script src="/libs/morphdom-umd.min.js"></script>
 
 <script type="text/javascript">
 // Global error handler

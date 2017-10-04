@@ -8,3 +8,5 @@ config.js
 
 // Logs from server logger
 error.log
+
+public/libs/
