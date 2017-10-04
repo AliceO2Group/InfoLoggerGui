@@ -50,20 +50,9 @@ http.post('/query', function(req, res) {
     });
 });
 
-http.post('/liveStart', function(req, res) {
-  const filters = req.body.filters;
-  stream.setfilters(filters);
-  stream.connect(config.infoLoggerServer);
-  res.json({ok: 1});
-});
-
-http.post('/liveStop', function(req, res) {
-  stream.disconnect();
-  res.json({ok: 1});
-});
-
+stream.connect(config.infoLoggerServer);
 stream.on('message', (message) => {
   const res = new Response(200);
   res.command('message').payload(message);
-  websocketServer.broadcast(JSON.stringify(res.json));
+  websocketServer.broadcast(res.json);
 });

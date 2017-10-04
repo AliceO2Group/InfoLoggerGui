@@ -46,6 +46,8 @@ hr { border: 0; border-bottom: 1px solid #dddddd; }
 .text-right { text-align: right; }
 .text-overflow { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; } /* hide last part */
 .text-wrap-break { overflow-wrap: break-word; } /* always show last part */
+.text-error { color: #F44336; }
+.text-sucess { color: #4CAF50; }
 
 .pull-left {float: left;}
 .pull-right {float: right;}
@@ -203,7 +205,8 @@ input:disabled, textarea:disabled, select:disabled { background-color: #eceeef; 
 
 .col-150px {
   width: 150px;
-}.col-100px {
+}
+.col-100px {
   width: 100px;
 }
 .col-75px {
