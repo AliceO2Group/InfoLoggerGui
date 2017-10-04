@@ -36,7 +36,6 @@ jQuery.widget('o2.filters', {
       // }
 
       this.model.rawFilter(field, operator, value);
-      console.log('this.model.rawFilter(field, operator):', this.model.rawFilter(field, operator), field, operator);
     });
 
     $(this.element).delegate('.input-datetime-from', 'focus', (e) => {
@@ -102,12 +101,12 @@ jQuery.widget('o2.filters', {
       </tr>
       <tr>
         <td rowspan="2">
-          <select ${model.live() ? 'disabled' : ''}>
-            <option selected>Any</option>
-            <option>Shift ≤1</option>
-            <option>Oncall ≤6</option>
-            <option>Devel ≤11</option>
-            <option>Debug ≤21</option>
+          <select ${model.live() ? 'disabled' : ''} data-criteria data-operator="$lte" data-field="level">
+            <option value="" ${!model.rawFilter('level', '$lte') ? 'selected' : ''}>Any</option>
+            <option value="1" ${model.rawFilter('level', '$lte') === '1' ? 'selected' : ''}>Shift ≤1</option>
+            <option value="6" ${model.rawFilter('level', '$lte') === '6' ? 'selected' : ''}>Oncall ≤6</option>
+            <option value="11" ${model.rawFilter('level', '$lte') === '11' ? 'selected' : ''}>Devel ≤11</option>
+            <option value="21" ${model.rawFilter('level', '$lte') === '21' ? 'selected' : ''}>Debug ≤21</option>
           </select>
         </td>
         <td>

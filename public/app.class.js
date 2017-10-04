@@ -223,13 +223,16 @@ class App extends Observable {
   rawFilter(field, operator, value) {
     // Set raw filter
     if (arguments.length === 3) {
+      console.log(`Set filter ${field} ${operator} ${value}`);
       if (!value) {
-        // empty value, don't keep useless information
-        delete this.rawFilters[field][operator];
+        if (this.rawFilters[field]) {
+          // empty value, don't keep useless information
+          delete this.rawFilters[field][operator];
 
-        // remove also the fields widthout any value
-        if (Object.keys(this.rawFilters[field]).length === 0) {
-          delete this.rawFilters[field];
+          // remove also the fields widthout any value
+          if (Object.keys(this.rawFilters[field]).length === 0) {
+            delete this.rawFilters[field];
+          }
         }
       } else {
         if (!this.rawFilters[field]) {
