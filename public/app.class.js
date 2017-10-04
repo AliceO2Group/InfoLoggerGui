@@ -4,13 +4,15 @@
  * App model containing all data, methods, ajax calls of this application
  * It runs on its own and views can 'observe' for changes to redraw.
  */
-class ModelApp extends Observable {
+class App extends Observable {
   /**
    * Constructor, declares default properties and init Observable super class
    */
-  constructor() {
+  constructor(ws) {
     super();
 
+    this.ws = ws; // websocket connection
+    this.wsState = 'closed';
     this.logs = []; // to be shown
     this.liveStarted = false; // websocket gets new data
     this.inspectorActivated = true; // right panel displaying current row selected
@@ -43,8 +45,20 @@ class ModelApp extends Observable {
     this.rawFilters = {}; // copy of user inputs
     this.filters = {}; // parsed version with type casting
 
-    $('#ws').bind('websocketmessage', (evt, data) => {
+    ws.element.bind('websocketmessage', (evt, data) => {
       this.onLiveMessage(data.payload);
+    });
+
+    ws.element.bind('websocketopen', (evt, data) => {
+      console.log('WS open');
+      this.wsState = 'open';
+      this.notify();
+    });
+
+    ws.element.bind('websocketclose', (evt, data) => {
+      console.log('WS close');
+      this.wsState = 'close';
+      this.notify();
     });
   }
 
@@ -53,7 +67,6 @@ class ModelApp extends Observable {
    * @return {xhr} jquery ajax instance
    */
   query() {
-    console.log('this:', this);
     // first, stop real-time if set
     if (this.live()) {
       this.live(false);
@@ -100,24 +113,55 @@ class ModelApp extends Observable {
       // first, empty all logs, then listen for new ones
       this.logs = [];
       this.total = 0;
+      this.liveStarted = true;
+      this.queyTime = 0; // no querytime with real-time
+      this.selectedRow = null;
       this.notify();
 
-      $.ajax({
-        url: '/api/liveStart?token=' + appConfig.token,
-        method: 'POST',
-        data: JSON.stringify({filters: this.filters}),
-        contentType: 'application/json',
-        success: () => {
-          this.liveStarted = true;
-          this.queyTime = 0; // no querytime with real-time
-          this.notify();
+      const filters = this.filters;
+
+      function fn(message) {
+        const filters = 'data';
+        if (message.payload) {
+          // to be fixed in Gui
+          // https://alice.its.cern.ch/jira/browse/OGUI-76
+          message = message.payload;
         }
-      });
+
+        for (const field in filters) {
+          let messageValue = message[field];
+          if (field === 'timestamp') {
+            messageValue = new Date(message[field] * 1000);
+          }
+
+          for (const operator in filters[field]) {
+            let criteriaValue = filters[field][operator];
+            if (field === 'timestamp') {
+              criteriaValue = new Date(criteriaValue);
+            }
+
+            if (operator === '$in' && criteriaValue.indexOf(messageValue) === -1) {
+              return false;
+            } else if (operator === '$nin' && messageValue && criteriaValue.indexOf(messageValue) >= 0) {
+              return false;
+            } else if (operator === '$gte' && messageValue < criteriaValue) {
+              return false;
+            } else if (operator === '$lte' && messageValue > criteriaValue) {
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+
+      this.ws.setFilter(fn.toString().replace('\'data\'', JSON.stringify(this.filters)));
     } else {
-      $.post('/api/liveStop?token=' + appConfig.token, () => {
-        this.liveStarted = false;
-        this.queyTime = 0; // no querytime with real-time
-        this.notify();
+      this.liveStarted = false;
+      this.queyTime = 0; // no querytime with real-time
+      this.notify();
+
+      this.ws.setFilter(function(message) {
+        return false;
       });
     }
 
@@ -129,8 +173,19 @@ class ModelApp extends Observable {
    * @param {string} log - log object to be inserted
    */
   onLiveMessage(log) {
+    if (!this.liveStarted) {
+      // server is sending but we did not ask to
+      // to be fixed in Gui
+      // https://alice.its.cern.ch/jira/browse/OGUI-77
+      this.ws.setFilter(function(message) {
+        return false;
+      });
+      return;
+    }
+
     // Logs don't have any unique id, so we generate one
     log.virtualId = $.virtualId();
+    this.total++;
 
     this.logs.push(log);
     if (this.logs.length > this.maxLogs) {
@@ -146,6 +201,7 @@ class ModelApp extends Observable {
     this.logs = [];
     this.queyTime = 0;
     this.total = 0;
+    this.selectedRow = null;
     this.notify();
   }
 
@@ -160,49 +216,6 @@ class ModelApp extends Observable {
   }
 
   /**
-   * Getter/setter for criterias per field and per operator
-   * @param {string} fieldName - field to be set
-   * @param {string} operator - operator associated (match, exclude, lessthan, morethan)
-   * @param {string} value - criteria
-   */
-  criteria(fieldName, operator, value) {
-    if (arguments.length === 3) {
-      // this.filters[operator][fieldName] = value;
-      // console.log(arguments);
-      // this.notify();
-
-      switch(operator) {
-        case 'match':
-          this.filters[fieldName] = value;
-          break;
-        case 'exclude':
-          if (this.filters[fieldName] !== 'object') {
-            this.filters[fieldName] = {};
-          }
-          this.filters[fieldName] = {$not: {$eq: value, $not: null}};
-          break;
-        case 'lessthan':
-          if (this.filters[fieldName] !== 'object') {
-            this.filters[fieldName] = {};
-          }
-          this.filters[fieldName] = {$lt: value};
-          break;
-        case 'morethan':
-          if (this.filters[fieldName] !== 'object') {
-            this.filters[fieldName] = {};
-          }
-          this.filters[fieldName] = {$gt: value};
-          break;
-        default:
-          throw new Error(`operator "${operator}" unknown`);
-          break;
-      }
-
-      console.log('this.filters:', this.filters);
-    }
-  }
-
-  /**
    * Getter/setter for input field, this also update the parsed/casted filters
    * @param {string} field - name of the column
    * @param {string} operator - criteria to apply to the column
@@ -212,13 +225,16 @@ class ModelApp extends Observable {
   rawFilter(field, operator, value) {
     // Set raw filter
     if (arguments.length === 3) {
+      console.log(`Set filter ${field} ${operator} ${value}`);
       if (!value) {
-        // empty value, don't keep useless information
-        delete this.rawFilters[field][operator];
+        if (this.rawFilters[field]) {
+          // empty value, don't keep useless information
+          delete this.rawFilters[field][operator];
 
-        // remove also the fields widthout any value
-        if (Object.keys(this.rawFilters[field]).length === 0) {
-          delete this.rawFilters[field];
+          // remove also the fields widthout any value
+          if (Object.keys(this.rawFilters[field]).length === 0) {
+            delete this.rawFilters[field];
+          }
         }
       } else {
         if (!this.rawFilters[field]) {
@@ -254,7 +270,6 @@ class ModelApp extends Observable {
 
       // Notify
       this.notify();
-      console.log('this.rawFilters:', this.rawFilters, this.filters);
     }
 
     // Get raw value, always a string

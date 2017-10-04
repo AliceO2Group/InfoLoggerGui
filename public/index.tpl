@@ -68,7 +68,7 @@ $(function() {
   // Model runs by itself and has an interface Observable
   // so views can connect to him and rereder when they get notified by the model
 
-  const app = new ModelApp();
+  const app = new App(ws);
 
   $('body').body({model: app});
   $('#logs').logs({model: app});
@@ -76,11 +76,6 @@ $(function() {
   $('#commands').commands({model: app});
   $('#inspector').inspector({model: app});
   $('#statusBar').statusBar({model: app});
-
-  // Server should stop by itself the real-time when a client shutdown
-  // but currently there is no way to know if a client has been disconnected
-  // So we tell the server to not live when we begin a new session
-  app.live(false);
 
   // Let's get the last data to begin
   app.query();

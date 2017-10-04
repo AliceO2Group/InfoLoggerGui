@@ -5,3 +5,6 @@ config.js
 
 // Mac files
 .DS_Store
+
+// Logs from server logger
+error.log

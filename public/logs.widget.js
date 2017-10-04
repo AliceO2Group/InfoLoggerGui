@@ -71,7 +71,7 @@ jQuery.widget('o2.logs', {
           ${columns.facility ? `<th class="text-overflow cell-bordered text-left col-100px">Facility</th>` : ''}
           ${columns.detector ? `<th class="text-overflow cell-bordered text-left col-50px">Detector</th>` : ''}
           ${columns.partition ? `<th class="text-overflow cell-bordered text-left col-100px">Partition</th>` : ''}
-          ${columns.run ? `<th class="text-overflow cell-bordered text-left col-50px">Run</th>` : ''}
+          ${columns.run ? `<th class="text-overflow cell-bordered text-left col-75px">Run</th>` : ''}
           ${columns.errcode ? `<th class="text-overflow cell-bordered text-left col-50px">errCode</th>` : ''}
           ${columns.errline ? `<th class="text-overflow cell-bordered text-left col-50px">errLine</th>` : ''}
           ${columns.errsource ? `<th class="text-overflow cell-bordered text-left col-100px">errSource</th>` : ''}
@@ -94,7 +94,7 @@ jQuery.widget('o2.logs', {
             ${columns.facility ? `<col class="col-100px">` : ''}
             ${columns.detector ? `<col class="col-50px">` : ''}
             ${columns.partition ? `<col class="col-100px">` : ''}
-            ${columns.run ? `<col class="col-50px">` : ''}
+            ${columns.run ? `<col class="col-75px">` : ''}
             ${columns.errcode ? `<col class="col-50px">` : ''}
             ${columns.errline ? `<col class="col-50px">` : ''}
             ${columns.errsource ? `<col class="col-100px">` : ''}
