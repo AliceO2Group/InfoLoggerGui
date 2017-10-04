@@ -8,3 +8,6 @@ config.js
 
 // Logs from server logger
 error.log
+
+// Don't push libs copied from npm
+public/libs/
