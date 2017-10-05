@@ -135,7 +135,7 @@ jQuery.widget('o2.logs', {
 
               return `
                 <tr class="row-hover ${rowSelected}" onclick="app.selected('${row.virtualId}')">
-                  ${columns.severity ? `<td class="text-overflow text-center cell-bordered ${classSeverity}">${textSeverity}</td>` : ''}
+                  ${columns.severity ? `<td class="text-overflow text-center cell-bordered text-strong ${classSeverity}">${textSeverity}</td>` : ''}
                   ${columns.level ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.level)}</td>` : ''}
                   ${columns.date ? `<td class="text-overflow cell-bordered">${new Date(row.timestamp * 1000).toLocaleDateString()}</td>` : ''}
                   ${columns.time ? `<td class="text-overflow cell-bordered">${new Date(row.timestamp * 1000).toLocaleTimeString()}</td>` : ''}
