@@ -45,8 +45,8 @@ class App extends Observable {
     this.rawFilters = {}; // copy of user inputs
     this.filters = {}; // parsed version with type casting
 
-    ws.element.bind('websocketmessage', (evt, data) => {
-      this.onLiveMessage(data.payload);
+    ws.element.bind('websocketmessage', (evt, message) => {
+      this.onLiveMessage(message.payload);
     });
 
     ws.element.bind('websocketopen', (evt, data) => {
@@ -120,13 +120,10 @@ class App extends Observable {
 
       const filters = this.filters;
 
+      // This function will be stringified then sent to server so it can filter logs
+      // 'data' will be replaced by the stringified filters too so the function contains de data
       function fn(message) {
         const filters = 'data';
-        if (message.payload) {
-          // to be fixed in Gui
-          // https://alice.its.cern.ch/jira/browse/OGUI-76
-          message = message.payload;
-        }
 
         for (const field in filters) {
           let messageValue = message[field];
