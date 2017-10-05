@@ -15,15 +15,19 @@ jQuery.widget('o2.logs', {
     this.render();
 
     this.rowHeight = 20; // px, to change if CSS change
-    this.logsModel = null; // scroll top when this value change
-    this.logsScrollTop = 0;
+
+    this.logsContainerScrollTop = 0;
+    this.logsContainerOffsetHeight = 0;
+    this.tablePaddingBottom = 0;
+    this.tableMarginTop = 0;
+    this.logsDisplayed = []; // contains only rows displayed for real
 
     // we need this element to watch its scroll position and render only the <td> inside the screen
     // so we are not rendering the <td> the user can't see
     // .container-table-logs will stay the same DOM element thanks to DOM diff algo
     // we do this after render so it exists
-    this.logs = this.el.querySelector('.container-table-logs')
-    this.logs.addEventListener('scroll', (e) => {
+    this.logsContainer = this.el.querySelector('.container-table-logs')
+    this.logsContainer.addEventListener('scroll', (e) => {
       requestAnimationFrame(this.render.bind(this));
     });
 
@@ -36,25 +40,92 @@ jQuery.widget('o2.logs', {
 
   },
 
+  /**
+   * On live mode when new rows are coming and auto-scroll is on, scroll-down
+   * @param {string} argName - blabla
+   * @return {string} blabla
+   */
+  _autoScrollOnLive: function() {
+    if (this.model.live() && this.model.autoScroll() && this.previousLogsLength !== this.model.logs.length) {
+      this.logsContainer.scrollTop = this.logsContainer.scrollHeight;
+    }
+    this.previousLogsLength = this.model.logs.length; // save for next render
+  },
+
+  /**
+   * Auto-scroll top on logs reference change
+   * for example when we clean and add new rows, just scroll top
+   */
+  _autoScrollOnReset: function() {
+    const logs = this.model.logs;
+
+    if (this.logsContainer && this.previousLogsModel !== logs) {
+      this.logsContainer.scrollTop = 0;
+    }
+    this.previousLogsModel = logs; // save for next render
+  },
+
+  /**
+   * Auto-scroll to selected row:
+   * A row is selected and it was not the case earlier,
+   * so let's scroll to it if not in the screen!
+   */
+  _autoScrollOnSelected: function() {
+    const logs = this.model.logs;
+    const selected = this.model.selected();
+
+    if (this.logsContainer && selected && this.previousSelectedRow !== selected) {
+      const viewportStart = this.logsContainerScrollTop;
+      const viewportEnd = this.logsContainerScrollTop + this.logsContainerOffsetHeight - this.rowHeight;
+      const selectedPosition = logs.indexOf(selected) * this.rowHeight;
+
+      // if selected row is outside
+      if (selectedPosition < viewportStart || viewportEnd < selectedPosition) {
+        if (selectedPosition < viewportStart) {
+          this.logsContainer.scrollTop = selectedPosition;
+        }
+        if (viewportEnd < selectedPosition) {
+          this.logsContainer.scrollTop = selectedPosition - this.logsContainerOffsetHeight + this.rowHeight;
+        }
+      }
+    }
+    this.previousSelectedRow = selected; // save for next render
+  },
+
+  /**
+   * Fake big scroll
+   * Only dozen of rows are actually displayed in the table inside a big DIV scrolling
+   * so we need to calculate the position of the table inside it
+   * this is made for performance, DOM cannot handle 50k nodes
+   */
+  _computeTablePosition: function() {
+    const logs = this.model.logs;
+
+    const nbRows = logs.length;
+    const start = Math.round(this.logsContainerScrollTop / this.rowHeight);
+    const end = start + Math.round(this.logsContainerOffsetHeight / this.rowHeight) + 1; // the last one is cut in half
+    const slice = logs.slice(start, end);
+    const allLogsHeight = nbRows * this.rowHeight;
+    const sliceLogsHeight = slice.length * this.rowHeight;
+    this.tablePaddingBottom = Math.max(allLogsHeight - sliceLogsHeight - this.logsContainerScrollTop, 0);
+    // handle max scroll possible: total height - table height
+    // avoid cutting in half the last row or instable rendering (slice unstable)
+    this.tableMarginTop = Math.min(this.logsContainerScrollTop, allLogsHeight - sliceLogsHeight);
+    this.logsDisplayed = slice;
+  },
+
   render: function() {
     const model = this.model;
     const logs = model.logs;
     const columns = model.columns;
 
-    this.logsScrollTop = this.logs ? this.logs.scrollTop : 0;
-    this.logsOffsetHeight = this.logs ? this.logs.offsetHeight : 0;
+    this.logsContainerScrollTop = this.logsContainer ? this.logsContainer.scrollTop : 0;
+    this.logsContainerOffsetHeight = this.logsContainer ? this.logsContainer.offsetHeight : 0;
 
-    const nbRows = logs.length;
-    const start = Math.round(this.logsScrollTop / this.rowHeight);
-    const end = start + Math.round(this.logsOffsetHeight / this.rowHeight) + 1; // the last one is cut in half
-    const slice = logs.slice(start, end);
-    const allLogsHeight = nbRows * this.rowHeight;
-    const sliceLogsHeight = slice.length * this.rowHeight;
-    const paddingBottom = Math.max(allLogsHeight - sliceLogsHeight - this.logsScrollTop, 0);
-
-    // handle max scroll possible: total height - table height
-    // avoid cutting in half the last row or instable rendering (slice unstable)
-    const marginTop = Math.min(this.logsScrollTop, allLogsHeight - sliceLogsHeight);
+    this._autoScrollOnLive();
+    this._autoScrollOnReset();
+    this._autoScrollOnSelected();
+    this._computeTablePosition();
 
     const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''}">
       <table class="table-logs-header table-bordered default-cursor">
@@ -80,7 +151,7 @@ jQuery.widget('o2.logs', {
       </table>
 
       <div class="container-table-logs">
-        <table class="table-hover table-bordered default-cursor" style="margin-top:${marginTop}px;margin-bottom:${paddingBottom}px;">
+        <table class="table-hover table-bordered default-cursor" style="margin-top:${this.tableMarginTop}px;margin-bottom:${this.tablePaddingBottom}px;">
           <colgroup>
             ${columns.severity ? `<col class="col-100px">` : ''}
             ${columns.level ? `<col class="col-50px">` : ''}
@@ -101,7 +172,7 @@ jQuery.widget('o2.logs', {
             ${columns.message ? `<col class="col-max">` : ''}
           </colgroup>
           <tbody>
-            ${slice.map((row) => {
+            ${this.logsDisplayed.map((row) => {
               let classSeverity = '';
               let textSeverity = '';
               if (row) {
@@ -160,20 +231,5 @@ jQuery.widget('o2.logs', {
       </div>
     </div>`;
     morphdom(this.el, tableStr);
-
-    // Scrolling down will force a redraw, so we put it in next animation frame
-    requestAnimationFrame(() => {
-      if (model.live() && model.autoScroll()) {
-        this.logs.scrollTop = this.logs.scrollHeight;
-      }
-    });
-
-    // When reference change (new logs were loaded), scroll top
-    if (this.logsModel !== logs && this.logs) {
-      requestAnimationFrame(() => {
-        this.logs.scrollTop = 0;
-      });
-    }
-    this.logsModel = logs;
   }
 });
