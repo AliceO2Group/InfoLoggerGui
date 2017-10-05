@@ -48,11 +48,12 @@ hr { border: 0; border-bottom: 1px solid #dddddd; }
 .text-wrap-break { overflow-wrap: break-word; } /* always show last part */
 .text-error { color: #F44336; }
 .text-sucess { color: #4CAF50; }
+.text-strong { font-weight: bold; }
 
 .pull-left {float: left;}
 .pull-right {float: right;}
 
-.btn { background-color: transparent; border: 0; text-decoration: none; display: inline-block; font-size: 12px; user-select: none; border-radius: 5px;}
+.btn { background-color: transparent; border: 0; text-decoration: none; display: inline-block; font-size: 12px; user-select: none; border-radius: 5px; padding: 2px 6px 3px; color: black;}
 .btn:hover {background-color: rgba(0, 0, 0, 0.05);}
 .btn.active {background-color: rgba(0, 0, 0, 0.4); color: white;}
 .btn.disabled { color: rgba(0, 0, 0, 0.2); }
@@ -65,6 +66,11 @@ input:disabled, textarea:disabled, select:disabled { background-color: #eceeef; 
 
 .d-flex { display: flex; }
 .hidden { display: none; }
+
+.severity-i { color: #17a2b8; }
+.severity-w { color: #ffc107; }
+.severity-e { color: #dc3545; }
+.severity-f { color: #9c27b0; }
 
 /* filters */
 
@@ -218,23 +224,6 @@ input:disabled, textarea:disabled, select:disabled { background-color: #eceeef; 
 .col-100px:last-child, .col-75px:last-child, .col-50px:last-child {
   /* don't set size for the last column so it take the rest available */
   width: initial;
-}
-
-.severity-i, .severity-w, .severity-e, .severity-f {
-  vertical-align: middle !important;
-  font-weight: bold;
-}
-.severity-i {
-  color: #17a2b8;
-}
-.severity-w {
-  color: #ffc107;
-}
-.severity-e {
-  color: #dc3545;
-}
-.severity-f {
-  color: #9c27b0;
 }
 
 .cell-bordered {

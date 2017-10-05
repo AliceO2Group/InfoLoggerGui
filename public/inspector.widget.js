@@ -14,7 +14,7 @@ jQuery.widget('o2.inspector', {
     this.el = this.element[0]; // get DOM element from widget
     this.render();
 
-    $(this.element).delegate('.copy-table', 'click', (e) => {
+    $(this.element).delegate('[copy-table-action]', 'click', (e) => {
       const table = this.el.querySelector('.inspector-table');
       if (table) {
         $.toClipboard(table);
@@ -81,7 +81,12 @@ jQuery.widget('o2.inspector', {
             </table>
           </div>
           <div class="inspector-content">
-            <button class="btn copy-table">Copy the table</button>
+            <div><button class="btn" copy-table-action>Copy the table</button></div>
+            ${
+              row.errcode
+              ? `<div><a class="btn" href="https://alice-daq.web.cern.ch/error_codes/${$.escapeHTML(row.errcode)}" target="_blank">Go to wiki for error ${$.escapeHTML(row.errcode)}</a></div>`
+              : ''
+            }
           </div>
           `
         }
