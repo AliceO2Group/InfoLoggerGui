@@ -24,6 +24,12 @@ jQuery.widget('o2.commands', {
     <button class="btn toolbar-btn ${model.max() === 100000 ? 'active' : ''}" onclick="app.max(100000)" title="Keep only 100k logs">100k</button>
     <span class="toolbar-spacer"></span>
 
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-Infinity)" title="First error (ALT + left arrow)" ${model.querying ? 'disabled' : ''}>❮❮</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-1)" title="Previous error (left arrow)" ${model.querying ? 'disabled' : ''}>❮</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+1)" title="Next error (right arrow)" ${model.querying ? 'disabled' : ''}>❯</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+Infinity)" title="Last error (ALT + right arrow)" ${model.querying ? 'disabled' : ''}>❯❯</button>
+    <span class="toolbar-spacer"></span>
+
     <button class="btn toolbar-btn ${model.querying ? 'disabled' : ''}" onclick="app.query()" title="Find X first logs based on filters (q)" ${model.querying ? 'disabled' : ''}>${model.querying ? 'Loading...' : 'Query'}</button>
     <span class="toolbar-spacer"></span>
 
@@ -37,7 +43,7 @@ jQuery.widget('o2.commands', {
   </div>
 
   <div class="pull-right command-bar toolbar">
-    <button title="Shortcut: i" class="btn toolbar-btn ${model.inspector() ? 'active' : ''}" onclick="app.inspector(!app.inspector())">Inspector</button>
+    <button title="Show log details (i)" class="btn toolbar-btn ${model.inspector() ? 'active' : ''}" onclick="app.inspector(!app.inspector())">Inspector</button>
   </div>
 </div>`;
 

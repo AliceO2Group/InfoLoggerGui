@@ -46,10 +46,12 @@ jQuery.widget('o2.logs', {
    * @return {string} blabla
    */
   _autoScrollOnLive: function() {
-    if (this.model.live() && this.model.autoScroll() && this.previousLogsLength !== this.model.logs.length) {
+    const logs = this.model.logs();
+
+    if (this.model.live() && this.model.autoScroll() && this.previousLogsLength !== logs.length) {
       this.logsContainer.scrollTop = this.logsContainer.scrollHeight;
     }
-    this.previousLogsLength = this.model.logs.length; // save for next render
+    this.previousLogsLength = logs.length; // save for next render
   },
 
   /**
@@ -57,7 +59,7 @@ jQuery.widget('o2.logs', {
    * for example when we clean and add new rows, just scroll top
    */
   _autoScrollOnReset: function() {
-    const logs = this.model.logs;
+    const logs = this.model.logs();
 
     if (this.logsContainer && this.previousLogsModel !== logs) {
       this.logsContainer.scrollTop = 0;
@@ -71,7 +73,7 @@ jQuery.widget('o2.logs', {
    * so let's scroll to it if not in the screen!
    */
   _autoScrollOnSelected: function() {
-    const logs = this.model.logs;
+    const logs = this.model.logs();
     const selected = this.model.selected();
 
     if (this.logsContainer && selected && this.previousSelectedRow !== selected) {
@@ -99,7 +101,7 @@ jQuery.widget('o2.logs', {
    * this is made for performance, DOM cannot handle 50k nodes
    */
   _computeTablePosition: function() {
-    const logs = this.model.logs;
+    const logs = this.model.logs();
 
     const nbRows = logs.length;
     const start = Math.round(this.logsContainerScrollTop / this.rowHeight);
@@ -116,7 +118,7 @@ jQuery.widget('o2.logs', {
 
   render: function() {
     const model = this.model;
-    const logs = model.logs;
+    const logs = model.logs();
     const columns = model.columns;
 
     this.logsContainerScrollTop = this.logsContainer ? this.logsContainer.scrollTop : 0;
