@@ -15,7 +15,7 @@ jQuery.widget('o2.body', {
     if (e.target.tagName.toLowerCase() === 'input') {
       return;
     }
-console.log('e.keyCode:', e.keyCode, e);
+    console.log('e.keyCode:', e.keyCode, e);
     // shortcuts
     switch (e.keyCode) {
       case 40: // bottom
@@ -43,6 +43,12 @@ console.log('e.keyCode:', e.keyCode, e);
         break;
       case 83: // s
         this.model.autoScroll(!this.model.autoScroll());
+        break;
+      case 37: // left
+        this.model.moveSelectedError(e.altKey ? -Infinity : -1);
+        break;
+      case 39: // right
+        this.model.moveSelectedError(e.altKey ? +Infinity : +1);
         break;
     }
   }

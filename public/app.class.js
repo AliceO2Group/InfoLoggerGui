@@ -13,7 +13,7 @@ class App extends Observable {
 
     this.ws = ws; // websocket connection
     this.wsState = 'closed';
-    this.logs = []; // to be shown
+    this.logsLoaded = []; // to be shown
     this.liveStarted = false; // websocket gets new data
     this.inspectorActivated = true; // right panel displaying current row selected
     this.selectedRow = null;
@@ -21,7 +21,13 @@ class App extends Observable {
     this.maxLogs = 10000;
     this.queyTime = 0;
     this.querying = false; // loading data from a query
-    this.total = 0; // total rows found, can be smaller than logs.length
+
+    this.total = 0; // total rows found, can be smaller than logsLoaded.length
+    this.fatals = 0;
+    this.errors = 0;
+    this.warnings = 0;
+    this.infos = 0;
+
     this.columns = { // display or not
       date: false,
       time: true,
@@ -88,7 +94,7 @@ class App extends Observable {
         result.rows.forEach((row) => row.virtualId = $.virtualId());
 
         this.queyTime = new Date() - startTiming;
-        this.logs = result.rows;
+        this.logs(result.rows);
         this.total = result.total;
       },
       complete: () => {
@@ -111,7 +117,7 @@ class App extends Observable {
 
     if (enabled) {
       // first, empty all logs, then listen for new ones
-      this.logs = [];
+      this.logs([]);
       this.total = 0;
       this.liveStarted = true;
       this.queyTime = 0; // no querytime with real-time
@@ -184,10 +190,7 @@ class App extends Observable {
     log.virtualId = $.virtualId();
     this.total++;
 
-    this.logs.push(log);
-    if (this.logs.length > this.maxLogs) {
-      this.logs = this.logs.slice(-this.maxLogs);
-    }
+    this.logs(log, true);
     this.notify();
   }
 
@@ -195,7 +198,7 @@ class App extends Observable {
    * Empty all logs stored
    */
   empty() {
-    this.logs = [];
+    this.logs([]);
     this.queyTime = 0;
     this.total = 0;
     this.selectedRow = null;
@@ -300,7 +303,7 @@ class App extends Observable {
     if (arguments.length) {
       if (typeof row === 'string') {
         // if we set by the virtualId
-        row = this.logs.find((log) => log.virtualId === row)
+        row = this.logsLoaded.find((log) => log.virtualId === row)
       }
       this.selectedRow = row;
       this.notify();
@@ -314,20 +317,92 @@ class App extends Observable {
    * @param {Number} n - can be negative or positive
    */
   moveRow(n) {
-    if (!this.logs.length) {
+    if (!this.logsLoaded.length) {
       return;
     }
 
     const currentSelected = this.selected();
     if (!currentSelected) {
-      this.selected(this.logs[0]);
+      this.selected(this.logsLoaded[0]);
       return;
     }
 
-    const currentIndex = this.logs.indexOf(currentSelected);
-    const newIndex = Math.min(Math.max(currentIndex + n, 0), this.logs.length - 1); // [0 ; length-1]
+    const currentIndex = this.logsLoaded.indexOf(currentSelected);
+    const newIndex = Math.min(Math.max(currentIndex + n, 0), this.logsLoaded.length - 1); // [0 ; length-1]
 
-    this.selected(this.logs[newIndex].virtualId);
+    this.selected(this.logsLoaded[newIndex].virtualId);
+  }
+
+  /**
+   * Move current cursor by `n` rows, but only errors
+   * @param {Number} n - negative or positive number, Infinity for first and last error
+   */
+  moveSelectedError(n) {
+    if (!this.logs.length) {
+      return;
+    }
+
+    const errors = this.logsLoaded.filter(log => log.severity === 'E');
+
+    const currentSelected = this.selected();
+    if (!currentSelected) {
+      // nothing selected, just select the first error
+      this.selected(errors[0]);
+      return;
+    }
+
+    const currentIndex = errors.indexOf(currentSelected);
+    const newIndex = Math.min(Math.max(currentIndex + n, 0), errors.length - 1); // [0 ; length-1]
+
+    this.selected(errors[newIndex].virtualId);
+  }
+
+  /**
+   * Getter/setter for logs, can append with second arg
+   * @param {array|object} log(s) - the new log(s)
+   * @param {bool} append - just push on last position and truncate if needed
+   * @return {array} logs in memory
+   */
+  logs(newLogs, append) {
+    if (arguments.length) {
+      if (append) {
+        this.logsLoaded.push(newLogs);
+        if (this.logsLoaded.length > this.maxLogs) {
+          this.logsLoaded = this.logsLoaded.slice(-this.maxLogs);
+        }
+      } else {
+        this.logsLoaded = newLogs;
+      }
+
+      // Count by severity
+      // We count each time because of the slice
+      // It is not possible to to just increment
+      this.fatals = 0;
+      this.errors = 0;
+      this.warnings = 0;
+      this.infos = 0;
+      const logs = this.logsLoaded;
+      for (let i = 0; i < logs.length; i++) {
+        switch(logs[i].severity) {
+          case 'F':
+            this.fatals++;
+            break;
+          case 'E':
+            this.errors++;
+            break;
+          case 'W':
+            this.warnings++;
+            break;
+          case 'I':
+            this.infos++;
+            break;
+        }
+      }
+
+      this.notify();
+    }
+
+    return this.logsLoaded;
   }
 
   /**
