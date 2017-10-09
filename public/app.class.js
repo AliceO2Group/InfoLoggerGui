@@ -53,7 +53,6 @@ class App extends Observable {
     this.filters = {}; // parsed version with type casting
 
     ws.element.bind('websocketmessage', (evt, message) => {
-      return console.log(message);
       this.onLiveMessage(message.payload);
     });
 
@@ -73,7 +72,12 @@ class App extends Observable {
     ws.element.bind('websocketclose', (evt, data) => {
       console.log('WS close');
       this.wsState = 'close';
-      this.reconnect();
+
+      const isAuthError = data.code && data.code.code === 1008;
+      if (!isAuthError) {
+        this.reconnect();
+      }
+
       this.notify();
     });
   }
