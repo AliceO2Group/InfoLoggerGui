@@ -53,7 +53,6 @@ class App extends Observable {
     this.filters = {}; // parsed version with type casting
 
     ws.element.bind('websocketmessage', (evt, message) => {
-      return console.log(message);
       this.onLiveMessage(message.payload);
     });
 
@@ -73,6 +72,7 @@ class App extends Observable {
     ws.element.bind('websocketclose', (evt, data) => {
       console.log('WS close');
       this.wsState = 'close';
+
       this.reconnect();
       this.notify();
     });
@@ -140,6 +140,10 @@ class App extends Observable {
   live(enabled) {
     if (!arguments.length) {
       return this.liveStarted;
+    }
+
+    if (this.wsState !== 'open') {
+      return alert('Sorry, connection is not yet ready');
     }
 
     if (enabled) {
