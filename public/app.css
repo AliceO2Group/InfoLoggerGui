@@ -46,8 +46,9 @@ hr { border: 0; border-bottom: 1px solid #dddddd; }
 .text-right { text-align: right; }
 .text-overflow { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; } /* hide last part */
 .text-wrap-break { overflow-wrap: break-word; } /* always show last part */
-.text-error { color: #F44336; }
-.text-sucess { color: #4CAF50; }
+.text-error { color: #F44336 !important; }
+.text-warning { color: #ffc107 !important; }
+.text-sucess { color: #4CAF50 !important; }
 .text-strong { font-weight: bold; }
 
 .pull-left {float: left;}

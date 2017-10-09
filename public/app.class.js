@@ -12,7 +12,7 @@ class App extends Observable {
     super();
 
     this.ws = ws; // websocket connection
-    this.wsState = 'closed';
+    this.wsState = 'closed'; // closed, connecting, authentication, open
     this.logsLoaded = []; // to be shown
     this.liveStarted = false; // websocket gets new data
     this.inspectorActivated = true; // right panel displaying current row selected
@@ -21,6 +21,7 @@ class App extends Observable {
     this.maxLogs = 10000;
     this.queyTime = 0;
     this.querying = false; // loading data from a query
+    this.reconnectTimer = 0;
 
     this.total = 0; // total rows found, can be smaller than logsLoaded.length
     this.fatals = 0;
@@ -52,20 +53,46 @@ class App extends Observable {
     this.filters = {}; // parsed version with type casting
 
     ws.element.bind('websocketmessage', (evt, message) => {
+      return console.log(message);
       this.onLiveMessage(message.payload);
     });
 
-    ws.element.bind('websocketopen', (evt, data) => {
-      console.log('WS open');
+    ws.element.bind('websocketauthed', (evt, message) => {
+      console.log('WS authed, messages can be sent');
       this.wsState = 'open';
+      this.reconnect();
+      this.notify();
+    });
+
+    ws.element.bind('websocketopen', (evt, data) => {
+      console.log('WS open, waiting for authentication');
+      this.wsState = 'authentication';
       this.notify();
     });
 
     ws.element.bind('websocketclose', (evt, data) => {
       console.log('WS close');
       this.wsState = 'close';
+      this.reconnect();
       this.notify();
     });
+  }
+
+  /**
+   * Reconnect ws when connection is lost, 2s between tries
+   */
+  reconnect() {
+    if (this.wsState !== 'close') {
+      return;
+    }
+    this.wsState = 'connecting';
+    this.notify();
+
+    clearTimeout(this.reconnectTimer);
+    this.reconnectTimer = setTimeout(() => {
+      console.log('WS reconnecting now...');
+      ws._connect();
+    }, 2000);
   }
 
   /**
