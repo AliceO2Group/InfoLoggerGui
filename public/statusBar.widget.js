@@ -23,7 +23,12 @@ jQuery.widget('o2.statusBar', {
       ${model.errors ? `<span class="severity-e">${model.errors} E</span>` : ''}
       ${model.fatals ? `<span class="severity-f">${model.fatals} F</span>` : ''}
 
-      <div class="pull-right" title="State of the connection between this app and the web server">${model.wsState === 'open' ? '<span class="text-sucess">READY</span>' : '<span class="text-error">DISCONNECTED</span>'}</div>
+      <div class="pull-right" title="State of the connection between this app and the web server">
+        ${model.wsState === 'open' ? '<span class="text-sucess">READY</span>' : ''}
+        ${model.wsState === 'connecting' ? '<span class="text-warning">CONNECTING</span>' : ''}
+        ${model.wsState === 'authentication' ? '<span class="text-warning">AUTHENTICATION</span>' : ''}
+        ${model.wsState === 'close' ? '<span class="text-error">DISCONNECTED</span>' : ''}
+      </div>
     </div>`;
 
     morphdom(this.el, template);

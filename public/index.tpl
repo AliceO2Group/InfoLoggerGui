@@ -73,6 +73,8 @@ $(function() {
     id: appConfig.personid,
   }, $('#ws') );
 
+  window.ws = ws;
+
   // Model runs by itself and has an interface Observable
   // so views can connect to him and rereder when they get notified by the model
 
