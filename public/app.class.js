@@ -142,6 +142,10 @@ class App extends Observable {
       return this.liveStarted;
     }
 
+    if (this.wsState !== 'open') {
+      return alert('Sorry, connection is not yet ready');
+    }
+
     if (enabled) {
       // first, empty all logs, then listen for new ones
       this.logs([]);
