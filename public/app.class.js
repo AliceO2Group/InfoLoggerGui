@@ -76,6 +76,9 @@ class App extends Observable {
       const isAuthError = data.code && data.code.code === 1008;
       if (!isAuthError) {
         this.reconnect();
+      } else {
+        // session expired code, reload the app to begin a new session
+        location.href = '/';
       }
 
       this.notify();
