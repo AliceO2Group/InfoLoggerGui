@@ -21,7 +21,7 @@
   "author": "Vladimir Kosmala",
   "license": "ISC",
   "dependencies": {
-    "@aliceo2/aliceo2-gui": "^1.0.28",
+    "@aliceo2/aliceo2-gui": "^1.0.29",
     "morphdom": "2.3.3",
     "mysql": "2.14.1"
   },
