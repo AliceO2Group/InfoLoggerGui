@@ -10,6 +10,7 @@
 </div>
 
 <div class="panel-logs">
+  <div id="minimap"><canvas id="canvas" width="50" height="729"></canvas></div>
   <div id="inspector"></div>
   <div id="logs"></div>
 </div>
@@ -37,6 +38,7 @@ const appConfig = {
 <!-- This project -->
 <script src="/observable.class.js"></script>
 <script src="/app.class.js"></script>
+<script src="/minimap.widget.js"></script>
 <script src="/body.widget.js"></script>
 <script src="/logs.widget.js"></script>
 <script src="/commands.widget.js"></script>
@@ -86,6 +88,7 @@ $(function() {
   $('#commands').commands({model: app});
   $('#inspector').inspector({model: app});
   $('#statusBar').statusBar({model: app});
+  $('#minimap').minimap({model: app});
 
   // Expose app instance for debugging purpose as it contains all the project's data
   window.app = app;

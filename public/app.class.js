@@ -343,6 +343,10 @@ class App extends Observable {
         // if we set by the virtualId
         row = this.logsLoaded.find((log) => log.virtualId === row)
       }
+      if (typeof row === 'number') {
+        // if we set by the virtualId
+        row = this.logsLoaded[row];
+      }
       this.selectedRow = row;
       this.notify();
     }
