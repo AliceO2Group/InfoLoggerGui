@@ -18,6 +18,9 @@ jQuery.widget('o2.body', {
     console.log('e.keyCode:', e.keyCode, e);
     // shortcuts
     switch (e.keyCode) {
+      case 13: // bottom
+        this.model.query();
+        break;
       case 40: // bottom
         this.model.moveRow(+1);
         e.preventDefault();
