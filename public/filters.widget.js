@@ -8,7 +8,12 @@ jQuery.widget('o2.filters', {
     }
 
     this.model = this.options.model;
-    this.model.observe(this.render.bind(this)); // refresh when data change
+    this.model.observe((e) => {
+      if (this.requestFrame) {
+        cancelAnimationFrame(this.requestFrame);
+      }
+      this.requestFrame = requestAnimationFrame(this.render.bind(this)); // refresh when data change
+    });
     this.el = this.element[0]; // get DOM element from widget
     this.state = {
       datetimeFromFocus: false, // internal state to show datetime help
