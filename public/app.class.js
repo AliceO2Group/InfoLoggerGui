@@ -18,7 +18,7 @@ class App extends Observable {
     this.inspectorActivated = true; // right panel displaying current row selected
     this.selectedRow = null;
     this.autoScrollEnabled = true;
-    this.maxLogs = 10000;
+    this.maxLogs = 1000;
     this.queyTime = 0;
     this.querying = false; // loading data from a query
     this.reconnectTimer = 0;
@@ -263,7 +263,6 @@ class App extends Observable {
   rawFilter(field, operator, value) {
     // Set raw filter
     if (arguments.length === 3) {
-      console.log(`Set filter ${field} ${operator} ${value}`);
       if (!value) {
         if (this.rawFilters[field]) {
           // empty value, don't keep useless information
@@ -278,7 +277,7 @@ class App extends Observable {
         if (!this.rawFilters[field]) {
           this.rawFilters[field] = {};
         }
-        this.rawFilters[field][operator] = value;
+        this.rawFilters[field][operator] = String(value); // raw input is always string
       }
 
       // Set parsed filter

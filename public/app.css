@@ -284,6 +284,13 @@ button:disabled { color: #eceeef; cursor: no-drop; }
 .inspector-cell {
   padding: 2px;
 }
+.inspector-quick-search {
+  display: none;
+  line-height: 12px;
+}
+td:hover .inspector-quick-search {
+  display: inline;
+}
 
 /* Status bar */
 

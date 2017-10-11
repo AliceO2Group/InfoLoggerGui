@@ -34,11 +34,7 @@ jQuery.widget('o2.filters', {
       const $target = $(e.target);
       const field = $target.data('field');
       const operator = $target.data('operator');
-      let value = $target.val();
-
-      // if (field === 'timestamp') {
-      //   value = $.parseDate(value);
-      // }
+      const value = $target.val();
 
       this.model.rawFilter(field, operator, value);
     });
