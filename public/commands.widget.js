@@ -43,6 +43,7 @@ jQuery.widget('o2.commands', {
   </div>
 
   <div class="pull-right command-bar toolbar">
+    <button title="Show all severities in one view (m)" class="btn toolbar-btn ${model.minimap() ? 'active' : ''}" onclick="app.minimap(!app.minimap())">Minimap</button>
     <button title="Show log details (i)" class="btn toolbar-btn ${model.inspector() ? 'active' : ''}" onclick="app.inspector(!app.inspector())">Inspector</button>
   </div>
 </div>`;

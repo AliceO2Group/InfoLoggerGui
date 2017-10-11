@@ -10,7 +10,12 @@ jQuery.widget('o2.logs', {
     }
 
     this.model = this.options.model;
-    this.model.observe(this.render.bind(this)); // refresh when data change
+    this.model.observe((e) => {
+      if (this.requestFrame) {
+        cancelAnimationFrame(this.requestFrame);
+      }
+      this.requestFrame = requestAnimationFrame(this.render.bind(this)); // refresh when data change
+    });
     this.el = this.element[0]; // get DOM element from widget
     this.render();
 
@@ -22,6 +27,8 @@ jQuery.widget('o2.logs', {
     this.tableMarginTop = 0;
     this.logsDisplayed = []; // contains only rows displayed for real
 
+    window.ll = this;
+
     // we need this element to watch its scroll position and render only the <td> inside the screen
     // so we are not rendering the <td> the user can't see
     // .container-table-logs will stay the same DOM element thanks to DOM diff algo
@@ -29,6 +36,7 @@ jQuery.widget('o2.logs', {
     this.logsContainer = this.el.querySelector('.container-table-logs')
     this.logsContainer.addEventListener('scroll', (e) => {
       requestAnimationFrame(this.render.bind(this));
+      this.model.selected(this.model.selected());
     });
 
     window.addEventListener('resize', (e) => {
@@ -106,9 +114,14 @@ jQuery.widget('o2.logs', {
     const nbRows = logs.length;
     const start = Math.round(this.logsContainerScrollTop / this.rowHeight);
     const end = start + Math.round(this.logsContainerOffsetHeight / this.rowHeight) + 1; // the last one is cut in half
+    this.maxSlice = Math.round(this.logsContainerOffsetHeight / this.rowHeight);
+    this.maxSliceHeight = this.maxSlice * this.rowHeight;
     const slice = logs.slice(start, end);
     const allLogsHeight = nbRows * this.rowHeight;
     const sliceLogsHeight = slice.length * this.rowHeight;
+    this.allLogsHeight = allLogsHeight;
+    this.sliceLogsHeight = sliceLogsHeight;
+
     this.tablePaddingBottom = Math.max(allLogsHeight - sliceLogsHeight - this.logsContainerScrollTop, 0);
     // handle max scroll possible: total height - table height
     // avoid cutting in half the last row or instable rendering (slice unstable)
@@ -129,7 +142,7 @@ jQuery.widget('o2.logs', {
     this._autoScrollOnSelected();
     this._computeTablePosition();
 
-    const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''}">
+    const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''} ${model.minimap() ? 'left-panel-open' : ''}">
       <table class="table-logs-header table-bordered default-cursor">
         <tr>
           ${columns.severity ? `<th class="text-overflow cell-bordered text-center col-100px">Severity</th>` : ''}

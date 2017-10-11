@@ -10,7 +10,12 @@ jQuery.widget('o2.minimap', {
     }
 
     this.model = this.options.model;
-    this.model.observe(this.render.bind(this)); // refresh when data change
+    this.model.observe((e) => {
+      if (this.requestFrame) {
+        cancelAnimationFrame(this.requestFrame);
+      }
+      this.requestFrame = requestAnimationFrame(this.render.bind(this)); // refresh when data change
+    });
     this.el = this.element[0]; // get DOM element from widget
     this.canvas = null;
     this.ctx = null;
@@ -22,7 +27,13 @@ jQuery.widget('o2.minimap', {
       const clickPositionY = eventTop - offsetTop;
       const logsLength = this.model.logs().length;
       const rowNumber = logsLength <= this.canvas.height ? clickPositionY : Math.round(clickPositionY / this.canvas.height * logsLength);
-      this.model.selected(rowNumber);
+      logsLength <= this.canvas.height ?
+        $('.container-table-logs').scrollTop(clickPositionY * 20 - (ll.maxSliceHeight / 2))
+        : $('.container-table-logs').scrollTop(clickPositionY / this.canvas.height * ll.allLogsHeight - (ll.maxSliceHeight / 2))
+    });
+
+    window.addEventListener('resize', (e) => {
+      requestAnimationFrame(this.render.bind(this));
     });
   },
 
@@ -32,19 +43,37 @@ jQuery.widget('o2.minimap', {
 
   render: function() {
     const model = this.model;
+    const logsLength = this.model.logs().length;
 
-    const template = `<div id="minimap"><canvas width="50" height="729"></canvas></div>`;
+    const template = `<div id="minimap" class="${model.minimap() ? 'left-panel-open' : ''}"><canvas width="30" height="100%"></canvas></div>`;
     morphdom(this.el, template);
 
+    if (!model.minimap()) {
+      return; // don't work if not visible
+    }
+
     if (!this.ctx) {
+      // cache reference after first creation of the element
       this.canvas = this.el.querySelector('canvas');
       this.ctx = this.canvas.getContext('2d');
     }
 
+    // get reference from cache
     const ctx = this.ctx;
+    this.canvas.height = this.el.offsetHeight; // this will force browser renderer
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, 50, 99729);
+    ctx.clearRect(0, 0, 30, 99729);
+
+
+    // position of the screen view
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.rect(
+      0, logsLength <= this.canvas.height ? ll.tableMarginTop / 20 : ll.tableMarginTop / ll.allLogsHeight * this.canvas.height, // x, y
+      30, logsLength <= this.canvas.height ? ll.maxSliceHeight / 20 : ll.sliceLogsHeight / ll.allLogsHeight * this.canvas.height // width, height
+    );
+    ctx.fill();
+
     const logs = model.logs();
     ctx.scale(1, Math.min(this.canvas.height / logs.length, 1));
     for (var i = 0; i < logs.length; i++) {
