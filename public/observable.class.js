@@ -3,14 +3,17 @@
  */
 class Observable {
   /**
+   * Initialize observable with an empty array
+   */
+  constructor() {
+    this.observers = [];
+  }
+
+  /**
    * Add an observer
    * @param {function} callback - will be called for each notification
    */
   observe(callback) {
-    if (!this.observers) {
-      this.observers = [];
-    }
-
     this.observers.push(callback);
   }
 
