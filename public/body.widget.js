@@ -22,11 +22,11 @@ jQuery.widget('o2.body', {
         this.model.query();
         break;
       case 40: // bottom
-        this.model.moveRow(+1);
+        this.model.moveSelected(+1);
         e.preventDefault();
         break;
       case 38: // top
-        this.model.moveRow(-1);
+        this.model.moveSelected(-1);
         e.preventDefault();
         break;
       case 73: // i
