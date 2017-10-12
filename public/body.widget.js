@@ -47,6 +47,9 @@ jQuery.widget('o2.body', {
       case 83: // s
         this.model.autoScroll(!this.model.autoScroll());
         break;
+      case 72: // h
+        this.model.help(!this.model.help());
+        break;
       case 37: // left
         this.model.moveSelectedError(e.altKey ? -Infinity : -1);
         break;

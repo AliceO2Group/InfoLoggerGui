@@ -22,6 +22,7 @@ class App extends Observable {
     this.queyTime = 0;
     this.querying = false; // loading data from a query
     this.reconnectTimer = 0;
+    this._helpEnabled = false;
 
     this.total = 0; // total rows found, can be smaller than logsLoaded.length
     this.fatals = 0;
@@ -518,5 +519,19 @@ class App extends Observable {
     }
 
     return this.maxLogs;
+  }
+
+  /**
+   * Getter/setter for the help modal to be shown or not
+   * @param {bool} enabled - set is enabled
+   * @return {bool} if enabled
+   */
+  help(enabled) {
+    if (arguments.length) {
+      this._helpEnabled = enabled;
+      this.notify();
+    }
+
+    return this._helpEnabled;
   }
 }

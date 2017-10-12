@@ -35,7 +35,7 @@ jQuery.widget('o2.commands', {
     <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+Infinity)" title="Last error (ALT + right arrow)" ${model.querying ? 'disabled' : ''}>❯❯</button>
     <span class="toolbar-spacer"></span>
 
-    <button class="btn toolbar-btn ${model.querying ? 'disabled' : ''}" onclick="app.query()" title="Find X first logs based on filters (q)" ${model.querying ? 'disabled' : ''}>${model.querying ? 'Loading...' : 'Query'}</button>
+    <button class="btn toolbar-btn ${model.querying ? 'disabled' : ''}" onclick="app.query()" title="Find X first logs based on filters (q or enter)" ${model.querying ? 'disabled' : ''}>${model.querying ? 'Loading...' : 'Query'}</button>
     <span class="toolbar-spacer"></span>
 
     <span class="toolbar">
