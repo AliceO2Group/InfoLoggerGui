@@ -74,6 +74,14 @@ button:disabled { color: #eceeef; cursor: no-drop; }
 .severity-e { color: #dc3545; }
 .severity-f { color: #9c27b0; }
 
+.modal { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1050; display: block; overflow: hidden; outline: 0; }
+.modal-content { margin: auto; width: 900px; max-width: 100%; }
+.modal-close { font-family: sans-serif; font-size: 5rem; background: transparent; border: 0; position: fixed; top: 1rem; right: 1rem; line-height: 1rem; color: gray; padding: 0; }
+.modal-close:hover { color: black; }
+
+.modal-help { background-color: white; overflow: auto; animation: fade-in-pulse-08 .3s forwards cubic-bezier(.8,.02,.45,.91); font-size: 1rem; }
+@keyframes fade-in-pulse-08{0%{opacity:0;transform:scale(.8)}50%{opacity:1}100%,70%{transform:scale(1)}}
+
 /* filters */
 
 #filters {

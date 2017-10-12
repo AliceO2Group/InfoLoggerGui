@@ -33,6 +33,8 @@ jQuery.widget('o2.statusBar', {
         ${model.wsState === 'connecting' ? '<span class="text-warning">CONNECTING</span>' : ''}
         ${model.wsState === 'authentication' ? '<span class="text-warning">AUTHENTICATION</span>' : ''}
         ${model.wsState === 'close' ? '<span class="text-error">DISCONNECTED</span>' : ''}
+        <span> • </span>
+        <a title="Get some help on how to use this app (h)" class="" href="javascript:;" onclick="app.help(true)">Help</a>
       </div>
     </div>`;
 
