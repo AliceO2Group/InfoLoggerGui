@@ -40,9 +40,18 @@ $ ssh -L 3306:127.0.0.1:3306 user@remote
 
 ### Configuration
 
-The content of config.js must be as follow
+Copy config-default.js to config.js then change values as follow.
 
-TODO: table here, waiting first prototype to be finished
+Path  | Description
+------------- | -------------
+oAuth.secret | password from your oauth declaration
+oAuth.id | login from your oauth declaration
+oAuth.redirect_uri | the URL of this application like https://hostname:port/callback
+http.hostname | should be the one from redirect_uri
+infoLoggerServer.{host,port} | empty if you don't want to use
+mysql.{host,user,password} | empty if you don't want to use
+
+Other fields should be ok by default for your configuration at CERN.
 
 ### Insert fake data into MySQL and check them
 
