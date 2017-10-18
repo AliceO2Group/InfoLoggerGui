@@ -38,14 +38,22 @@ During development you can use SSH Tunnels to use a distant SQL server without o
 
 $ ssh -L 3306:127.0.0.1:3306 user@remote
 
+### Register CERN OAuth
+
+1. Go https://sso-management.web.cern.ch/OAuth/RegisterOAuthClient.aspx
+1. client_id is whatever you want
+1. redirect_uri is like https://hostname:port/callback
+1. Generate and put the secret to your config.js
+1. submit request
+
 ### Configuration
 
 Copy config-default.js to config.js then change values as follow.
 
 Path  | Description
 ------------- | -------------
-oAuth.secret | password from your oauth declaration
-oAuth.id | login from your oauth declaration
+oAuth.secret | password from your oauth registration
+oAuth.id | login from your oauth registration
 oAuth.redirect_uri | the URL of this application like https://hostname:port/callback
 http.hostname | should be the one from redirect_uri
 infoLoggerServer.{host,port} | empty if you don't want to use
