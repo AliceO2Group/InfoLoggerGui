@@ -14,7 +14,7 @@
     "doc": "mkdir -p docs && ./node_modules/.bin/jsdoc2md --files ./*.js public/*.js test/*.js > docs/API.md",
     "ils": "node test/infoLoggerServer.js",
     "postinstall": "mkdir -p public/libs; cp node_modules/morphdom/dist/morphdom-umd.min.js public/libs;",
-    "demo": "concurrently 'npm run start' 'sleep 1 && npm run start'"
+    "demo": "concurrently 'npm run ils' 'sleep 1 && npm run start'"
   },
   "keywords": [
     "Alice"
