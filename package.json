@@ -1,7 +1,7 @@
 {
   "name": "infologgergui",
   "version": "0.0.1",
-  "description": "Streaming and querying O2 logging",
+  "description": "Streaming and querying O2 logging system",
   "main": "index.js",
   "scripts": {
     "test": "npm run eslint && npm run mocha && npm run qunit",
@@ -13,7 +13,8 @@
     "eslint": "./node_modules/.bin/eslint ./*.js public/*.js test/*.js",
     "doc": "mkdir -p docs && ./node_modules/.bin/jsdoc2md --files ./*.js public/*.js test/*.js > docs/API.md",
     "ils": "node test/infoLoggerServer.js",
-    "postinstall": "mkdir -p public/libs; cp node_modules/morphdom/dist/morphdom-umd.min.js public/libs;"
+    "postinstall": "mkdir -p public/libs; cp node_modules/morphdom/dist/morphdom-umd.min.js public/libs;",
+    "demo": "concurrently 'npm run start' 'sleep 1 && npm run start'"
   },
   "keywords": [
     "Alice"
@@ -21,7 +22,8 @@
   "author": "Vladimir Kosmala",
   "license": "ISC",
   "dependencies": {
-    "@aliceo2/aliceo2-gui": "^1.0.29",
+    "@aliceo2/aliceo2-gui": "1.0.29",
+    "concurrently": "3.5.0",
     "morphdom": "2.3.3",
     "mysql": "2.14.1"
   },
