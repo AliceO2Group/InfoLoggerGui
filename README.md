@@ -56,7 +56,8 @@ Other fields should be ok by default for your configuration at CERN.
 ### Insert fake data into MySQL and check them
 
 ```
-$ mysql -u root -p INFOLOGGER < logs.sql
+$ echo "CREATE DATABASE INFOLOGGER;" | mysql
+$ mysql INFOLOGGER < logs.sql
 $ mysql
 $ use INFOLOGGER;
 $ select * from messages limit 10;
