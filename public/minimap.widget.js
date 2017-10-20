@@ -73,12 +73,12 @@ jQuery.widget('o2.minimap', {
     this.ctx.clearRect(0, 0, 30, 99729);
 
     // Draw position of the screen view (the gray area)
-    // this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-    // this.ctx.rect(
-    //   0, logsLength <= this.canvas.height ? this.logsContainer.tableMarginTop / 20 : this.logsContainer.tableMarginTop / this.logsContainer.allLogsHeight * this.canvas.height, // x, y
-    //   30, logsLength <= this.canvas.height ? this.logsContainer.maxSliceHeight / 20 : this.logsContainer.sliceLogsHeight / this.logsContainer.allLogsHeight * this.canvas.height // width, height
-    // );
-    // this.ctx.fill();
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    this.ctx.rect(
+      0, logsLength <= this.canvas.height ? this.logsContainer.tableMarginTop / 20 : this.logsContainer.tableMarginTop / this.logsContainer.allLogsHeight * this.canvas.height, // x, y
+      30, logsLength <= this.canvas.height ? this.logsContainer.maxSliceHeight / 20 : this.logsContainer.sliceLogsHeight / this.logsContainer.allLogsHeight * this.canvas.height // width, height
+    );
+    this.ctx.fill();
 
     // Zoom-out the scrollbar if it cannot fit the screen's height
     if (this.canvas.height / logsLength < 1) {
