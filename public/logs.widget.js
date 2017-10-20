@@ -18,6 +18,7 @@ jQuery.widget('o2.logs', {
     });
     this.el = this.element[0]; // get DOM element from widget
     this.render();
+    $('#minimap').minimap({model: this.options.model, logsContainer: this});
 
     this.rowHeight = 20; // px, to change if CSS change
 
@@ -26,8 +27,6 @@ jQuery.widget('o2.logs', {
     this.tablePaddingBottom = 0;
     this.tableMarginTop = 0;
     this.logsDisplayed = []; // contains only rows displayed for real
-
-    window.ll = this;
 
     // we need this element to watch its scroll position and render only the <td> inside the screen
     // so we are not rendering the <td> the user can't see
@@ -244,7 +243,16 @@ jQuery.widget('o2.logs', {
           </tbody>
         </table>
       </div>
+
+      <div id="minimap"></div>
     </div>`;
-    morphdom(this.el, tableStr);
+    morphdom(this.el, tableStr, {
+      onBeforeElUpdated: (fromEl, toEl) => {
+        // Don't redraw widgets, they are redrawing by themselve
+        if (fromEl.id === 'minimap') {
+          return false;
+        }
+      }
+    });
   }
 });
