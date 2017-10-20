@@ -2,15 +2,18 @@
 
 Web app for querying infoLogger database and streaming logs in real-time with filtering.
 
-```
-$ git clone ...
-$ cd InfoLoggerGui
-$ mkdir cert
-$ openssl req -nodes -x509 -newkey rsa:4096 -keyout cert/key.pem -out cert/cert.pem -days 365
-$ mv config-default.js config.js
-$ vi config.js
-$ npm install
-$ npm start
+```bash
+git clone ...
+cd InfoLoggerGui
+mkdir cert
+openssl req -nodes -x509 -newkey rsa:4096 -keyout cert/key.pem -out cert/cert.pem -days 365
+mv config-default.js config.js
+# configure your mysql instance, see below
+# register on Oauth, see below
+vi config.js
+npm install
+npm run ils # if fake InfoLoggerServer needed
+npm start
 ```
 
 You need a MySQL and a InfoLoggerServer to connect to. InfoLoggerServer can be faked using `npm run ils`.
@@ -23,34 +26,79 @@ npm run test | will run eslint, mocha and qunit
 npm run doc | build the doc in docs/API.md
 npm run coverage | report coverage of tests
 npm run ils | start local InfoLoggerServer with fake real-time data for dev purpose
+npm run demo | start both InfoLoggerGui and a fake InfoLoggerServer
 
-Before starting the InfoLoggerGui (which is a server/client view), you should have a InfoLoggerServer and MySQL running (which store the logs) and configured in config.js, all this can be found here: https://github.com/AliceO2Group/InfoLogger/blob/master/doc/README.md
+Before starting the InfoLoggerGui (which is a server/client view), you should have a InfoLoggerServer and MySQL running (which store the logs) and configured in config.js
 
 ### Compatibility
 
 All browsers, starting from IE 12 (Edge)
 
-# How to develop
+### Register CERN OAuth
 
-### Working with remote MariaSQL server
-
-During development you can use SSH Tunnels to use a distant SQL server without opening him to the world which is a security issue cause of bruteforce.
-
-$ ssh -L 3306:127.0.0.1:3306 user@remote
+1. Go https://sso-management.web.cern.ch/OAuth/RegisterOAuthClient.aspx
+1. client_id is whatever you want
+1. redirect_uri is like https://hostname:port/callback
+1. Generate and put the secret to your config.js
+1. submit request
 
 ### Configuration
 
-The content of config.js must be as follow
+Copy config-default.js to config.js then change values as follow.
 
-TODO: table here, waiting first prototype to be finished
+Path  | Description
+------------- | -------------
+oAuth.secret | password from your oauth registration
+oAuth.id | login from your oauth registration
+oAuth.redirect_uri | the URL of this application like https://hostname:port/callback
+http.hostname | should be the one from redirect_uri
+infoLoggerServer.{host,port} | empty if you don't want to use
+mysql.{host,user,password} | empty if you don't want to use
+
+Other fields should be ok by default for your configuration at CERN.
 
 ### Insert fake data into MySQL and check them
 
+```bash
+echo "CREATE DATABASE INFOLOGGER;" | mysql
+mysql INFOLOGGER < logs.sql
+mysql
+use INFOLOGGER;
+select * from messages limit 10;
 ```
-$ mysql -u root -p INFOLOGGER < logs.sql
-$ mysql
-$ use INFOLOGGER;
-$ select * from messages limit 10;
+
+If the server is remote with private port, you can build a bridge: `ssh -L 3306:127.0.0.1:3306 user@remote`
+
+### Install on CentOS 7
+
+```bash
+yum install epel-release
+curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
+yum install -y nodejs
+yum install git
+cd /opt
+git clone https://github.com/AliceO2Group/InfoLoggerGui.git
+cd InfoLoggerGui
+npm install --production
+vim /etc/systemd/system/infologgergui.service # see below
+systemctl daemon-reload
+systemctl start infologgergui.service
+systemctl status infologgergui.service
+
+```
+
+```bash
+[Unit]
+Description=InfoLoggerGui
+After=network.target
+
+[Service]
+User=nobody
+Group=nobody
+WorkingDirectory=/opt/InfoLoggerGui
+ExecStart=/usr/bin/npm run start # replace start by demo for fake live data
+Restart=always
+StandardError=syslog
 ```
 
 ### Credits

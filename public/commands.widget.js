@@ -7,7 +7,12 @@ jQuery.widget('o2.commands', {
     this.model = this.options.model;
     this.el = this.element[0]; // get DOM element from widget
     this.render();
-    this.model.observe(this.render.bind(this)); // refresh when data change
+    this.model.observe((e) => {
+      if (this.requestFrame) {
+        cancelAnimationFrame(this.requestFrame);
+      }
+      this.requestFrame = requestAnimationFrame(this.render.bind(this)); // refresh when data change
+    });
   },
 
   render: function() {
@@ -30,7 +35,7 @@ jQuery.widget('o2.commands', {
     <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+Infinity)" title="Last error (ALT + right arrow)" ${model.querying ? 'disabled' : ''}>❯❯</button>
     <span class="toolbar-spacer"></span>
 
-    <button class="btn toolbar-btn ${model.querying ? 'disabled' : ''}" onclick="app.query()" title="Find X first logs based on filters (q)" ${model.querying ? 'disabled' : ''}>${model.querying ? 'Loading...' : 'Query'}</button>
+    <button class="btn toolbar-btn ${model.querying ? 'disabled' : ''}" onclick="app.query()" title="Find X first logs based on filters (q or enter)" ${model.querying ? 'disabled' : ''}>${model.querying ? 'Loading...' : 'Query'}</button>
     <span class="toolbar-spacer"></span>
 
     <span class="toolbar">
@@ -43,7 +48,7 @@ jQuery.widget('o2.commands', {
   </div>
 
   <div class="pull-right command-bar toolbar">
-    <button title="Show all severities in one view (m)" class="btn toolbar-btn ${model.minimap() ? 'active' : ''}" onclick="app.minimap(!app.minimap())">Minimap</button>
+    <button title="Show all severities in one view (m)" class="btn toolbar-btn ${model.minimap() ? 'active' : ''}" onclick="app.minimap(!app.minimap())">Minimap (experimental)</button>
     <button title="Show log details (i)" class="btn toolbar-btn ${model.inspector() ? 'active' : ''}" onclick="app.inspector(!app.inspector())">Inspector</button>
   </div>
 </div>`;

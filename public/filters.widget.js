@@ -8,7 +8,12 @@ jQuery.widget('o2.filters', {
     }
 
     this.model = this.options.model;
-    this.model.observe(this.render.bind(this)); // refresh when data change
+    this.model.observe((e) => {
+      if (this.requestFrame) {
+        cancelAnimationFrame(this.requestFrame);
+      }
+      this.requestFrame = requestAnimationFrame(this.render.bind(this)); // refresh when data change
+    });
     this.el = this.element[0]; // get DOM element from widget
     this.state = {
       datetimeFromFocus: false, // internal state to show datetime help
@@ -29,11 +34,7 @@ jQuery.widget('o2.filters', {
       const $target = $(e.target);
       const field = $target.data('field');
       const operator = $target.data('operator');
-      let value = $target.val();
-
-      // if (field === 'timestamp') {
-      //   value = $.parseDate(value);
-      // }
+      const value = $target.val();
 
       this.model.rawFilter(field, operator, value);
     });

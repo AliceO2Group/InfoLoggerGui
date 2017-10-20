@@ -5,7 +5,12 @@ jQuery.widget('o2.statusBar', {
     }
 
     this.model = this.options.model;
-    this.model.observe(this.render.bind(this)); // refresh when data change
+    this.model.observe((e) => {
+      if (this.requestFrame) {
+        cancelAnimationFrame(this.requestFrame);
+      }
+      this.requestFrame = requestAnimationFrame(this.render.bind(this)); // refresh when data change
+    });
     this.el = this.element[0]; // get DOM element from widget
     this.render();
   },
@@ -28,6 +33,8 @@ jQuery.widget('o2.statusBar', {
         ${model.wsState === 'connecting' ? '<span class="text-warning">CONNECTING</span>' : ''}
         ${model.wsState === 'authentication' ? '<span class="text-warning">AUTHENTICATION</span>' : ''}
         ${model.wsState === 'close' ? '<span class="text-error">DISCONNECTED</span>' : ''}
+        <span> • </span>
+        <a title="Get some help on how to use this app (h)" class="" href="javascript:;" onclick="app.help(true)">Help</a>
       </div>
     </div>`;
 

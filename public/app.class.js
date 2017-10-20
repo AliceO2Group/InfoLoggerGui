@@ -23,6 +23,7 @@ class App extends Observable {
     this.queyTime = 0;
     this.querying = false; // loading data from a query
     this.reconnectTimer = 0;
+    this._helpEnabled = false;
 
     this.total = 0; // total rows found, can be smaller than logsLoaded.length
     this.fatals = 0;
@@ -50,7 +51,7 @@ class App extends Observable {
       message: true
     };
 
-    this.rawFilters = {}; // copy of user inputs
+    this._rawFilters = {}; // copy of user inputs
     this.filters = {}; // parsed version with type casting
 
     ws.element.bind('websocketmessage', (evt, message) => {
@@ -84,6 +85,21 @@ class App extends Observable {
 
       this.notify();
     });
+
+    // Backward in history of filters
+    window.addEventListener('popstate', (e) => {
+      if (e.state) {
+        const rawFilters = e.state;
+        this.rawFilters(rawFilters);
+      }
+    });
+
+    // Load filters from hash when starting app
+    if (location.hash) {
+      const rawFiltersStr = location.hash.substr(1); // remove '#'
+      const rawFilters = JSON.parse(rawFiltersStr);
+      this.rawFilters(rawFilters); // load it up
+    }
   }
 
   /**
@@ -118,6 +134,9 @@ class App extends Observable {
     const startTiming = new Date();
     this.querying = true;
     this.notify();
+
+    // We put the filters in the URL so we can navigate though results in browser history
+    history.pushState(this._rawFilters, '', '#' + JSON.stringify(this._rawFilters));
 
     return $.ajax({
       url: '/api/query?token=' + appConfig.token,
@@ -245,13 +264,31 @@ class App extends Observable {
   }
 
   /**
-   * Set if a field should be displayed or not
+   * Getter/setter if a field should be displayed or not
    * @param {string} fieldName - field to be set
    * @param {boolean} value - display or not
+   * @return {bool} if should be displayed
    */
   displayField(fieldName, value) {
-    this.columns[fieldName] = value;
-    this.notify();
+    if (arguments.length === 2) {
+      this.columns[fieldName] = value;
+      this.notify();
+    }
+
+    return this.columns[fieldName];
+  }
+
+  /**
+   * Set many raw filters from an object, because it calls rawFilter, parsed filters
+   * will be setted too, it must be used to load any filter from outside model
+   * @param {object} rawFilters - field->operator
+   */
+  rawFilters(rawFilters) {
+    for (const field in rawFilters) {
+      for (const operator in rawFilters[field]) {
+        this.rawFilter(field, operator, rawFilters[field][operator]);
+      }
+    }
   }
 
   /**
@@ -264,32 +301,31 @@ class App extends Observable {
   rawFilter(field, operator, value) {
     // Set raw filter
     if (arguments.length === 3) {
-      console.log(`Set filter ${field} ${operator} ${value}`);
       if (!value) {
-        if (this.rawFilters[field]) {
+        if (this._rawFilters[field]) {
           // empty value, don't keep useless information
-          delete this.rawFilters[field][operator];
+          delete this._rawFilters[field][operator];
 
           // remove also the fields widthout any value
-          if (Object.keys(this.rawFilters[field]).length === 0) {
-            delete this.rawFilters[field];
+          if (Object.keys(this._rawFilters[field]).length === 0) {
+            delete this._rawFilters[field];
           }
         }
       } else {
-        if (!this.rawFilters[field]) {
-          this.rawFilters[field] = {};
+        if (!this._rawFilters[field]) {
+          this._rawFilters[field] = {};
         }
-        this.rawFilters[field][operator] = value;
+        this._rawFilters[field][operator] = String(value); // raw input is always string
       }
 
       // Set parsed filter
       this.filters = {};
-      for (const field in this.rawFilters) {
+      for (const field in this._rawFilters) {
         this.filters[field] = {};
 
-        for (const operator in this.rawFilters[field]) {
+        for (const operator in this._rawFilters[field]) {
           // Cast special values
-          let parsedValue = this.rawFilters[field][operator];
+          let parsedValue = this._rawFilters[field][operator];
           if (field === 'timestamp') {
             parsedValue = $.parseDate(parsedValue);
           } else if (operator === '$in') {
@@ -312,11 +348,11 @@ class App extends Observable {
     }
 
     // Get raw value, always a string
-    if (!this.rawFilters[field] || !this.rawFilters[field][operator]) {
+    if (!this._rawFilters[field] || !this._rawFilters[field][operator]) {
       return '';
     }
 
-    return this.rawFilters[field][operator];
+    return this._rawFilters[field][operator];
   }
 
   /**
@@ -359,7 +395,7 @@ class App extends Observable {
    * Move current cursor by `n` rows
    * @param {Number} n - can be negative or positive
    */
-  moveRow(n) {
+  moveSelected(n) {
     if (!this.logsLoaded.length) {
       return;
     }
@@ -502,5 +538,19 @@ class App extends Observable {
     }
 
     return this.maxLogs;
+  }
+
+  /**
+   * Getter/setter for the help modal to be shown or not
+   * @param {bool} enabled - set is enabled
+   * @return {bool} if enabled
+   */
+  help(enabled) {
+    if (arguments.length) {
+      this._helpEnabled = enabled;
+      this.notify();
+    }
+
+    return this._helpEnabled;
   }
 }

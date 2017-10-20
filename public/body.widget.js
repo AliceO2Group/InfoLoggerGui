@@ -18,12 +18,15 @@ jQuery.widget('o2.body', {
     console.log('e.keyCode:', e.keyCode, e);
     // shortcuts
     switch (e.keyCode) {
+      case 13: // bottom
+        this.model.query();
+        break;
       case 40: // bottom
-        this.model.moveRow(+1);
+        this.model.moveSelected(+1);
         e.preventDefault();
         break;
       case 38: // top
-        this.model.moveRow(-1);
+        this.model.moveSelected(-1);
         e.preventDefault();
         break;
       case 73: // i
@@ -43,6 +46,9 @@ jQuery.widget('o2.body', {
         break;
       case 83: // s
         this.model.autoScroll(!this.model.autoScroll());
+        break;
+      case 72: // h
+        this.model.help(!this.model.help());
         break;
       case 37: // left
         this.model.moveSelectedError(e.altKey ? -Infinity : -1);

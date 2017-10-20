@@ -153,3 +153,15 @@ $.parseDate = function(humanString) {
 
   return date;
 }
+
+/**
+ * Generate a datetime representation string compatible with the previous parser
+ * @param {number} timestamp - 1456135200002.017
+ * @return {string} dd/mm/yyyy HH:MM:SS.mmm
+ */
+$.datetime = function(timestamp) {
+  const date = new Date(timestamp);
+  const day = `${date.getDate()}/${date.getMonth() + 1}/${date.getYear() + 1900}`;
+  const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
+  return `${day} ${time}`;
+}

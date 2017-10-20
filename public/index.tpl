@@ -16,6 +16,7 @@
 </div>
 
 <div id="statusBar"></div>
+<div id="help"></div>
 
 <div id="ws"></div>
 
@@ -45,6 +46,7 @@ const appConfig = {
 <script src="/filters.widget.js"></script>
 <script src="/statusBar.widget.js"></script>
 <script src="/inspector.widget.js"></script>
+<script src="/help.widget.js"></script>
 <script src="/utils.js"></script>
 <script src="/libs/morphdom-umd.min.js"></script>
 
@@ -89,6 +91,7 @@ $(function() {
   $('#inspector').inspector({model: app});
   $('#statusBar').statusBar({model: app});
   $('#minimap').minimap({model: app});
+  $('#help').help({model: app});
 
   // Expose app instance for debugging purpose as it contains all the project's data
   window.app = app;
