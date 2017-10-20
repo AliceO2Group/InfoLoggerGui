@@ -193,44 +193,15 @@ button:disabled { color: #eceeef; cursor: no-drop; }
 
 /* Logs view */
 
-#logs {
-  height: 100%;
-  transition: margin-right 0.3s;
-  position: relative;
-}
-#logs.right-panel-open {
-  margin-right: 350px;
-}
+#logs { height: 100%; transition: margin-right 0.3s; position: relative; }
+#logs.right-panel-open { margin-right: 350px; }
+.table-logs-header { background-color: white; border-bottom: 1px solid #aaa; height: 25px; line-height: 22px; }
+.container-table-logs { width: 100%; overflow-x: hidden; overflow-y: scroll; position: absolute; top: 25px; /* table header + 1px border */ bottom: 0; background-color: white;}
 
-.table-logs-header {
-  background-color: white;
-  border-bottom: 1px solid #aaa;
-  height: 25px;
-  line-height: 22px;
-}
-
-.container-table-logs {
-  width: 100%;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  position: absolute;
-  top: 25px; /* table header + 1px border */
-  bottom: 0;
-  background-color: white;
-}
-
-.col-150px {
-  width: 150px;
-}
-.col-100px {
-  width: 100px;
-}
-.col-75px {
-  width: 75px;
-}
-.col-50px {
-  width: 50px;
-}
+.col-150px { width: 150px; }
+.col-100px { width: 100px; }
+.col-75px { width: 75px; }
+.col-50px { width: 50px; }
 .col-100px:last-child, .col-75px:last-child, .col-50px:last-child {
   /* don't set size for the last column so it take the rest available */
   width: initial;
@@ -299,6 +270,10 @@ button:disabled { color: #eceeef; cursor: no-drop; }
 td:hover .inspector-quick-search {
   display: inline;
 }
+
+/* Minimap */
+#minimap { width: 30px; background-color: white; position: absolute; top: 25px; right: 0; bottom: 0; border-left: 0; overflow: hidden; display: none; }
+#minimap.left-panel-open { width: 30px; border-left: 1px solid #aaa; display: block; }
 
 /* Status bar */
 

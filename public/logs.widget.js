@@ -18,6 +18,7 @@ jQuery.widget('o2.logs', {
     });
     this.el = this.element[0]; // get DOM element from widget
     this.render();
+    $('#minimap').minimap({model: this.options.model, logsContainer: this});
 
     this.rowHeight = 20; // px, to change if CSS change
 
@@ -34,6 +35,7 @@ jQuery.widget('o2.logs', {
     this.logsContainer = this.el.querySelector('.container-table-logs')
     this.logsContainer.addEventListener('scroll', (e) => {
       requestAnimationFrame(this.render.bind(this));
+      this.model.selected(this.model.selected());
     });
 
     window.addEventListener('resize', (e) => {
@@ -111,9 +113,14 @@ jQuery.widget('o2.logs', {
     const nbRows = logs.length;
     const start = Math.round(this.logsContainerScrollTop / this.rowHeight);
     const end = start + Math.round(this.logsContainerOffsetHeight / this.rowHeight) + 1; // the last one is cut in half
+    this.maxSlice = Math.round(this.logsContainerOffsetHeight / this.rowHeight);
+    this.maxSliceHeight = this.maxSlice * this.rowHeight;
     const slice = logs.slice(start, end);
     const allLogsHeight = nbRows * this.rowHeight;
     const sliceLogsHeight = slice.length * this.rowHeight;
+    this.allLogsHeight = allLogsHeight;
+    this.sliceLogsHeight = sliceLogsHeight;
+
     this.tablePaddingBottom = Math.max(allLogsHeight - sliceLogsHeight - this.logsContainerScrollTop, 0);
     // handle max scroll possible: total height - table height
     // avoid cutting in half the last row or instable rendering (slice unstable)
@@ -134,7 +141,7 @@ jQuery.widget('o2.logs', {
     this._autoScrollOnSelected();
     this._computeTablePosition();
 
-    const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''}">
+    const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''} ${model.minimap() ? 'left-panel-open' : ''}">
       <table class="table-logs-header table-bordered default-cursor">
         <tr>
           ${columns.severity ? `<th class="text-overflow cell-bordered text-center col-100px">Severity</th>` : ''}
@@ -236,7 +243,16 @@ jQuery.widget('o2.logs', {
           </tbody>
         </table>
       </div>
+
+      <div id="minimap"></div>
     </div>`;
-    morphdom(this.el, tableStr);
+    morphdom(this.el, tableStr, {
+      onBeforeElUpdated: (fromEl, toEl) => {
+        // Don't redraw widgets, they are redrawing by themselve
+        if (fromEl.id === 'minimap') {
+          return false;
+        }
+      }
+    });
   }
 });
