@@ -16,6 +16,7 @@ class App extends Observable {
     this.logsLoaded = []; // to be shown
     this.liveStarted = false; // websocket gets new data
     this.inspectorActivated = true; // right panel displaying current row selected
+    this.minimapActivated = true; // left panel displaying all severities
     this.selectedRow = null;
     this.autoScrollEnabled = true;
     this.maxLogs = 1000;
@@ -379,6 +380,10 @@ class App extends Observable {
         // if we set by the virtualId
         row = this.logsLoaded.find((log) => log.virtualId === row)
       }
+      if (typeof row === 'number') {
+        // if we set by the virtualId
+        row = this.logsLoaded[row];
+      }
       this.selectedRow = row;
       this.notify();
     }
@@ -491,6 +496,20 @@ class App extends Observable {
     }
 
     return this.inspectorActivated;
+  }
+
+  /**
+   * Getter/setter for the minimap
+   * @param {bool} activated - state of the minimap
+   * @return {bool} if the minimap is enabled or not
+   */
+  minimap(activated) {
+    if (arguments.length) {
+      this.minimapActivated = activated;
+      this.notify();
+    }
+
+    return this.minimapActivated;
   }
 
   /**

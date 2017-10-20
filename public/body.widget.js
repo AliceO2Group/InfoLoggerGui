@@ -56,6 +56,9 @@ jQuery.widget('o2.body', {
       case 39: // right
         this.model.moveSelectedError(e.altKey ? +Infinity : +1);
         break;
+      case 77: // m
+        this.model.minimap(!this.model.minimap());
+        break;
     }
   }
 });
