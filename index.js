@@ -1,4 +1,4 @@
-const log = require('@aliceo2/aliceo2-gui').Log;
+const log = require('./lib/logger');
 const HttpServer = require('@aliceo2/aliceo2-gui').HttpServer;
 const WebSocket = require('@aliceo2/aliceo2-gui').WebSocket;
 const Response = require('@aliceo2/aliceo2-gui').Response;
