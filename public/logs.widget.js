@@ -141,7 +141,7 @@ jQuery.widget('o2.logs', {
     this._autoScrollOnSelected();
     this._computeTablePosition();
 
-    const tableStr = `<div id="logs" class="${model.inspector() ? 'right-panel-open' : ''} ${model.minimap() ? 'left-panel-open' : ''}">
+    const tableStr = `<div id="logs" class="unselectable-cursor ${model.inspector() ? 'right-panel-open' : ''} ${model.minimap() ? 'left-panel-open' : ''}">
       <table class="table-logs-header table-bordered default-cursor">
         <tr>
           ${columns.severity ? `<th class="text-overflow cell-bordered text-center col-100px">Severity</th>` : ''}
