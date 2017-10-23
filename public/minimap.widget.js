@@ -20,6 +20,7 @@ jQuery.widget('o2.minimap', {
     this.el = this.element[0]; // get DOM element from widget
     this.canvas = null;
     this.ctx = null;
+    this.mousedown = false;
     this.render();
 
     // On click, scroll to the position like a normal scroll-bar
@@ -28,10 +29,37 @@ jQuery.widget('o2.minimap', {
       const eventTop = e.pageY;
       const clickPositionY = eventTop - offsetTop;
       const logsLength = this.model.logs().length;
-      const rowNumber = logsLength <= this.canvas.height ? clickPositionY : Math.round(clickPositionY / this.canvas.height * logsLength);
-      logsLength <= this.canvas.height ?
-        $('.container-table-logs').scrollTop(clickPositionY * 20 - (this.logsContainer.maxSliceHeight / 2))
-        : $('.container-table-logs').scrollTop(clickPositionY / this.canvas.height * this.logsContainer.allLogsHeight - (this.logsContainer.maxSliceHeight / 2))
+      const rowNumber = Math.round(clickPositionY / this.canvas.height * logsLength);
+      $('.container-table-logs').scrollTop(
+        clickPositionY / this.canvas.height * this.logsContainer.allLogsHeight - (this.logsContainer.maxSliceHeight / 2)
+      )
+    });
+
+    this.canvas.addEventListener('mousedown', (e) => {
+      this.mousedown = true;
+    });
+
+    this.canvas.addEventListener('mousemove', (e) => {
+      if (!this.mousedown) {
+        return;
+      }
+
+      const offsetTop = $(this.canvas).offset().top;
+      const eventTop = e.pageY;
+      const clickPositionY = eventTop - offsetTop;
+      const logsLength = this.model.logs().length;
+      const rowNumber = Math.round(clickPositionY / this.canvas.height * logsLength);
+      $('.container-table-logs').scrollTop(
+        clickPositionY / this.canvas.height * this.logsContainer.allLogsHeight - (this.logsContainer.maxSliceHeight / 2)
+      )
+    });
+
+    this.canvas.addEventListener('mouseout', (e) => {
+      this.mousedown = false;
+    });
+
+    this.canvas.addEventListener('mouseup', (e) => {
+      this.mousedown = false;
     });
 
     // Height will change on resize, re-render it
@@ -50,7 +78,7 @@ jQuery.widget('o2.minimap', {
     const logsLength = logs.length;
 
     var height = this.el.offsetHeight; // offsetHeight will force browser renderer
-    const template = `<div id="minimap" class="${model.minimap() ? 'left-panel-open' : ''}"><canvas width="30" height="${height}"></canvas></div>`;
+    const template = `<div id="minimap" class="unselectable-cursor ${model.minimap() ? 'left-panel-open' : ''}"><canvas width="30" height="${height}"></canvas></div>`;
     morphdom(this.el, template);
 
     if (!model.minimap()) {
@@ -75,15 +103,13 @@ jQuery.widget('o2.minimap', {
     // Draw position of the screen view (the gray area)
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
     this.ctx.rect(
-      0, logsLength <= this.canvas.height ? this.logsContainer.tableMarginTop / 20 : this.logsContainer.tableMarginTop / this.logsContainer.allLogsHeight * this.canvas.height, // x, y
-      30, logsLength <= this.canvas.height ? this.logsContainer.maxSliceHeight / 20 : this.logsContainer.sliceLogsHeight / this.logsContainer.allLogsHeight * this.canvas.height // width, height
+      0, this.logsContainer.tableMarginTop / this.logsContainer.allLogsHeight * this.canvas.height, // x, y
+      30, this.logsContainer.sliceLogsHeight / this.logsContainer.allLogsHeight * this.canvas.height // width, height
     );
     this.ctx.fill();
 
-    // Zoom-out the scrollbar if it cannot fit the screen's height
-    if (this.canvas.height / logsLength < 1) {
-      this.ctx.scale(1, this.canvas.height / logsLength);
-    }
+    // Zoom-out the scrollbar to fit the container's height
+    this.ctx.scale(1, this.canvas.height / logsLength);
 
     // Draw a line for each log, a color per severity
     for (var i = 0; i < logsLength; i++) {
@@ -92,13 +118,13 @@ jQuery.widget('o2.minimap', {
           this.ctx.strokeStyle = 'rgba(23, 162, 184, 0.05)';
           break;
         case 'W':
-          this.ctx.strokeStyle = 'rgba(255, 193, 7, 0.1)';
+          this.ctx.strokeStyle = 'rgba(255, 152, 0, 0.7)';
           break;
         case 'E':
-          this.ctx.strokeStyle = 'rgba(220, 53, 69, 0.5)';
+          this.ctx.strokeStyle = 'rgba(220, 53, 69, 1)';
           break;
         case 'F':
-          this.ctx.strokeStyle = 'rgba(156, 39, 176, 0.1)';
+          this.ctx.strokeStyle = 'rgba(156, 39, 176, 0.7)';
           break;
       }
       this.ctx.beginPath();
