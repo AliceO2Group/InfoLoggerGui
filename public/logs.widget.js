@@ -164,7 +164,7 @@ jQuery.widget('o2.logs', {
         </tr>
       </table>
 
-      <div class="container-table-logs">
+      <div class="container-table-logs ${model.minimap() ? 'hide-scroll-bar' : ''}">
         <table class="table-hover table-bordered default-cursor" style="margin-top:${this.tableMarginTop}px;margin-bottom:${this.tablePaddingBottom}px;">
           <colgroup>
             ${columns.severity ? `<col class="col-100px">` : ''}
