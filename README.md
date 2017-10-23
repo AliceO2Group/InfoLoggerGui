@@ -2,6 +2,8 @@
 
 Web app for querying infoLogger database and streaming logs in real-time with filtering.
 
+![](docs/screenshot.png)
+
 ```bash
 git clone ...
 cd InfoLoggerGui
