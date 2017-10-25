@@ -83,7 +83,7 @@ jQuery.widget('o2.inspector', {
             <table class="inspector-table">
               <tr><td class="col-100px inspector-cell text-right">Severity :</td><td class="text-wrap-break ${classSeverity}">${textSeverity}</td></tr>
               <tr><td class="col-100px inspector-cell text-right">Level :</td><td class="text-wrap-break">${$.escapeHTML(row.level)}</td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Timestamp :</td><td class="text-wrap-break">${$.datetime(parseInt(row.timestamp, 10) * 1000)}<span class="inspector-quick-search default-cursor" data-search="timestamp"> 🔍</span></td></tr>
+              <tr><td class="col-100px inspector-cell text-right">Timestamp :</td><td class="text-wrap-break">${$.datetime(row.timestamp, 'datetime', model.timezone())}<span class="inspector-quick-search default-cursor" data-search="timestamp"> 🔍</span></td></tr>
               <tr><td class="col-100px inspector-cell text-right">Hostname :</td><td class="text-wrap-break">${$.escapeHTML(row.hostname)}<span class="inspector-quick-search default-cursor" data-search="hostname"> 🔍</span></td></tr>
               <tr><td class="col-100px inspector-cell text-right">Rolename :</td><td class="text-wrap-break">${$.escapeHTML(row.rolename)}<span class="inspector-quick-search default-cursor" data-search="rolename"> 🔍</span></td></tr>
               <tr><td class="col-100px inspector-cell text-right">Pid :</td><td class="text-wrap-break">${$.escapeHTML(row.pid)}<span class="inspector-quick-search default-cursor" data-search="pid"> 🔍</span></td></tr>

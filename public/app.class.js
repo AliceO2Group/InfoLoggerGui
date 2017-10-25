@@ -31,6 +31,10 @@ class App extends Observable {
     this.warnings = 0;
     this.infos = 0;
 
+    // default to Geneva (= Zurich)
+    // Can contain any normalized timezone like 'Europe/Zurich'
+    this._timezone = 'America/New_York';
+
     this.columns = { // display or not
       date: false,
       time: true,
@@ -327,7 +331,7 @@ class App extends Observable {
           // Cast special values
           let parsedValue = this._rawFilters[field][operator];
           if (field === 'timestamp') {
-            parsedValue = $.parseDate(parsedValue);
+            parsedValue = $.parseDate(parsedValue, this.timezone());
           } else if (operator === '$in') {
             parsedValue = parsedValue.split(' ');
           } else if (operator === '$nin') {
@@ -552,5 +556,19 @@ class App extends Observable {
     }
 
     return this._helpEnabled;
+  }
+
+  /**
+   * Getter/setter for user timezone, null means local time of the browser/computer
+   * @param {string} timezone - 'Europe/Zurich' or CEST  for example
+   * @return {string} the current timezone to display datetimes
+   */
+  timezone(timezone) {
+    if (arguments.length) {
+      this._timezone = timezone;
+      this.notify();
+    }
+
+    return this._timezone;
   }
 }

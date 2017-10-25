@@ -24,6 +24,10 @@ jQuery.widget('o2.commands', {
     <button class="btn toolbar-btn" onclick="app.empty()" title="Empty all logs (e)">Empty</button>
     <span class="toolbar-spacer"></span>
 
+    <button class="btn toolbar-btn ${model.timezone() === 'Europe/Zurich' ? 'active' : ''}" onclick="app.timezone('Europe/Zurich')" title="Set timezone to Geneva">Geneva</button>
+    <button class="btn toolbar-btn ${model.timezone() === null ? 'active' : ''}" onclick="app.timezone(null)" title="Set timezone to your computer">Local</button>
+    <span class="toolbar-spacer"></span>
+
     <button class="btn toolbar-btn ${model.max() === 1000 ? 'active' : ''}" onclick="app.max(1000)" title="Keep only 1k logs">1k</button>
     <button class="btn toolbar-btn ${model.max() === 10000 ? 'active' : ''}" onclick="app.max(10000)" title="Keep only 10k logs">10k</button>
     <button class="btn toolbar-btn ${model.max() === 100000 ? 'active' : ''}" onclick="app.max(100000)" title="Keep only 100k logs">100k</button>
