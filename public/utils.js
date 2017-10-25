@@ -56,15 +56,17 @@ $.toClipboard = function(el) {
 
 /**
  * Parse a human date string and returns a javascript Date, default date is now
- * @param {String} human date - Eg: -5m means five minutes ago
- * @return {Date} the parsed date or null if empty
+ * @param {string} human date - Eg: -5m means five minutes ago
+ * @param {string} tz - optional timezone, default to local
+ * @return {date} the parsed date or null if empty
  */
-$.parseDate = function(humanString) {
+$.parseDate = function(humanString, tz) {
   if (!humanString) {
     return null;
   }
+  tz = tz || LOCAL_TIMEZONE;
 
-  const date = new Date(); // let's begin by 'now' and modify it according to regexes
+  const date = moment().tz(tz); // let's begin by 'now' and modify it according to regexes
 
   // Array of regex to find something to parse with their setters on Date object.
   // Must follow the same pattern, only last letter change.
@@ -76,23 +78,23 @@ $.parseDate = function(humanString) {
   const relatives = [
     {
       reg: /([-+])([0-9]*)\s?s/i,
-      setter: 'setSeconds',
-      getter: 'getSeconds'
+      setter: 'seconds',
+      getter: 'seconds'
     },
     {
       reg: /([-+])([0-9]*)\s?m/i,
-      setter: 'setMinutes',
-      getter: 'getMinutes'
+      setter: 'minutes',
+      getter: 'minutes'
     },
     {
       reg: /([-+])([0-9]*)\s?h/i,
-      setter: 'setHours',
-      getter: 'getHours'
+      setter: 'hours',
+      getter: 'hours'
     },
     {
       reg: /([-+])([0-9]*)\s?d/i,
-      setter: 'setDate',
-      getter: 'getDate'
+      setter: 'date',
+      getter: 'date'
     }
   ];
 
@@ -101,23 +103,23 @@ $.parseDate = function(humanString) {
   const regDate = /([0-9]+)\/(([0-9]+)(\/([0-9]+)(\/([0-9]+))?)?)?/i;
   const regDateResult = regDate.exec(humanString);
   if (regDateResult) {
-    date.setDate(parseInt(regDateResult[1], 10)); // mandatory day
+    date.date(parseInt(regDateResult[1], 10)); // mandatory day
     if (regDateResult[3]) { // optional month
-      date.setMonth(parseInt(regDateResult[3], 10) - 1); // zero-based
+      date.months(parseInt(regDateResult[3], 10) - 1); // zero-based
     }
     if (regDateResult[5]) { // optional year
       let newYear = parseInt(regDateResult[5], 10); // zero-based
       if (newYear < 100) { // 20 => 2020
         newYear += 2000;
       }
-      date.setYear(newYear);
+      date.years(newYear);
     }
 
     // Midnight of this day
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
+    date.hours(0);
+    date.minutes(0);
+    date.seconds(0);
+    date.milliseconds(0);
   }
 
   // Absolute: [hh:[mm[:ss[.mmm]]] and keep the day previously set
@@ -125,10 +127,10 @@ $.parseDate = function(humanString) {
   const regTime = /([0-9]+):(([0-9]*)(:([0-9]*)(\.([0-9]*))?)?)?/i;
   const regTimeResult = regTime.exec(humanString);
   if (regTimeResult) {
-    date.setHours(parseInt(regTimeResult[1], 10));
-    date.setMinutes(parseInt(regTimeResult[3] || 0, 10)); // set zero if not set
-    date.setSeconds(parseInt(regTimeResult[5] || 0, 10));
-    date.setMilliseconds(parseInt(regTimeResult[7] || 0, 10));
+    date.hours(parseInt(regTimeResult[1], 10));
+    date.minutes(parseInt(regTimeResult[3] || 0, 10)); // set zero if not set
+    date.seconds(parseInt(regTimeResult[5] || 0, 10));
+    date.milliseconds(parseInt(regTimeResult[7] || 0, 10));
   }
 
   // Apply relative changes (eg: +- 5 minutes)
@@ -155,13 +157,27 @@ $.parseDate = function(humanString) {
 }
 
 /**
- * Generate a datetime representation string compatible with the previous parser
- * @param {number} timestamp - 1456135200002.017
+ * Generate a datetime representation string (compatible with parser)
+ * @param {number|string|date} timestamp - 1456135200002.017
+ * @param {string} format - 'datetime' or 'date' or 'time'
+ * @param {string} tz - timezone normalized like 'Europe/Zurich'
  * @return {string} dd/mm/yyyy HH:MM:SS.mmm
  */
-$.datetime = function(timestamp) {
-  const date = new Date(timestamp);
-  const day = `${date.getDate()}/${date.getMonth() + 1}/${date.getYear() + 1900}`;
-  const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
-  return `${day} ${time}`;
+$.datetime = function(timestamp, format, tz) {
+  if (typeof timestamp === 'string') {
+    timestamp = parseFloat(timestamp, 10);
+  }
+  if (typeof timestamp === 'number') {
+    timestamp = timestamp * 1000; // seconds to ms
+  }
+  tz = tz || LOCAL_TIMEZONE;
+
+  if (format === 'datetime') {
+    // zz is the timezone like 'Europe/Zurich', CET (Central European Time), CEST, etc.
+    return moment(timestamp).tz(tz).format('DD/MM/GGGG HH:mm:ss.SSS zz');
+  } else if (format === 'date') {
+    return moment(timestamp).tz(tz).format('DD/MM/GGGG');
+  } else {// time
+    return moment(timestamp).tz(tz).format('HH:mm:ss.SSS');
+  }
 }

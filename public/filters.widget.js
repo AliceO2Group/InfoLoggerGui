@@ -157,7 +157,7 @@ jQuery.widget('o2.filters', {
       return show ? `
         <div class="datetime-helper arrow-up-left">
           <div class="datetime-helper-result">
-            <span>${date || 'Which datetime?'}</span>
+            <span>${date ? $.datetime(date, 'datetime', model.timezone()) : 'Which datetime?'}</span>
           </div>
 
           <div class="datetime-helper-memo">

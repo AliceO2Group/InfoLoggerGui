@@ -30,6 +30,11 @@ const appConfig = {
 };
 </script>
 
+<!-- External libs from 'npm run postinstall' -->
+<script src="/libs/morphdom-umd.min.js"></script>
+<script src="/libs/moment.js"></script>
+<script src="/libs/moment-timezone-with-data.js"></script>
+
 <!-- Gui Framework -->
 <script src="/jquery/jquery.js"></script>
 <script src="/jquery-ui/jquery-ui.js"></script>
@@ -47,7 +52,6 @@ const appConfig = {
 <script src="/inspector.widget.js"></script>
 <script src="/help.widget.js"></script>
 <script src="/utils.js"></script>
-<script src="/libs/morphdom-umd.min.js"></script>
 
 <script type="text/javascript">
 // Global error handler
@@ -64,9 +68,12 @@ $(document).ajaxError(function(err, xhr) {
   console.error('Ajax error:', xhr);
 });
 
+// Global timezone of user
+const LOCAL_TIMEZONE = moment.tz.guess();
+
 // Starting app
 $(function() {
-  /// instance of websocket widget
+  // instance of websocket widget
   const ws = $.o2.websocket({
     // pass url of websocket server
     url: `wss://${location.host}`,
@@ -89,7 +96,6 @@ $(function() {
   $('#commands').commands({model: app});
   $('#inspector').inspector({model: app});
   $('#statusBar').statusBar({model: app});
-  // $('#minimap').minimap({model: app});
   $('#help').help({model: app});
 
   // Expose app instance for debugging purpose as it contains all the project's data
