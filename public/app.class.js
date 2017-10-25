@@ -33,7 +33,7 @@ class App extends Observable {
 
     // default to Geneva (= Zurich)
     // Can contain any normalized timezone like 'Europe/Zurich'
-    this._timezone = 'America/New_York';
+    this._timezone = 'Europe/Zurich';
 
     this.columns = { // display or not
       date: false,
