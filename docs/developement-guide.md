@@ -52,7 +52,7 @@ Here a basic example:
 
 ```JS
 const TODO = new TODO();
-
+```
 
 ### Filters for query and live
 
