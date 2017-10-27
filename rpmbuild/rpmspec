@@ -1,0 +1,33 @@
+Summary: InfoLoggerGui (ILG) client+server allows to browse logs from InfoLoggerServer in real-time or by queying the database.
+Name: InfoLoggerGui
+Version: %{_version}
+Release: 1
+License: GNU
+Group: Applications
+Distribution: CentOS 7
+BuildRequires: git, nodejs >= 7
+Requires: nodejs >= 7, openssl
+Vendor: CERN
+Packager: Vladimir Kosmala <vladimir.kosmala@cern.ch>
+
+%description
+This RPM will install in /opt and /etc/systemd/system/
+
+%build
+cd ~/rpmbuild/BUILD/opt/InfoLoggerGui
+# Install npm depencendies
+npm install --production
+# Prepare data to be packaged
+cp -R ~/rpmbuild/BUILD/opt ~/rpmbuild/BUILDROOT/
+# Prepare systemd file
+mkdir -p ~/rpmbuild/BUILDROOT/etc/systemd/system/
+mv ~/rpmbuild/BUILDROOT/opt/InfoLoggerGui/rpmbuild/infologgergui.service ~/rpmbuild/BUILDROOT/etc/systemd/system/
+
+%files
+/opt/InfoLoggerGui
+/etc/systemd/system/infologgergui.service
+
+%post
+mkdir /opt/InfoLoggerGui/cert
+openssl req -nodes -x509 -newkey rsa:4096 -keyout /opt/InfoLoggerGui/cert/key.pem -out /opt/InfoLoggerGui/cert/cert.pem -days 365 -subj "/C=CH/ST=Geneva/L=Meyrin/O=CERN"
+systemctl daemon-reload

@@ -57,3 +57,16 @@ The parsed structure is used for query or live modes. $in operator split on spac
 ## Templating engine
 
 TODO
+
+## Tips: Insert fake data into MySQL and check them
+
+```bash
+echo "CREATE DATABASE INFOLOGGER;" | mysql
+mysql INFOLOGGER < logs.sql
+mysql
+use INFOLOGGER;
+select * from messages limit 10;
+```
+
+If the server is remote with private port, you can build a bridge: `ssh -L 3306:127.0.0.1:3306 user@remote`
+
