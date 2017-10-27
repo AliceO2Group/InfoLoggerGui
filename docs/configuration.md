@@ -7,7 +7,7 @@ After installation (dev or prod) you need to configure the application to works 
 You need a certificate to access the app via HTTPS, this is mandatory. This is automatic when you install a package.
 
 ```bash
-cd InfoLoggerGui
+cd /opt/InfoLoggerGui
 mkdir cert
 openssl req -nodes -x509 -newkey rsa:4096 -keyout cert/key.pem -out cert/cert.pem -days 365 -subj "/C=CH/ST=Geneva/L=Meyrin/O=CERN"
 ```
@@ -23,9 +23,12 @@ openssl req -nodes -x509 -newkey rsa:4096 -keyout cert/key.pem -out cert/cert.pe
 ## Config file
 
 ```bash
-cd InfoLoggerGui
+cd /opt/InfoLoggerGui
 cp config-default.js config.js
 vim config.js
+systemctl restart infologgergui
+systemctl status infologgergui # check
+# Done, go to the HTTPS link :)
 ```
 
 Path  | Description

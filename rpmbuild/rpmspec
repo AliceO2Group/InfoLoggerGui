@@ -31,3 +31,6 @@ mv ~/rpmbuild/BUILDROOT/opt/InfoLoggerGui/rpmbuild/infologgergui.service ~/rpmbu
 mkdir /opt/InfoLoggerGui/cert
 openssl req -nodes -x509 -newkey rsa:4096 -keyout /opt/InfoLoggerGui/cert/key.pem -out /opt/InfoLoggerGui/cert/cert.pem -days 365 -subj "/C=CH/ST=Geneva/L=Meyrin/O=CERN"
 systemctl daemon-reload
+echo "Installation success :)"
+echo "You need to configure now, see: /opt/InfoLoggerGui/docs/configuration.md"
+
