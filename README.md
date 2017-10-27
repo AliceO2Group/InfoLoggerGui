@@ -12,6 +12,7 @@ Dev documentation:
  * [Configuration (config.js, oauth and certificate)](docs/configuration.md)
  * [Create a package release](docs/create-install-remove-package.md)
  * [Development guide](docs/developement-guide.md)
+ * [API](docs/API.md)
 
 ### Credits
 

@@ -40,14 +40,21 @@ The *index.tpl* is the main controller: it loads CSS and JS files then instancia
 
 *[AliceO2Group/Gui](https://github.com/AliceO2Group/Gui/)* is the base framework which contains web server, websocket server, OAuth handler.
 
-## Templating engine
+```
+
+## The model
+
+It's basically a class, every property has its getter/setter, [see API](API.md), for example `model.inspector(true):bool` enables the inspector, remove the argument and it's now a getter. Setters can have side effect inside the model like `model.query(true)` which begins an ajax call to fill the `model.logs():[]`. The filters are a bit different as they need to be parsed from raw inputs, so calling the getter/setter `model.rawFilters(...)` will affects the result of the getter `model.filters():[]`, which is no a getter only.
+
+Each setter will `notify()` so the views can update.
+
+## The views as components
 
 Here a basic example:
 
 ```JS
 const TODO = new TODO();
 
-```
 
 ### Filters for query and live
 
