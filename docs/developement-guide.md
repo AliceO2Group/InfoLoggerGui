@@ -36,7 +36,9 @@ InfoLoggerGui is a web server with its client part, it uses ajax and websocket t
 
 The application is made of one CSS and JS components. Each component has its view and some events listeners. All the data are stored in the model (App class) which hinerits from an Observable interface. As soon as the model changes, the views update.
 
-The index.tpl is the main controller: it loads CSS and JS files then instanciates the model and the views.
+The *index.tpl* is the main controller: it loads CSS and JS files then instanciates the model and the views.
+
+*[AliceO2Group/Gui](https://github.com/AliceO2Group/Gui/)* is base framework which contains web server, websocket server, OAuth handler.
 
 ## Templating engine
 
