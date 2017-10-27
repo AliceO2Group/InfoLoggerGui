@@ -2,16 +2,6 @@
 
 After installation (dev or prod) you need to configure the application to works in its environement.
 
-## Certificates
-
-You need a certificate to access the app via HTTPS, this is mandatory. This is automatic when you install a package.
-
-```bash
-cd /opt/InfoLoggerGui
-mkdir cert
-openssl req -nodes -x509 -newkey rsa:4096 -keyout cert/key.pem -out cert/cert.pem -days 365 -subj "/C=CH/ST=Geneva/L=Meyrin/O=CERN"
-```
-
 ## Register CERN OAuth
 
 1. Go https://sso-management.web.cern.ch/OAuth/RegisterOAuthClient.aspx
@@ -45,5 +35,22 @@ Other fields should be ok by default for your configuration at CERN.
 If you change the public ports (8080 and 8443), you need change it on your firewall:
 
 ```bash
-firewall-cmd --zone=public --add-port=8443/tcp --add-port=8080/tcp
+# add ports
+firewall-cmd --zone=public --add-port=8443/tcp --add-port=8080/tcp --permanent
+
+# list ports
+firewall-cmd --list-all
+
+# remove ports
+firewall-cmd --zone=public --remove-port=8443/tcp --remove-port=8080/tcp --permanent
+```
+
+## Certificates (dev only)
+
+You need a certificate to access the app via HTTPS, this is mandatory. This is automatic when you install a package.
+
+```bash
+cd /opt/InfoLoggerGui
+mkdir cert
+openssl req -nodes -x509 -newkey rsa:4096 -keyout cert/key.pem -out cert/cert.pem -days 365 -subj "/C=CH/ST=Geneva/L=Meyrin/O=CERN"
 ```

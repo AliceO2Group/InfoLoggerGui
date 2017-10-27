@@ -26,10 +26,9 @@ curl -O https://rpm.nodesource.com/pub_8.x/el/7/x86_64/nodejs-8.8.1-1nodesource.
 yum install nodejs-8.8.1-1nodesource.x86_64.rpm
 
 yum install PACKAGE_FILE
-# [configure](configuration.md)
-systemctl restart infologgergui
-systemctl status infologgergui
 ```
+
+After installation, you need [to configure](configuration.md).
 
 ## Remove package
 ```bash
