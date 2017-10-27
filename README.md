@@ -1,6 +1,6 @@
 # InfoLoggerGui
 
-Web app for querying infoLogger database and streaming logs in real-time with filtering. All browsers, starting from IE 12 (Edge).
+Web app for querying infoLogger database and streaming logs in real-time with filtering. Compatible with all browsers, starting from IE 12 (Edge).
 
 ![](docs/screenshot.png)
 
