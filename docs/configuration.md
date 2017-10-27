@@ -41,3 +41,9 @@ infoLoggerServer.{host,port} | empty if you don't want to use
 mysql.{host,user,password} | empty if you don't want to use
 
 Other fields should be ok by default for your configuration at CERN.
+
+If you change the public ports (8080 and 8443), you need change it on your firewall:
+
+```bash
+firewall-cmd --zone=public --add-port=8443/tcp --add-port=8080/tcp
+```

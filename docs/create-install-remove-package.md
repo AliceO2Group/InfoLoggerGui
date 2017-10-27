@@ -22,6 +22,9 @@ rpmbuild -ba rpmspec --buildroot ~/rpmbuild/BUILDROOT --define '_version `git re
 
 ## Install package
 ```bash
+curl -O https://rpm.nodesource.com/pub_8.x/el/7/x86_64/nodejs-8.8.1-1nodesource.x86_64.rpm
+yum install nodejs-8.8.1-1nodesource.x86_64.rpm
+
 yum install PACKAGE_FILE
 # [configure](configuration.md)
 systemctl restart infologgergui
