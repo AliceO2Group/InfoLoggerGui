@@ -44,7 +44,7 @@ The *index.tpl* is the main controller: it loads CSS and JS files then instancia
 
 ## The model
 
-It's basically a class, every property has its getter/setter, [see API](API.md), for example `model.inspector(true):bool` enables the inspector, remove the argument and it's now a getter. Setters can have side effect inside the model like `model.query(true)` which begins an ajax call to fill the `model.logs():[]`. The filters are a bit different as they need to be parsed from raw inputs, so calling the getter/setter `model.rawFilters(...)` will affects the result of the getter `model.filters():[]`, which is no a getter only.
+It's basically a class, every property has its getter/setter, [see API](API.md), for example `model.inspector(true):bool` enables the inspector, remove the argument and it's now a getter. Setters can have side effect inside the model like `model.live(true)` which begins to fill the `model.logs():[]`. The filters are a bit different as they need to be parsed from raw inputs, so calling the getter/setter `model.rawFilters(...)` will affects the result of the getter `model.filters():[]`, which is no a getter only.
 
 Each setter will `notify()` so the views can update.
 
