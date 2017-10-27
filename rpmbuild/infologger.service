@@ -1,0 +1,11 @@
+[Unit]
+Description=InfoLoggerGui
+After=network.target
+
+[Service]
+User=nobody
+Group=nobody
+WorkingDirectory=/opt/InfoLoggerGui
+ExecStart=/usr/bin/npm run start
+Restart=always
+StandardError=syslog
