@@ -28,9 +28,9 @@ npm run demo | start both InfoLoggerGui and a fake InfoLoggerServer
 ## Architecture
 
 Global view:
-* InfoLoggerServer concentrate logs via TCP streams
-* MySQL keep the logs so we can query them
-* InfoLoggerGui connects to both for 'querying' or 'stream'
+* InfoLoggerServer (external server) concentrates logs via TCP streams
+* MySQL (external server) keep the logs so we can query them
+* InfoLoggerGui (this server) connects to both previous servers for *querying* or *streaming*
 
 InfoLoggerGui is a web server with its client part, it uses ajax and websocket though an API. OAuth allows to connect and have access to the static files (the client).
 
@@ -38,7 +38,7 @@ The application is made of one CSS and JS components. Each component has its vie
 
 The *index.tpl* is the main controller: it loads CSS and JS files then instanciates the model and the views.
 
-*[AliceO2Group/Gui](https://github.com/AliceO2Group/Gui/)* is base framework which contains web server, websocket server, OAuth handler.
+*[AliceO2Group/Gui](https://github.com/AliceO2Group/Gui/)* is the base framework which contains web server, websocket server, OAuth handler.
 
 ## Templating engine
 
