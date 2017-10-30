@@ -1,7 +1,7 @@
 <!doctype html>
 <title>InfoLoggerGui - Alice</title>
 <link rel="icon" href="/favicon.png" />
-<link rel="stylesheet" href="/jquery-ui/jquery-ui.css">
+<link rel="stylesheet" href="/libs/jquery-ui.css">
 <link rel="stylesheet" href="/app.css">
 
 <div class="panel-command">
@@ -36,8 +36,8 @@ const appConfig = {
 <script src="/libs/moment-timezone-with-data.js"></script>
 
 <!-- Gui Framework -->
-<script src="/jquery/jquery.js"></script>
-<script src="/jquery-ui/jquery-ui.js"></script>
+<script src="/libs/jquery.js"></script>
+<script src="/libs/jquery-ui.js"></script>
 <script src="ws.widget.js"></script>
 
 <!-- This project -->
