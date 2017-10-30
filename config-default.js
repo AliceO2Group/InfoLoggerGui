@@ -25,7 +25,8 @@ module.exports = {
     portSecure: 8443,
     hostname: 'vcap.me',
     key: './cert/key.pem',
-    cert: './cert/cert.pem'
+    cert: './cert/cert.pem',
+    tls: true
   },
   infoLoggerServer: {
     host: 'localhost',
