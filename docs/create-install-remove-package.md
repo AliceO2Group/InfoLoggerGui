@@ -15,7 +15,7 @@ mkdir -p ~/rpmbuild/{BUILD/opt,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 cd ~/rpmbuild/BUILD/opt
 git clone https://github.com/AliceO2Group/InfoLoggerGui.git InfoLoggerGui
 cd InfoLoggerGui/rpmbuild
-rpmbuild -ba rpmspec --buildroot ~/rpmbuild/BUILDROOT --define '_version `git rev-parse --short HEAD`' # avoid subdir per architecture
+rpmbuild -ba rpmspec --buildroot ~/rpmbuild/BUILDROOT --define "_version `git rev-parse --short HEAD`" # avoid subdir per architecture
 # wait a minute
 # package available here ls /root/rpmbuild/RPMS/x86_64/InfoLoggerGui-*.rpm
 ```
