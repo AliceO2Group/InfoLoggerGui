@@ -16,7 +16,7 @@ This RPM will install in /opt and /etc/systemd/system/
 %build
 cd ~/rpmbuild/BUILD/opt/InfoLoggerGui
 # Install npm depencendies
-npm install --production
+npm install --production --unsafe-perm
 # Prepare data to be packaged
 cp -R ~/rpmbuild/BUILD/opt ~/rpmbuild/BUILDROOT/
 # Prepare systemd file
