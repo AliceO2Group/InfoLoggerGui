@@ -132,6 +132,7 @@ jQuery.widget('o2.logs', {
     const model = this.model;
     const logs = model.logs();
     const columns = model.columns;
+    const timezone = model.timezone();
 
     this.logsContainerScrollTop = this.logsContainer ? this.logsContainer.scrollTop : 0;
     this.logsContainerOffsetHeight = this.logsContainer ? this.logsContainer.offsetHeight : 0;
@@ -222,8 +223,8 @@ jQuery.widget('o2.logs', {
                 <tr class="row-hover ${rowSelected}" onclick="app.selected('${row.virtualId}')">
                   ${columns.severity ? `<td class="text-overflow text-center cell-bordered text-strong ${classSeverity}">${textSeverity}</td>` : ''}
                   ${columns.level ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.level)}</td>` : ''}
-                  ${columns.date ? `<td class="text-overflow cell-bordered">${new Date(row.timestamp * 1000).toLocaleDateString()}</td>` : ''}
-                  ${columns.time ? `<td class="text-overflow cell-bordered">${new Date(row.timestamp * 1000).toLocaleTimeString()}</td>` : ''}
+                  ${columns.date ? `<td class="text-overflow cell-bordered">${$.datetime(row.timestamp, 'date', timezone)}</td>` : ''}
+                  ${columns.time ? `<td class="text-overflow cell-bordered">${$.datetime(row.timestamp, 'time', timezone)}</td>` : ''}
                   ${columns.hostname ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.hostname)}</td>` : ''}
                   ${columns.rolename ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.rolename)}</td>` : ''}
                   ${columns.pid ? `<td class="text-overflow cell-bordered">${$.escapeHTML(row.pid)}</td>` : ''}

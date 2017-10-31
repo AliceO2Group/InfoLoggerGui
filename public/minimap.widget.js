@@ -115,6 +115,7 @@ jQuery.widget('o2.minimap', {
     for (var i = 0; i < logsLength; i++) {
       switch(logs[i].severity) {
         case 'I':
+          continue; // for performance reason, skip INFO logs
           this.ctx.strokeStyle = 'rgba(23, 162, 184, 0.05)';
           break;
         case 'W':

@@ -34,7 +34,7 @@ jQuery.widget('o2.inspector', {
       const value = row[field];
 
       if (field === 'timestamp') {
-        return model.rawFilter(field, '$gte', $.datetime(parseInt(value, 10) * 1000));
+        return model.rawFilter(field, '$gte', $.datetime(value, 'datetime', this.model.timezone()));
       }
 
       model.rawFilter(field, '$in', value);
