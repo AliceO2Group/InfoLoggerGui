@@ -174,7 +174,8 @@ jQuery.widget('o2.filters', {
               "2/9/12 20:00" second day of septembre 2012, 8pm<br>
               "2/ 20:" second day of this month, 8pm<br>
               "-1d 6:00" yesterday at 6am<br>
-              "-d 6:" yesterday at 6am</i>
+              "-d 6:" yesterday at 6am<br>
+              "-5m" five minutes ago</i>
             </span>
           </div>
         </div>
