@@ -171,9 +171,10 @@ jQuery.widget('o2.filters', {
               [+/-[N]s]<span class="pull-right">relative seconds</span>
               <hr>
               <i>Examples:<br>
-              1/ 20: (first day of this month, 8pm)<br>
-              -5m (now minus 5 minutes)<br>
-              -d 17: (yesterday 5pm)</i>
+              "2/9/12 20:00" second day of septembre 2012, 8pm<br>
+              "2/ 20:" second day of this month, 8pm<br>
+              "-1d 6:00" yesterday at 6am<br>
+              "-d 6:" yesterday at 6am</i>
             </span>
           </div>
         </div>
