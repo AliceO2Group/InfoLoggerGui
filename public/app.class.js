@@ -21,7 +21,7 @@ class App extends Observable {
     this.autoScrollEnabled = true;
     this.maxLogs = 1000;
     this.queyTime = 0;
-    this.querying = false; // loading data from a query
+    this.querying = null; // current instance of the xhr loading
     this.reconnectTimer = 0;
     this._helpEnabled = false;
 
@@ -124,27 +124,48 @@ class App extends Observable {
   }
 
   /**
-   * Query server for logs stored in DB
-   * @return {xhr} jquery ajax instance
+   * Getter/actionner about the ajax call to the server for logs stored in DB.
+   * query(true) query server, it aborts the current query if one is already started.
+   * query(false) aborts current query.
+   * Without argument, query() just get the status if a query is underway.
+   * @param {bool} enable - (optional) start/abort query mode
+   * @return {xhr} jquery ajax instance, null when aborted
    */
-  query() {
+  query(enable) {
+    // Getter
+    if (!arguments.length) {
+      return this.querying;
+    }
+
+    // Actions following...
+
+    // Just abort if anything started
+    if (!enable) {
+      return this.querying && this.querying.abort();
+    }
+
+    // Start a new query
     // first, stop real-time if set
     if (this.live()) {
       this.live(false);
     }
 
-    // jquery does not know how to stringify a deep object, so we JSON.stringify
-    // and we need to set content-type too (form-www-encoded by default)
+    // Stop current query of any
+    if (this.querying) {
+      this.querying.abort();
+    }
+
+    // keep track of how much time it takes
     const startTiming = new Date();
-    this.querying = true;
-    this.notify();
 
     // We put the filters in the URL so we can navigate though results in browser history
     history.pushState(this._rawFilters, '', '#' + JSON.stringify(this._rawFilters));
 
-    return $.ajax({
+    this.querying = $.ajax({
       url: '/api/query?token=' + appConfig.token,
       method: 'POST',
+      // jquery does not know how to stringify a deep object, so we JSON.stringify
+      // and we need to set content-type too (form-www-encoded by default)
       data: JSON.stringify({filters: this.filters, limit: this.maxLogs}),
       contentType: 'application/json',
       success: (result) => {
@@ -156,15 +177,20 @@ class App extends Observable {
         this.total = result.total;
       },
       complete: () => {
-        this.querying = false;
+        this.querying = null;
         this.notify();
       }
     });
+    this.notify();
+
+    return this.querying;
   }
 
   /**
-   * Getter/setter of live mode state, if argument is provided it tells the server to start/stop
-   * sending logs by websocket
+   * Getter/actionner of live mode.
+   * live(true) tells the server to start streaming by websocket.
+   * live(false) stop streaming if started.
+   * live() just give current state, is it enabled?
    * @param {bool} enabled - (optional) start/stop live mode
    * @return {bool} live mode state
    */

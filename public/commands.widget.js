@@ -33,13 +33,13 @@ jQuery.widget('o2.commands', {
     <button class="btn toolbar-btn ${model.max() === 100000 ? 'active' : ''}" onclick="app.max(100000)" title="Keep only 100k logs">100k</button>
     <span class="toolbar-spacer"></span>
 
-    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-Infinity)" title="First error (ALT + left arrow)" ${model.querying ? 'disabled' : ''}>❮❮</button>
-    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-1)" title="Previous error (left arrow)" ${model.querying ? 'disabled' : ''}>❮</button>
-    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+1)" title="Next error (right arrow)" ${model.querying ? 'disabled' : ''}>❯</button>
-    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+Infinity)" title="Last error (ALT + right arrow)" ${model.querying ? 'disabled' : ''}>❯❯</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-Infinity)" title="First error (ALT + left arrow)" ${model.errors ? '' : 'disabled'}>❮❮</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-1)" title="Previous error (left arrow)" ${model.errors ? '' : 'disabled'}>❮</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+1)" title="Next error (right arrow)" ${model.errors ? '' : 'disabled'}>❯</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+Infinity)" title="Last error (ALT + right arrow)" ${model.errors ? '' : 'disabled'}>❯❯</button>
     <span class="toolbar-spacer"></span>
 
-    <button class="btn toolbar-btn ${model.querying ? 'disabled' : ''}" onclick="app.query()" title="Find X first logs based on filters (q or enter)" ${model.querying ? 'disabled' : ''}>${model.querying ? 'Loading...' : 'Query'}</button>
+    <button class="btn toolbar-btn ${model.query() ? 'disabled' : ''}" onclick="app.query(${!model.query()})" title="Find X first logs based on filters (q or enter)">${model.query() ? 'Cancel loading' : 'Query'}</button>
     <span class="toolbar-spacer"></span>
 
     <span class="toolbar">

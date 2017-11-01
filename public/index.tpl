@@ -61,6 +61,11 @@ $(document).ajaxError(function(err, xhr) {
     return alert(xhr.responseJSON.message);
   }
 
+  // It's ok if user aborted himself
+  if (xhr.statusText === 'abort') {
+    return;
+  }
+
   // Unknown error, just print the HTTP status
   alert(xhr.statusText);
 

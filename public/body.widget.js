@@ -1,3 +1,5 @@
+// This widget is mainly about global events like keyboard keys.
+
 jQuery.widget('o2.body', {
   _create: function() {
     if (!this.options.model) {
@@ -11,16 +13,17 @@ jQuery.widget('o2.body', {
   },
 
   onKeydown: function(e) {
-    // don't handle input events
-    if (e.target.tagName.toLowerCase() === 'input') {
+    console.log('e.keyCode:', e.keyCode);
+
+    // don't listen to keys when it comes from an input
+    // except spacial ones which are not chars
+    // http://www.foreui.com/articles/Key_Code_Table.htm
+    if (e.target.tagName.toLowerCase() === 'input' && e.keyCode > 47) {
       return;
     }
-    console.log('e.keyCode:', e.keyCode, e);
+
     // shortcuts
     switch (e.keyCode) {
-      case 13: // bottom
-        this.model.query();
-        break;
       case 40: // bottom
         this.model.moveSelected(+1);
         e.preventDefault();
@@ -41,9 +44,6 @@ jQuery.widget('o2.body', {
       case 82: // r
         location.href = '/';
         break;
-      case 81: // q
-        this.model.query();
-        break;
       case 83: // s
         this.model.autoScroll(!this.model.autoScroll());
         break;
@@ -58,6 +58,18 @@ jQuery.widget('o2.body', {
         break;
       case 77: // m
         this.model.minimap(!this.model.minimap());
+        break;
+
+      case 81: // q
+        this.model.query(true); // start/restart ajax
+        break;
+      case 13: // ENTER
+        this.model.query(true); // start/restart ajax
+        break;
+      case 27: // ESC
+        if (this.model.query()) {
+          this.model.query(false); // just stop current ajax
+        }
         break;
     }
   }
