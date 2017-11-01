@@ -23,10 +23,10 @@ jQuery.widget('o2.statusBar', {
       ${model.total !== model.logs().length ? `out of ${model.total}` : ''}
       ${model.queyTime === 0 ? '' : `(${(model.queyTime / 1000).toPrecision(2)} seconds)`}
 
-      ${model.infos ? `<span class="severity-i">${model.infos} I</span>` : ''}
-      ${model.warnings ? `<span class="severity-w">${model.warnings} W</span>` : ''}
-      ${model.errors ? `<span class="severity-e">${model.errors} E</span>` : ''}
-      ${model.fatals ? `<span class="severity-f">${model.fatals} F</span>` : ''}
+      ${model.infos ? `<span class="status-severity severity-i">${model.infos} <span class="status-severity-label">INFO</span></span>` : ''}
+      ${model.warnings ? `<span class="status-severity severity-w">${model.warnings} <span class="status-severity-label">WARN</span></span>` : ''}
+      ${model.errors ? `<span class="status-severity severity-e">${model.errors} <span class="status-severity-label">ERROR</span></span>` : ''}
+      ${model.fatals ? `<span class="status-severity severity-f">${model.fatals} <span class="status-severity-label">FATAL</span></span>` : ''}
 
       <div class="pull-right" title="State of the connection between this app and the web server">
         ${model.wsState === 'open' ? '<span class="text-sucess">READY</span>' : ''}
