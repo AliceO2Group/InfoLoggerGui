@@ -13,9 +13,17 @@ jQuery.widget('o2.body', {
   },
 
   onKeydown: function(e) {
-    console.log('e.keyCode:', e.keyCode);
+    console.log(`e.keyCode=${e.keyCode}, e.metaKey=${e.metaKey}, e.ctrlKey=${e.ctrlKey}, e.altKey=${e.altKey}`);
 
-    // don't listen to keys when it comes from an input
+    // Disable ctrl+f
+    if (e.keyCode === 70 && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault(); // CTRL+F is not usable in this app
+      e.stopPropagation();
+      document.querySelector('.focus-on-ctrl-f').focus(); // focus on filters (datetime)
+      return;
+    }
+
+    // don't listen to keys when it comes from an input (they transform into letters)
     // except spacial ones which are not chars
     // http://www.foreui.com/articles/Key_Code_Table.htm
     if (e.target.tagName.toLowerCase() === 'input' && e.keyCode > 47) {

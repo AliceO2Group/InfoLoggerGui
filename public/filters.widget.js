@@ -111,43 +111,43 @@ jQuery.widget('o2.filters', {
           </select>
         </td>
         <td>
-          <input type="text" tabindex="1" class="form-control input-datetime-from" data-criteria data-operator="$gte" data-field="timestamp" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('timestamp', '$gte')}" placeholder="from"/>
+          <input type="text" tabindex="1" class="form-control input-datetime-from focus-on-ctrl-f" data-criteria data-operator="$gte" data-field="timestamp" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('timestamp', '$gte')}" placeholder="from"/>
           ${datetimeHelper(this.state.datetimeFromFocus, model.parsedFilters('timestamp', '$gte'))}
         </td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="severity" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('severity', '$in') || ''}" placeholder="match"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('hostname', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('rolename', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="pid" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('pid', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="username" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('username', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="system" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('system', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="facility" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('facility', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="detector" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('detector', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="partition" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('partition', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="run" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('run', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errcode', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="errline" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errline', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errsource', '$in') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$in" data-field="message" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('message', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="severity" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('severity', '$in') || ''}" placeholder="match"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('hostname', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('rolename', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="pid" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('pid', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="username" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('username', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="system" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('system', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="facility" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('facility', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="detector" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('detector', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="partition" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('partition', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="run" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('run', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errcode', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="errline" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errline', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errsource', '$in') || ''}"/></td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="message" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('message', '$in') || ''}"/></td>
       </tr>
       <tr>
         <td>
           <input type="text" tabindex="2" class="form-control input-datetime-to" data-criteria data-operator="$lte" data-field="timestamp" data-state="datetimeTo" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('timestamp', '$lte')}"  placeholder="to"/>
           ${datetimeHelper(this.state.datetimeToFocus, model.parsedFilters('timestamp', '$lte'))}
         </td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="severity" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('severity', '$nin') || ''}" placeholder="exclude"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('hostname', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('rolename', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="pid" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('pid', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="username" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('username', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="system" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('system', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="facility" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('facility', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="detector" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('detector', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="partition" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('partition', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="run" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('run', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errcode', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="errline" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errline', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errsource', '$nin') || ''}"/></td>
-        <td><input type="text" class="form-control" data-criteria data-operator="$nin" data-field="message" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('message', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="severity" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('severity', '$nin') || ''}" placeholder="exclude"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('hostname', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('rolename', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="pid" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('pid', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="username" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('username', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="system" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('system', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="facility" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('facility', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="detector" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('detector', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="partition" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('partition', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="run" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('run', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="errcode" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errcode', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="errline" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errline', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="errsource" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('errsource', '$nin') || ''}"/></td>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="message" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('message', '$nin') || ''}"/></td>
       </tr>
     </table>
   </form>
