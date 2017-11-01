@@ -188,6 +188,12 @@ jQuery.widget('o2.logs', {
           </colgroup>
           <tbody>
             ${this.logsDisplayed.map((row) => {
+              let rowSelected = '';
+              const isRowSelected = row === model.selected();
+              if (isRowSelected) {
+                rowSelected = 'row-selected';
+              }
+
               let classSeverity = '';
               let textSeverity = '';
               if (row) {
@@ -197,26 +203,24 @@ jQuery.widget('o2.logs', {
                     textSeverity = 'INFO';
                     break;
                   case 'W':
-                    classSeverity = 'severity-w';
+                    // selected row is in blue, switch bgColor to fontColor when selected
+                    classSeverity = isRowSelected ? 'severity-w' : 'severity-w-bg';
                     textSeverity = 'WARN';
                     break;
                   case 'E':
-                    classSeverity = 'severity-e';
+                    // selected row is in blue, switch bgColor to fontColor when selected
+                    classSeverity = isRowSelected ? 'severity-e' : 'severity-e-bg';
                     textSeverity = 'ERROR';
                     break;
                   case 'F':
-                    classSeverity = 'severity-f';
-                    textSeverity = 'FAIL';
+                    // selected row is in blue, switch bgColor to fontColor when selected
+                    classSeverity = isRowSelected ? 'severity-f' : 'severity-f-bg';
+                    textSeverity = 'FATAL';
                     break;
 
                   default:
                     break;
                 }
-              }
-
-              let rowSelected = '';
-              if (row === model.selected()) {
-                rowSelected = 'row-selected';
               }
 
               return `
