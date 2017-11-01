@@ -39,33 +39,35 @@ jQuery.widget('o2.minimap', {
       this.mousedown = true;
     });
 
-    this.canvas.addEventListener('mousemove', (e) => {
-      if (!this.mousedown) {
-        return;
-      }
-
-      const offsetTop = $(this.canvas).offset().top;
-      const eventTop = e.pageY;
-      const clickPositionY = eventTop - offsetTop;
-      const logsLength = this.model.logs().length;
-      const rowNumber = Math.round(clickPositionY / this.canvas.height * logsLength);
-      $('.container-table-logs').scrollTop(
-        clickPositionY / this.canvas.height * this.logsContainer.allLogsHeight - (this.logsContainer.maxSliceHeight / 2)
-      )
-    });
-
-    this.canvas.addEventListener('mouseout', (e) => {
-      this.mousedown = false;
-    });
-
-    this.canvas.addEventListener('mouseup', (e) => {
-      this.mousedown = false;
-    });
+    // Listen to document because during scroll, the mousedown can be outside of minimap
+    document.addEventListener('mousemove', this._handleMouseMove.bind(this));
+    document.addEventListener('mouseup', this._handleMouseUp.bind(this));
 
     // Height will change on resize, re-render it
     window.addEventListener('resize', (e) => {
       requestAnimationFrame(this.render.bind(this));
     });
+  },
+
+  // When the mouse is down (and started on the minimap) we follow it and scroll
+  _handleMouseMove: function(e) {
+    if (!this.mousedown) {
+      return;
+    }
+
+    const offsetTop = $(this.canvas).offset().top;
+    const eventTop = e.pageY;
+    const clickPositionY = eventTop - offsetTop;
+    const logsLength = this.model.logs().length;
+    const rowNumber = Math.round(clickPositionY / this.canvas.height * logsLength);
+    $('.container-table-logs').scrollTop(
+      clickPositionY / this.canvas.height * this.logsContainer.allLogsHeight - (this.logsContainer.maxSliceHeight / 2)
+    )
+  },
+
+  // When mouse is out of the window or up, we terminate the scrollbar move
+  _handleMouseUp: function(e) {
+    this.mousedown = false;
   },
 
   _destroy: function() {
