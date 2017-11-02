@@ -77,9 +77,14 @@ jQuery.widget('o2.filters', {
   <form class="d-flex">
     <input type="submit" class="hidden">
     <table class="">
+      <colgroup>
+        <col class="">
+        <col class="col-150px">
+      </colgroup>
+
       <tr>
         <td><button type="button" class="btn btn-block text-overflow ${columns.level ? 'active':''}" data-action="display" data-field="level">Level</button></td>
-        <td class="col-150px">
+        <td>
           <div class="d-flex">
             <button type="button" class="btn btn-block text-overflow ${columns.date ? 'active':''}" data-action="display" data-field="date">Date</button>
             <button type="button" class="btn btn-block text-overflow ${columns.time ? 'active':''}" data-action="display" data-field="time">Time</button>

@@ -117,7 +117,7 @@ button:disabled { color: #eceeef; cursor: no-drop; }
 .col-100px { width: 100px; }
 .col-75px { width: 75px; }
 .col-50px { width: 50px; }
-.col-100px:last-child, .col-75px:last-child, .col-50px:last-child {
+.col-max-last:last-child {
   /* don't set size for the last column so it take the rest available */
   width: initial;
 }

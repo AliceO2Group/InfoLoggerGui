@@ -2,11 +2,14 @@ const log = require('./lib/logger');
 const HttpServer = require('@aliceo2/aliceo2-gui').HttpServer;
 const WebSocket = require('@aliceo2/aliceo2-gui').WebSocket;
 const Response = require('@aliceo2/aliceo2-gui').Response;
+const fs = require('fs');
 
 const config = require('./config.js');
 
 const SQLDataSource = require('./lib/SQLDataSource');
 const LiveDataSource = require('./lib/LiveDataSource');
+
+const helpMd = fs.readFileSync('./docs/user-guide.md');
 
 process.once('uncaughtException', function(e) {
   console.error(e.stack || e);
@@ -34,6 +37,7 @@ const stream = new LiveDataSource();
 // Configuration variable for client
 http.passToTemplate('hostname', config.http.hostname);
 http.passToTemplate('port', config.http.portSecure);
+http.passToTemplate('helpHTML', helpMd);
 
 http.post('/query', function(req, res) {
   const filters = req.body.filters;

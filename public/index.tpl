@@ -27,6 +27,7 @@ const appConfig = {
   port: "{{port}}",
   personid: "{{personid}}",
   oauth: "{{oauth}}",
+  helpHTML: `{{{helpHTML}}}`,
 };
 </script>
 

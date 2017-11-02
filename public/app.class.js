@@ -597,4 +597,12 @@ class App extends Observable {
 
     return this._timezone;
   }
+
+  /**
+   * Getter for HTML help from the server markdown file
+   * @return {string} html
+   */
+  helpHTML() {
+    return appConfig.helpHTML; // global from server
+  }
 }

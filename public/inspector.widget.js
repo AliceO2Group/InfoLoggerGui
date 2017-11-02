@@ -81,22 +81,26 @@ jQuery.widget('o2.inspector', {
           ? `<p class="text-center inspector-default">Select a row</p>`
           : `<div class="inspector-content">
             <table class="inspector-table">
-              <tr><td class="col-100px inspector-cell text-right">Severity :</td><td class="text-wrap-break ${classSeverity}">${textSeverity}</td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Level :</td><td class="text-wrap-break">${$.escapeHTML(row.level)}</td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Timestamp :</td><td class="text-wrap-break">${$.datetime(row.timestamp, 'datetime', model.timezone())}<span class="inspector-quick-search default-cursor" data-search="timestamp"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Hostname :</td><td class="text-wrap-break">${$.escapeHTML(row.hostname)}<span class="inspector-quick-search default-cursor" data-search="hostname"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Rolename :</td><td class="text-wrap-break">${$.escapeHTML(row.rolename)}<span class="inspector-quick-search default-cursor" data-search="rolename"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Pid :</td><td class="text-wrap-break">${$.escapeHTML(row.pid)}<span class="inspector-quick-search default-cursor" data-search="pid"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Username :</td><td class="text-wrap-break">${$.escapeHTML(row.username)}<span class="inspector-quick-search default-cursor" data-search="username"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">System :</td><td class="text-wrap-break">${$.escapeHTML(row.system)}<span class="inspector-quick-search default-cursor" data-search="system"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Facility :</td><td class="text-wrap-break">${$.escapeHTML(row.facility)}<span class="inspector-quick-search default-cursor" data-search="facility"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Detector :</td><td class="text-wrap-break">${$.escapeHTML(row.detector)}<span class="inspector-quick-search default-cursor" data-search="detector"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Partition :</td><td class="text-wrap-break">${$.escapeHTML(row.partition)}<span class="inspector-quick-search default-cursor" data-search="partition"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Run :</td><td class="text-wrap-break">${$.escapeHTML(row.run)}<span class="inspector-quick-search default-cursor" data-search="run"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Errcode :</td><td class="text-wrap-break">${$.escapeHTML(row.errcode)}<span class="inspector-quick-search default-cursor" data-search="errcode"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Errline :</td><td class="text-wrap-break">${$.escapeHTML(row.errline)}<span class="inspector-quick-search default-cursor" data-search="errline"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Errsource :</td><td class="text-wrap-break">${$.escapeHTML(row.errsource)}<span class="inspector-quick-search default-cursor" data-search="errsource"> 🔍</span></td></tr>
-              <tr><td class="col-100px inspector-cell text-right">Message :</td><td class="text-wrap-break">${$.escapeHTML(row.message)}</td></tr>
+              <colgroup>
+                <col class="col-100px">
+              </colgroup>
+
+              <tr><td class="inspector-cell text-right">Severity :</td><td class="text-wrap-break ${classSeverity}">${textSeverity}</td></tr>
+              <tr><td class="inspector-cell text-right">Level :</td><td class="text-wrap-break">${$.escapeHTML(row.level)}</td></tr>
+              <tr><td class="inspector-cell text-right">Timestamp :</td><td class="text-wrap-break">${$.datetime(row.timestamp, 'datetime', model.timezone())}<span class="inspector-quick-search default-cursor" data-search="timestamp"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Hostname :</td><td class="text-wrap-break">${$.escapeHTML(row.hostname)}<span class="inspector-quick-search default-cursor" data-search="hostname"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Rolename :</td><td class="text-wrap-break">${$.escapeHTML(row.rolename)}<span class="inspector-quick-search default-cursor" data-search="rolename"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Pid :</td><td class="text-wrap-break">${$.escapeHTML(row.pid)}<span class="inspector-quick-search default-cursor" data-search="pid"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Username :</td><td class="text-wrap-break">${$.escapeHTML(row.username)}<span class="inspector-quick-search default-cursor" data-search="username"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">System :</td><td class="text-wrap-break">${$.escapeHTML(row.system)}<span class="inspector-quick-search default-cursor" data-search="system"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Facility :</td><td class="text-wrap-break">${$.escapeHTML(row.facility)}<span class="inspector-quick-search default-cursor" data-search="facility"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Detector :</td><td class="text-wrap-break">${$.escapeHTML(row.detector)}<span class="inspector-quick-search default-cursor" data-search="detector"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Partition :</td><td class="text-wrap-break">${$.escapeHTML(row.partition)}<span class="inspector-quick-search default-cursor" data-search="partition"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Run :</td><td class="text-wrap-break">${$.escapeHTML(row.run)}<span class="inspector-quick-search default-cursor" data-search="run"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Errcode :</td><td class="text-wrap-break">${$.escapeHTML(row.errcode)}<span class="inspector-quick-search default-cursor" data-search="errcode"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Errline :</td><td class="text-wrap-break">${$.escapeHTML(row.errline)}<span class="inspector-quick-search default-cursor" data-search="errline"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Errsource :</td><td class="text-wrap-break">${$.escapeHTML(row.errsource)}<span class="inspector-quick-search default-cursor" data-search="errsource"> 🔍</span></td></tr>
+              <tr><td class="inspector-cell text-right">Message :</td><td class="text-wrap-break">${$.escapeHTML(row.message)}</td></tr>
             </table>
           </div>
           <div class="inspector-content">
