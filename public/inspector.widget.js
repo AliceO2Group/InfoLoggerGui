@@ -100,7 +100,7 @@ jQuery.widget('o2.inspector', {
             </table>
           </div>
           <div class="inspector-content">
-            <div><button class="btn" copy-table-action>Copy the table</button></div>
+            <div><button class="btn" copy-table-action>Copy log details to clipboard</button></div>
             ${
               row.errcode
               ? `<div><a class="btn" href="https://alice-daq.web.cern.ch/error_codes/${$.escapeHTML(row.errcode)}" target="_blank">Go to wiki for error ${$.escapeHTML(row.errcode)}</a></div>`
