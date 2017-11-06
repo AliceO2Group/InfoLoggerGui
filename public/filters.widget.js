@@ -78,19 +78,18 @@ jQuery.widget('o2.filters', {
     <input type="submit" class="hidden">
     <table class="">
       <colgroup>
-        <col class="">
+        <col>
         <col class="col-150px">
       </colgroup>
 
       <tr>
-        <td><button type="button" class="btn btn-block text-overflow ${columns.level ? 'active':''}" data-action="display" data-field="level">Level</button></td>
+        <td><button type="button" class="btn btn-block text-overflow ${columns.severity ? 'active':''}" data-action="display" data-field="severity">Severity</button></td>
         <td>
           <div class="d-flex">
             <button type="button" class="btn btn-block text-overflow ${columns.date ? 'active':''}" data-action="display" data-field="date">Date</button>
             <button type="button" class="btn btn-block text-overflow ${columns.time ? 'active':''}" data-action="display" data-field="time">Time</button>
           </div>
         </td>
-        <td><button type="button" class="btn btn-block text-overflow ${columns.severity ? 'active':''}" data-action="display" data-field="severity">Severity</button></td>
         <td><button type="button" class="btn btn-block text-overflow ${columns.hostname ? 'active':''}" data-action="display" data-field="hostname">Hostname</button></td>
         <td><button type="button" class="btn btn-block text-overflow ${columns.rolename ? 'active':''}" data-action="display" data-field="rolename">Rolename</button></td>
         <td><button type="button" class="btn btn-block text-overflow ${columns.pid ? 'active':''}" data-action="display" data-field="pid">PID</button></td>
@@ -106,20 +105,11 @@ jQuery.widget('o2.filters', {
         <td><button type="button" class="btn btn-block text-overflow ${columns.message ? 'active':''}" data-action="display" data-field="message">Message</button></td>
       </tr>
       <tr>
-        <td rowspan="2">
-          <select ${model.live() ? 'disabled' : ''} data-criteria data-operator="$lte" data-field="level">
-            <option value="" ${!model.rawFilter('level', '$lte') ? 'selected' : ''}>Any</option>
-            <option value="1" ${model.rawFilter('level', '$lte') === '1' ? 'selected' : ''}>Shift ≤1</option>
-            <option value="6" ${model.rawFilter('level', '$lte') === '6' ? 'selected' : ''}>Oncall ≤6</option>
-            <option value="11" ${model.rawFilter('level', '$lte') === '11' ? 'selected' : ''}>Devel ≤11</option>
-            <option value="21" ${model.rawFilter('level', '$lte') === '21' ? 'selected' : ''}>Debug ≤21</option>
-          </select>
-        </td>
+        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="severity" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('severity', '$in') || ''}" placeholder="match"/></td>
         <td>
           <input type="text" tabindex="1" class="form-control input-datetime-from focus-on-ctrl-f" data-criteria data-operator="$gte" data-field="timestamp" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('timestamp', '$gte')}" placeholder="from"/>
           ${datetimeHelper(this.state.datetimeFromFocus, model.parsedFilters('timestamp', '$gte'))}
         </td>
-        <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="severity" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('severity', '$in') || ''}" placeholder="match"/></td>
         <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('hostname', '$in') || ''}"/></td>
         <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('rolename', '$in') || ''}"/></td>
         <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="pid" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('pid', '$in') || ''}"/></td>
@@ -135,11 +125,11 @@ jQuery.widget('o2.filters', {
         <td><input type="text" tabindex="3" class="form-control" data-criteria data-operator="$in" data-field="message" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('message', '$in') || ''}"/></td>
       </tr>
       <tr>
+        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="severity" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('severity', '$nin') || ''}" placeholder="exclude"/></td>
         <td>
           <input type="text" tabindex="2" class="form-control input-datetime-to" data-criteria data-operator="$lte" data-field="timestamp" data-state="datetimeTo" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('timestamp', '$lte')}"  placeholder="to"/>
           ${datetimeHelper(this.state.datetimeToFocus, model.parsedFilters('timestamp', '$lte'))}
         </td>
-        <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="severity" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('severity', '$nin') || ''}" placeholder="exclude"/></td>
         <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="hostname" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('hostname', '$nin') || ''}"/></td>
         <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="rolename" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('rolename', '$nin') || ''}"/></td>
         <td><input type="text" tabindex="4" class="form-control" data-criteria data-operator="$nin" data-field="pid" ${model.live() ? 'disabled' : ''} value="${model.rawFilter('pid', '$nin') || ''}"/></td>

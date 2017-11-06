@@ -20,7 +20,14 @@ jQuery.widget('o2.commands', {
 
     const template = `<div id="commands">
   <div class="pull-left command-bar toolbar">
-    <button class="btn toolbar-btn" onclick="location.href='/'" title="Restart this application (r)">Refresh page</button>
+
+    <button class="btn toolbar-btn ${!model.rawFilter('level', '$lte') ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '');" title="Don't filter by level">All</button>
+    <button class="btn toolbar-btn ${model.rawFilter('level', '$lte') === '1' ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '1');" title="Filter level ≤ 1">Shift</button>
+    <button class="btn toolbar-btn ${model.rawFilter('level', '$lte') === '6' ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '6');" title="Filter level ≤ 6">Oncall</button>
+    <button class="btn toolbar-btn ${model.rawFilter('level', '$lte') === '11' ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '11');" title="Filter level ≤ 11">Devel</button>
+    <button class="btn toolbar-btn ${model.rawFilter('level', '$lte') === '21' ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '21');" title="Filter level ≤ 21">Debug</button>
+    <span class="toolbar-spacer"></span>
+
     <button class="btn toolbar-btn" onclick="app.empty()" title="Empty all logs (e)">Empty</button>
     <span class="toolbar-spacer"></span>
 
