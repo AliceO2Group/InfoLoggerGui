@@ -20,7 +20,7 @@ jQuery.widget('o2.statusBar', {
 
     const template = `<div id="statusBar" class="default-cursor">
       ${model.logs().length} messages
-      ${model.total !== model.logs().length ? `out of ${model.total}` : ''}
+      ${model.total !== model.logs().length ? `out of ${model.total > 100000 ? 'more than 100k' : model.total}` : ''}
       ${model.queyTime === 0 ? '' : `(${(model.queyTime / 1000).toPrecision(2)} seconds)`}
 
       ${model.infos ? `<span class="status-severity severity-i">${model.infos} <span class="status-severity-label">INFO</span></span>` : ''}
