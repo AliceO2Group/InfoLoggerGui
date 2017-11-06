@@ -9,7 +9,7 @@ const config = require('./config.js');
 const SQLDataSource = require('./lib/SQLDataSource');
 const LiveDataSource = require('./lib/LiveDataSource');
 
-const helpMd = fs.readFileSync('./docs/user-guide.md');
+const helpMarkdown = fs.readFileSync('./docs/user-guide.md');
 
 process.once('uncaughtException', function(e) {
   if (e.code === 'EADDRINUSE') {
@@ -41,7 +41,7 @@ const stream = new LiveDataSource();
 // Configuration variable for client
 http.passToTemplate('hostname', config.http.hostname);
 http.passToTemplate('port', config.http.portSecure);
-http.passToTemplate('helpHTML', helpMd);
+http.passToTemplate('helpMarkdown', helpMarkdown);
 
 http.post('/query', function(req, res) {
   const filters = req.body.filters;

@@ -18,6 +18,7 @@ jQuery.widget('o2.statusBar', {
   render: function() {
     const model = this.model;
 
+    // Back-end will count maximum of 100001 rows so we just print "more than 100k"
     const template = `<div id="statusBar" class="default-cursor">
       ${model.logs().length} messages
       ${model.total !== model.logs().length ? `out of ${model.total > 100000 ? 'more than 100k' : model.total}` : ''}
