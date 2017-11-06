@@ -12,7 +12,11 @@ const LiveDataSource = require('./lib/LiveDataSource');
 const helpMd = fs.readFileSync('./docs/user-guide.md');
 
 process.once('uncaughtException', function(e) {
-  console.error(e.stack || e);
+  if (e.code === 'EADDRINUSE') {
+    log.error('Port is already used');
+  }
+
+  log.error(e.stack || e);
   process.exit(1);
 });
 
