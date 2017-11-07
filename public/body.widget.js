@@ -1,3 +1,5 @@
+// This widget is mainly about global events like keyboard keys.
+
 jQuery.widget('o2.body', {
   _create: function() {
     if (!this.options.model) {
@@ -11,16 +13,25 @@ jQuery.widget('o2.body', {
   },
 
   onKeydown: function(e) {
-    // don't handle input events
-    if (e.target.tagName.toLowerCase() === 'input') {
+    console.log(`e.keyCode=${e.keyCode}, e.metaKey=${e.metaKey}, e.ctrlKey=${e.ctrlKey}, e.altKey=${e.altKey}`);
+
+    // Disable ctrl+f
+    if (e.keyCode === 70 && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault(); // CTRL+F is not usable in this app
+      e.stopPropagation();
+      document.querySelector('.focus-on-ctrl-f').focus(); // focus on filters (datetime)
       return;
     }
-    console.log('e.keyCode:', e.keyCode, e);
+
+    // don't listen to keys when it comes from an input (they transform into letters)
+    // except spacial ones which are not chars
+    // http://www.foreui.com/articles/Key_Code_Table.htm
+    if (e.target.tagName.toLowerCase() === 'input' && e.keyCode > 47) {
+      return;
+    }
+
     // shortcuts
     switch (e.keyCode) {
-      case 13: // bottom
-        this.model.query();
-        break;
       case 40: // bottom
         this.model.moveSelected(+1);
         e.preventDefault();
@@ -41,9 +52,6 @@ jQuery.widget('o2.body', {
       case 82: // r
         location.href = '/';
         break;
-      case 81: // q
-        this.model.query();
-        break;
       case 83: // s
         this.model.autoScroll(!this.model.autoScroll());
         break;
@@ -58,6 +66,18 @@ jQuery.widget('o2.body', {
         break;
       case 77: // m
         this.model.minimap(!this.model.minimap());
+        break;
+
+      case 81: // q
+        this.model.query(true); // start/restart ajax
+        break;
+      case 13: // ENTER
+        this.model.query(true); // start/restart ajax
+        break;
+      case 27: // ESC
+        if (this.model.query()) {
+          this.model.query(false); // just stop current ajax
+        }
         break;
     }
   }

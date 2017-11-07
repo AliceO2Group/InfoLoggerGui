@@ -27,6 +27,7 @@ const appConfig = {
   port: "{{port}}",
   personid: "{{personid}}",
   oauth: "{{oauth}}",
+  helpMarkdown: `{{{helpMarkdown}}}`,
 };
 </script>
 
@@ -59,6 +60,11 @@ $(document).ajaxError(function(err, xhr) {
   // Error with a message
   if (xhr.responseJSON && xhr.responseJSON.message) {
     return alert(xhr.responseJSON.message);
+  }
+
+  // It's ok if user aborted himself
+  if (xhr.statusText === 'abort') {
+    return;
   }
 
   // Unknown error, just print the HTTP status

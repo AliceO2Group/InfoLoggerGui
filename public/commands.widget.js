@@ -20,7 +20,14 @@ jQuery.widget('o2.commands', {
 
     const template = `<div id="commands">
   <div class="pull-left command-bar toolbar">
-    <button class="btn toolbar-btn" onclick="location.href='/'" title="Restart this application (r)">Refresh page</button>
+
+    <button class="btn toolbar-btn ${!model.rawFilter('level', '$lte') ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '');" title="Don't filter by level">All</button>
+    <button class="btn toolbar-btn ${model.rawFilter('level', '$lte') === '1' ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '1');" title="Filter level ≤ 1">Shift</button>
+    <button class="btn toolbar-btn ${model.rawFilter('level', '$lte') === '6' ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '6');" title="Filter level ≤ 6">Oncall</button>
+    <button class="btn toolbar-btn ${model.rawFilter('level', '$lte') === '11' ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '11');" title="Filter level ≤ 11">Devel</button>
+    <button class="btn toolbar-btn ${model.rawFilter('level', '$lte') === '21' ? 'active' : ''}" onclick="app.rawFilter('level', '$lte', '21');" title="Filter level ≤ 21">Debug</button>
+    <span class="toolbar-spacer"></span>
+
     <button class="btn toolbar-btn" onclick="app.empty()" title="Empty all logs (e)">Empty</button>
     <span class="toolbar-spacer"></span>
 
@@ -33,13 +40,13 @@ jQuery.widget('o2.commands', {
     <button class="btn toolbar-btn ${model.max() === 100000 ? 'active' : ''}" onclick="app.max(100000)" title="Keep only 100k logs">100k</button>
     <span class="toolbar-spacer"></span>
 
-    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-Infinity)" title="First error (ALT + left arrow)" ${model.querying ? 'disabled' : ''}>❮❮</button>
-    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-1)" title="Previous error (left arrow)" ${model.querying ? 'disabled' : ''}>❮</button>
-    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+1)" title="Next error (right arrow)" ${model.querying ? 'disabled' : ''}>❯</button>
-    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+Infinity)" title="Last error (ALT + right arrow)" ${model.querying ? 'disabled' : ''}>❯❯</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-Infinity)" title="First error (ALT + left arrow)" ${model.errors ? '' : 'disabled'}>❮❮</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(-1)" title="Previous error (left arrow)" ${model.errors ? '' : 'disabled'}>❮</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+1)" title="Next error (right arrow)" ${model.errors ? '' : 'disabled'}>❯</button>
+    <button class="btn toolbar-btn" ${model.errors ? '' : 'disabled'} onclick="app.moveSelectedError(+Infinity)" title="Last error (ALT + right arrow)" ${model.errors ? '' : 'disabled'}>❯❯</button>
     <span class="toolbar-spacer"></span>
 
-    <button class="btn toolbar-btn ${model.querying ? 'disabled' : ''}" onclick="app.query()" title="Find X first logs based on filters (q or enter)" ${model.querying ? 'disabled' : ''}>${model.querying ? 'Loading...' : 'Query'}</button>
+    <button class="btn toolbar-btn ${model.query() ? 'disabled' : ''}" onclick="app.query(${!model.query()})" title="Find X first logs based on filters (q or enter)">${model.query() ? 'Cancel loading' : 'Query'}</button>
     <span class="toolbar-spacer"></span>
 
     <span class="toolbar">
@@ -52,7 +59,7 @@ jQuery.widget('o2.commands', {
   </div>
 
   <div class="pull-right command-bar toolbar">
-    <button title="Show all severities in one view (m)" class="btn toolbar-btn ${model.minimap() ? 'active' : ''}" onclick="app.minimap(!app.minimap())">Minimap (experimental)</button>
+    <button title="Show all severities in one view (m)" class="btn toolbar-btn ${model.minimap() ? 'active' : ''}" onclick="app.minimap(!app.minimap())">Minimap</button>
     <button title="Show log details (i)" class="btn toolbar-btn ${model.inspector() ? 'active' : ''}" onclick="app.inspector(!app.inspector())">Inspector</button>
   </div>
 </div>`;

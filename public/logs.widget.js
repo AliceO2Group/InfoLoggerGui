@@ -168,26 +168,32 @@ jQuery.widget('o2.logs', {
       <div class="container-table-logs ${model.minimap() ? 'hide-scroll-bar' : ''}">
         <table class="table-hover table-bordered default-cursor" style="margin-top:${this.tableMarginTop}px;margin-bottom:${this.tablePaddingBottom}px;">
           <colgroup>
-            ${columns.severity ? `<col class="col-100px">` : ''}
-            ${columns.level ? `<col class="col-50px">` : ''}
-            ${columns.date ? `<col class="col-100px">` : ''}
-            ${columns.time ? `<col class="col-100px">` : ''}
-            ${columns.hostname ? `<col class="col-100px">` : ''}
-            ${columns.rolename ? `<col class="col-100px">` : ''}
-            ${columns.pid ? `<col class="col-50px">` : ''}
-            ${columns.username ? `<col class="col-100px">` : ''}
-            ${columns.system ? `<col class="col-50px">` : ''}
-            ${columns.facility ? `<col class="col-100px">` : ''}
-            ${columns.detector ? `<col class="col-50px">` : ''}
-            ${columns.partition ? `<col class="col-100px">` : ''}
-            ${columns.run ? `<col class="col-75px">` : ''}
-            ${columns.errcode ? `<col class="col-50px">` : ''}
-            ${columns.errline ? `<col class="col-50px">` : ''}
-            ${columns.errsource ? `<col class="col-100px">` : ''}
-            ${columns.message ? `<col class="col-max">` : ''}
+            ${columns.severity ? `<col class="col-100px col-max-last">` : ''}
+            ${columns.level ? `<col class="col-50px col-max-last">` : ''}
+            ${columns.date ? `<col class="col-100px col-max-last">` : ''}
+            ${columns.time ? `<col class="col-100px col-max-last">` : ''}
+            ${columns.hostname ? `<col class="col-100px col-max-last">` : ''}
+            ${columns.rolename ? `<col class="col-100px col-max-last">` : ''}
+            ${columns.pid ? `<col class="col-50px col-max-last">` : ''}
+            ${columns.username ? `<col class="col-100px col-max-last">` : ''}
+            ${columns.system ? `<col class="col-50px col-max-last">` : ''}
+            ${columns.facility ? `<col class="col-100px col-max-last">` : ''}
+            ${columns.detector ? `<col class="col-50px col-max-last">` : ''}
+            ${columns.partition ? `<col class="col-100px col-max-last">` : ''}
+            ${columns.run ? `<col class="col-75px col-max-last">` : ''}
+            ${columns.errcode ? `<col class="col-50px col-max-last">` : ''}
+            ${columns.errline ? `<col class="col-50px col-max-last">` : ''}
+            ${columns.errsource ? `<col class="col-100px col-max-last">` : ''}
+            ${columns.message ? `<col class="col-max-last">` : ''}
           </colgroup>
           <tbody>
             ${this.logsDisplayed.map((row) => {
+              let rowSelected = '';
+              const isRowSelected = row === model.selected();
+              if (isRowSelected) {
+                rowSelected = 'row-selected';
+              }
+
               let classSeverity = '';
               let textSeverity = '';
               if (row) {
@@ -197,26 +203,24 @@ jQuery.widget('o2.logs', {
                     textSeverity = 'INFO';
                     break;
                   case 'W':
-                    classSeverity = 'severity-w';
+                    // selected row is in blue, switch bgColor to fontColor when selected
+                    classSeverity = isRowSelected ? 'severity-w' : 'severity-w-bg';
                     textSeverity = 'WARN';
                     break;
                   case 'E':
-                    classSeverity = 'severity-e';
+                    // selected row is in blue, switch bgColor to fontColor when selected
+                    classSeverity = isRowSelected ? 'severity-e' : 'severity-e-bg';
                     textSeverity = 'ERROR';
                     break;
                   case 'F':
-                    classSeverity = 'severity-f';
-                    textSeverity = 'FAIL';
+                    // selected row is in blue, switch bgColor to fontColor when selected
+                    classSeverity = isRowSelected ? 'severity-f' : 'severity-f-bg';
+                    textSeverity = 'FATAL';
                     break;
 
                   default:
                     break;
                 }
-              }
-
-              let rowSelected = '';
-              if (row === model.selected()) {
-                rowSelected = 'row-selected';
               }
 
               return `
