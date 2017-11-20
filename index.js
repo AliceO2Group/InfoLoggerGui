@@ -1,7 +1,7 @@
 const log = require('./lib/logger');
 const HttpServer = require('@aliceo2/aliceo2-gui').HttpServer;
 const WebSocket = require('@aliceo2/aliceo2-gui').WebSocket;
-const Response = require('@aliceo2/aliceo2-gui').Response;
+const WebSocketMessage = require('@aliceo2/aliceo2-gui').WebSocketMessage;
 const fs = require('fs');
 
 const config = require('./config.js');
@@ -59,7 +59,8 @@ http.post('/query', function(req, res) {
 
 stream.connect(config.infoLoggerServer);
 stream.on('message', (message) => {
-  const res = new Response(200);
-  res.command('message').payload(message);
-  websocketServer.broadcast(res.json);
+  const res = new WebSocketMessage(200)
+    .setCommand('message')
+    .setPayload(message);
+  websocketServer.broadcast(res);
 });
