@@ -19,6 +19,8 @@ cd ~/rpmbuild/BUILD/opt/InfoLoggerGui
 npm install --production --unsafe-perm
 # Prepare data to be packaged
 cp -R ~/rpmbuild/BUILD/opt ~/rpmbuild/BUILDROOT/
+# Delete git folder
+rm -rf ~/rpmbuild/BUILDROOT/opt/InfoLoggerGui/.git
 # Prepare systemd file
 mkdir -p ~/rpmbuild/BUILDROOT/etc/systemd/system/
 mv ~/rpmbuild/BUILDROOT/opt/InfoLoggerGui/rpmbuild/infologgergui.service ~/rpmbuild/BUILDROOT/etc/systemd/system/
