@@ -39,7 +39,7 @@ const appConfig = {
 <!-- Gui Framework -->
 <script src="/libs/jquery.js"></script>
 <script src="/libs/jquery-ui.js"></script>
-<script src="ws.widget.js"></script>
+<script src="websocket-client.js"></script>
 
 <!-- This project -->
 <script src="/observable.class.js"></script>
@@ -80,14 +80,11 @@ const LOCAL_TIMEZONE = moment.tz.guess();
 // Starting app
 $(function() {
   // instance of websocket widget
-  const ws = $.o2.websocket({
-    // pass url of websocket server
-    url: `wss://${location.host}`,
-    // token, cernid, name and username are provided by CERN SSO
-    oauth: appConfig.oauth,
-    token: appConfig.token,
-    id: appConfig.personid,
-  }, $('#ws') );
+  const ws = new WebSocketClient(
+    appConfig.personid,
+    appConfig.token,
+    appConfig.oauth
+  );
 
   window.ws = ws;
 

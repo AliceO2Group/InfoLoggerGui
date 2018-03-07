@@ -58,24 +58,24 @@ class App extends Observable {
     this._rawFilters = {}; // copy of user inputs
     this.filters = {}; // parsed version with type casting
 
-    ws.element.bind('websocketmessage', (evt, message) => {
+    ws.bind('message', (message) => {
       this.onLiveMessage(message.payload);
-    });
+    })
 
-    ws.element.bind('websocketauthed', (evt, message) => {
+    ws.bind('authed', (message) => {
       console.log('WS authed, messages can be sent');
       this.wsState = 'open';
       this.reconnect();
       this.notify();
     });
 
-    ws.element.bind('websocketopen', (evt, data) => {
+    ws.bind('open', (data) => {
       console.log('WS open, waiting for authentication');
       this.wsState = 'authentication';
       this.notify();
     });
 
-    ws.element.bind('websocketclose', (evt, data) => {
+    ws.bind('close', (data) => {
       console.log('WS close');
       this.wsState = 'close';
 
@@ -119,7 +119,7 @@ class App extends Observable {
     clearTimeout(this.reconnectTimer);
     this.reconnectTimer = setTimeout(() => {
       console.log('WS reconnecting now...');
-      ws._connect();
+      ws.connect();
     }, 2000);
   }
 
